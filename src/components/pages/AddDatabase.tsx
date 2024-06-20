@@ -1,8 +1,10 @@
 import { useIpfs } from "../../hooks/useIpfs";
+import { useOrbitDB } from "../../hooks/useOrbitDB";
 
 const AddDatabase = () => {
   const ipfs = useIpfs();
-
+  const orbitDB = useOrbitDB("LinSoap");
+  console.log(orbitDB);
   return (
     <div>
       {ipfs ? (

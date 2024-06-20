@@ -1,4 +1,4 @@
-const createOrbitDB = require("@orbitdb/core/src/orbitdb.js") ;
+import { createOrbitDB } from '@orbitdb/core';
 
 class OrbitdbService {
     private static instance: OrbitdbService;
@@ -18,7 +18,7 @@ class OrbitdbService {
 
     public async loadInstance(ipfs: any, id?: string) {
         if (!this.localInstance) {
-            this.localInstance = await createOrbitDB(ipfs, { id });
+            this.localInstance = await createOrbitDB({ipfs, id });
         }
     }
 

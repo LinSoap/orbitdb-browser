@@ -8,7 +8,6 @@ import { all } from '@libp2p/websockets/filters'
 import { identify } from '@libp2p/identify'
 import { createLibp2p } from 'libp2p'
 import { MemoryBlockstore } from 'blockstore-core'
-import { LevelBlockstore } from 'blockstore-level'
 import { createHelia } from 'helia'
 import { bitswap } from '@helia/block-brokers'
 const Libp2pBrowserOptions = {
@@ -62,7 +61,6 @@ class IpfsService {
         };
 
         this.ipfsInstance = await createHelia({ ...heliaOptions });
-        console.log(this.ipfsInstance)
         }
     }
 

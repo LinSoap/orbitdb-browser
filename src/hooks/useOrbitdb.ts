@@ -3,7 +3,7 @@ import { useIpfs } from './useIpfs';
 import OrbitdbService from '../services/orbitdb.service';
 
 
-export const useOrbitDb = (id?: string) => {
+export const useOrbitDB = (id?: string) => {
     const [orbitDb, setOrbitDb] = useState<any>(null);
     const ipfs = useIpfs();
 
