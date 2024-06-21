@@ -1,35 +1,33 @@
-import { createOrbitDB } from '@orbitdb/core';
+import { Database, createOrbitDB } from '@orbitdb/core';
 
-class OrbitdbService {
-    private static instance: OrbitdbService;
-    private localInstance: any;
-    private databases: any[];
+export interface DatabaseConfig {
+    address: string; // The address of an existing database to open, or the name of a new database.
+    params: {
+      type: "event"|"documents"|"keyvalue"; // <optional> The database's type.
+      meta?: any; // <optional> The database's metadata. Only applies when creating a database and is not used when opening an existing database.
+      sync?: boolean; // <optional> If true, sync databases automatically. Otherwise, false.
+      Database?: Database; // <optional> A Database-compatible module.
+      AccessController?: any; // <optional> An AccessController-compatible module.
+      headsStorage?: Storage; // <optional> A compatible storage instance for storing log heads. Defaults to ComposedStorage(LRUStorage, LevelStorage).
+      entryStorage?: Storage; // <optional> A compatible storage instance for storing log entries. Defaults to ComposedStorage(LRUStorage, IPFSBlockStorage).
+      indexStorage?: Storage; // <optional> A compatible storage instance for storing an " index of log entries. Defaults to ComposedStorage(LRUStorage, LevelStorage).
+      referencesCount?: number; // <optional> The number of references to use for Log entries.
+    };
+  }
+  
 
-    private constructor() {
-        this.databases = [];
-    }
 
-    public static getInstance(): OrbitdbService {
-        if (!OrbitdbService.instance) {
-            OrbitdbService.instance = new OrbitdbService();
-        }
-        return OrbitdbService.instance;
-    }
-
-    public async loadInstance(ipfs: any, id?: string) {
-        if (!this.localInstance) {
-            this.localInstance = await createOrbitDB({ipfs, id });
-        }
-    }
-
-    public async createDatabase(address: string, type: string, options?: any) {
-        if (!this.localInstance) {
-            throw new Error('OrbitDB instance not created. Call loadLocalInstance() first.');
-        }
-        const database = await this.localInstance.open(address, { type, ...options });
-        this.databases.push(database);
-        return database;
+export const createOrbitdb = async (ipfs:any,id:string) => {
+    const orbitdb = await createOrbitDB({ipfs, id});
+    console.log(orbitdb);
+    return await orbitdb;
+}
+// 打开指定的数据库
+export const openDatabase = async (orbitdb:any, address:string) => {
+    try {
+        const db = await orbitdb.open(address);
+        return db;
+    } catch (error:any) {
+        throw new Error(`Failed to open database: ${error.message}`);
     }
 }
-
-export default OrbitdbService;

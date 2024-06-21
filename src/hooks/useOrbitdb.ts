@@ -1,23 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { createOrbitdb } from '../services/orbitdb.service';
 import { useIpfs } from './useIpfs';
-import OrbitdbService from '../services/orbitdb.service';
 
 
-export const useOrbitDB = (id?: string) => {
-    const [orbitDb, setOrbitDb] = useState<any>(null);
-    const ipfs = useIpfs();
 
+export const useOrbitDB = () => {
+  const [orbitDB, setOrbitDB] = useState<any>(null);
+  const [error, setError] = useState('');
+  const ipfs = useIpfs();
     useEffect(() => {
-        if (ipfs) {
-            const initializeOrbitDb = async () => {
-                const service = OrbitdbService.getInstance();
-                await service.loadInstance(ipfs, id);
-                setOrbitDb(service);
-            };
-
-            initializeOrbitDb();
-        }
+        const init = async () => {
+            try {
+                const orbitdbInstance = await createOrbitdb(ipfs, "LinSoap");
+                setOrbitDB(orbitdbInstance);
+            } catch (error:any) {
+                setError(`Error creating OrbitDB: ${error.message}`);
+            }
+          };
+        init();
     }, [ipfs]);
-
-    return orbitDb;
+  
+  return { orbitDB, error };
 };

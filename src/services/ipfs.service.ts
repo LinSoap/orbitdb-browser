@@ -34,42 +34,16 @@ const Libp2pBrowserOptions = {
     }
   }
 
-class IpfsService {
-    private static instance: IpfsService;
-    private ipfsInstance: any;
 
-    private constructor() {}
+export const createIpfs = async () => {
+    const libp2pOptions =  Libp2pBrowserOptions;
+    const libp2p = await createLibp2p({ ...libp2pOptions });
+    const blockstore = new MemoryBlockstore();
 
-    public static getInstance(): IpfsService {
-        if (!IpfsService.instance) {
-            IpfsService.instance = new IpfsService();
-        }
-        return IpfsService.instance;
-    }
-
-    public async createInstance() {
-        if (!this.ipfsInstance) {
-        const libp2pOptions =  Libp2pBrowserOptions;
-        const libp2p = await createLibp2p({ ...libp2pOptions });
-
-        const blockstore = new MemoryBlockstore();
-
-        const heliaOptions = {
-            blockstore,
-            libp2p,
-            blockBrokers: [bitswap()],
-        };
-
-        this.ipfsInstance = await createHelia({ ...heliaOptions });
-        }
-    }
-
-    public getInstance() {
-            if (!this.ipfsInstance) {
-            throw new Error('IPFS instance not created. Call createInstance() first.');
-            }
-            return this.ipfsInstance;
-        }
-    }
-
-export default IpfsService;
+    const heliaOptions = {
+        blockstore,
+        libp2p,
+        blockBrokers: [bitswap()],
+    };
+    return await createHelia({ ...heliaOptions });
+}
