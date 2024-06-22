@@ -13,48 +13,96 @@ import {
 } from "@chakra-ui/react";
 import { useIdentities } from "../../hooks/useIdentities";
 import { DatabaseConfig } from "../../services/orbitdb.service";
-import { ComposedStorage, Events, IPFSAccessController } from "@orbitdb/core";
+import {
+  ComposedStorage,
+  Database,
+  Documents,
+  Events,
+  IPFSAccessController,
+  IPFSBlockStorage,
+  KeyValue,
+  LRUStorage,
+  LevelStorage,
+  MemoryStorage,
+  OrbitDBAccessController,
+} from "@orbitdb/core";
 
 const AddDatabase = () => {
   const ipfs = useIpfs();
   const { orbitDB } = useOrbitDB();
-  const { identities } = useIdentities();
 
   const [formData, setFormData] = useState<DatabaseConfig>({
     address: "",
     params: {
       type: "event",
-      meta: "", // 默认为空对象
-      sync: true, // 默认为 true
-      Database: Events, // 默认为 undefined
-      AccessController: IPFSAccessController, // 默认为 undefined
-      headsStorage: ComposedStorage, // 默认为 undefined
-      entryStorage: ComposedStorage, // 默认为 undefined
-      indexStorage: ComposedStorage, // 默认为 undefined
-      referencesCount: undefined, // 默认为 0，或者根据需要设置其他默认值
+      meta: "",
+      sync: true,
+      Database: Events,
+      AccessController: IPFSAccessController,
+      headsStorage: ComposedStorage,
+      entryStorage: ComposedStorage,
+      indexStorage: ComposedStorage,
+      referencesCount: 0,
     },
   });
 
+  const databaseMapping: {
+    [key: string]: DatabaseConfig["params"]["Database"];
+  } = {
+    event: Events,
+    documents: Documents,
+    keyvalue: KeyValue,
+  };
+
+  const accessControllerMapping: {
+    [key: string]: DatabaseConfig["params"]["AccessController"];
+  } = {
+    IPFSAccessController: IPFSAccessController,
+    OrbitDBAccessController: OrbitDBAccessController,
+  };
+
+  const storageMapping: {
+    [key: string]: DatabaseConfig["params"]["headsStorage"];
+  } = {
+    IPFSBlockStorage: IPFSBlockStorage,
+    LevelStorage: LevelStorage,
+    ComposedStorage: ComposedStorage,
+    LRUStorage: LRUStorage,
+    MemoryStorage: MemoryStorage,
+  };
+
+  const getStorageKey = (mapping: any, value: any) => {
+    return Object.keys(mapping).find((key) => mapping[key] === value) || "";
+  };
+
   const handleChange = (e: any) => {
     const { name, value, type, checked } = e.target;
+    const newParams = {
+      ...formData.params,
+      [name]: type === "checkbox" ? checked : value,
+    };
+    if (name === "type") {
+      newParams.Database = databaseMapping[value];
+    }
+    if (name === "AccessController") {
+      newParams.AccessController = accessControllerMapping[value];
+    }
+    if (
+      name === "headsStorage" ||
+      name === "entryStorage" ||
+      name === "indexStorage"
+    ) {
+      newParams[name] = storageMapping[value];
+    }
     setFormData({
       ...formData,
-      params: {
-        ...formData.params,
-        [name]: type === "checkbox" ? checked : value,
-      },
+      params: newParams,
     });
+    console.log(formData);
   };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    // try {
-    //   await orbitDB.createDatabase(formData);
-    //   alert("Database created successfully!");
-    // } catch (error) {
-    //   console.error("Error creating database:", error);
-    //   alert("Failed to create database.");
-    // }
   };
 
   return (
@@ -70,7 +118,9 @@ const AddDatabase = () => {
                   name="address"
                   placeholder="String Or OrbitDB Address"
                   value={formData.address}
-                  onChange={handleChange}
+                  onChange={(e) =>
+                    setFormData({ ...formData, address: e.target.value })
+                  }
                 />
               </FormControl>
               <FormControl>
@@ -108,11 +158,75 @@ const AddDatabase = () => {
                 <FormLabel>AccessController</FormLabel>
                 <Select
                   name="AccessController"
-                  value={formData.params.AccessController.name}
+                  value={
+                    Object.keys(accessControllerMapping).find(
+                      (key) =>
+                        accessControllerMapping[key] ===
+                        formData.params.AccessController
+                    ) || ""
+                  }
                   onChange={handleChange}
                 >
-                  <option value="event">IPFSAccessController</option>
-                  <option value="documents">OrbitDBAccessController</option>
+                  <option value="IPFSAccessController">
+                    IPFSAccessController
+                  </option>
+                  <option value="OrbitDBAccessController">
+                    OrbitDBAccessController
+                  </option>
+                </Select>
+              </FormControl>
+              <FormControl>
+                <FormLabel>headsStorage</FormLabel>
+                <Select
+                  name="headsStorage"
+                  value={getStorageKey(
+                    storageMapping,
+                    formData.params.headsStorage
+                  )}
+                  onChange={handleChange}
+                  isReadOnly={true}
+                >
+                  <option value="IPFSBlockStorage">IPFSBlockStorage</option>
+                  <option value="LevelStorage">LevelStorage</option>
+                  <option value="ComposedStorage">ComposedStorage</option>
+                  <option value="LRUStorage">LRUStorage</option>
+                  <option value="MemoryStorage">MemoryStorage</option>
+                </Select>
+              </FormControl>
+              <FormControl>
+                <FormLabel>EntryStorage</FormLabel>
+                <Select
+                  name="entryStorage"
+                  value={getStorageKey(
+                    storageMapping,
+                    formData.params.entryStorage
+                  )}
+                  onChange={handleChange}
+                  isReadOnly={true}
+                >
+                  <option value="IPFSBlockStorage">IPFSBlockStorage</option>
+                  <option value="LevelStorage">LevelStorage</option>
+                  <option value="ComposedStorage">ComposedStorage</option>
+                  <option value="LRUStorage">LRUStorage</option>
+                  <option value="MemoryStorage">MemoryStorage</option>
+                </Select>
+              </FormControl>
+              <FormControl>
+                <FormLabel>IndexStorage</FormLabel>
+                <Select
+                  name="indexStorage"
+                  value={getStorageKey(
+                    storageMapping,
+                    formData.params.indexStorage
+                  )}
+                  onChange={handleChange}
+                  isReadOnly={true}
+                >
+                  <option value="IPFSBlockStorage">IPFSBlockStorage</option>
+                  <option value="LevelStorage">LevelStorage</option>
+                  <option value="ComposedStorage">ComposedStorage</option>
+                  <option value="LRUStorage">LRUStorage</option>
+                  <option value="MemoryStorage">MemoryStorage</option>
                 </Select>
               </FormControl>
               <FormControl>
