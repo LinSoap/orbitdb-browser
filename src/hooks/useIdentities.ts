@@ -1,7 +1,6 @@
 
-import { MemoryStorage } from '@orbitdb/core';
+import { Identities, MemoryStorage } from '@orbitdb/core';
 import { useEffect, useState } from 'react';
-import { createIdentities } from '../services/identities.service';
 
 export const useIdentities = () => {
     const [identities, setIdentities] = useState<any>(null);
@@ -14,7 +13,7 @@ export const useIdentities = () => {
                     path: path || './orbitdb/identities',
                     storage: await MemoryStorage(),
                 };
-                const identities = await createIdentities(params);
+                const identities = await await Identities(params);
                 setIdentities(identities);
             } catch (error:any) {
             setError(`Error creating OrbitDB: ${error.message}`);

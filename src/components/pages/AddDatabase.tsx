@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIpfs } from "../../hooks/useIpfs";
-import { useOrbitDB } from "../../hooks/useOrbitDB";
+import { DatabaseConfig, useOrbitDB } from "../../hooks/useOrbitDB";
 import {
   Box,
   Button,
@@ -11,11 +11,9 @@ import {
   Select,
   VStack,
 } from "@chakra-ui/react";
-import { useIdentities } from "../../hooks/useIdentities";
-import { DatabaseConfig } from "../../services/orbitdb.service";
+
 import {
   ComposedStorage,
-  Database,
   Documents,
   Events,
   IPFSAccessController,
@@ -28,9 +26,11 @@ import {
 } from "@orbitdb/core";
 
 const AddDatabase = () => {
-  const ipfs = useIpfs();
-  const { orbitDB } = useOrbitDB();
-
+  const { ipfs } = useIpfs();
+  const { orbitDB, initOrbitdb } = useOrbitDB();
+  useEffect(() => {
+    initOrbitdb();
+  }, [ipfs]);
   const [formData, setFormData] = useState<DatabaseConfig>({
     address: "",
     params: {
@@ -103,6 +103,11 @@ const AddDatabase = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    // const orbitdb = await createOrbitDB(ipfs, "LinSoap");
+    // console.log(formData.address);
+    const db = await orbitDB.open(formData.address);
+    console.log(db);
+    // e.preventDefault();
   };
 
   return (
