@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
-import { useIpfs } from "../../hooks/useIpfs";
-import { DatabaseConfig, useOrbitDB } from "../../hooks/useOrbitDB";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -24,13 +22,15 @@ import {
   MemoryStorage,
   OrbitDBAccessController,
 } from "@orbitdb/core";
+import { useNavigate } from "react-router-dom";
+import { useIpfs } from "../../context/IpfsProvider";
+import { DatabaseConfig } from "../../interface/DatabaseConfig";
+import { useOrbitDB } from "../../context/OrbitDBProvier";
 
 const AddDatabase = () => {
+  const navigate = useNavigate();
   const { ipfs } = useIpfs();
-  const { orbitDB, initOrbitdb } = useOrbitDB();
-  useEffect(() => {
-    initOrbitdb();
-  }, [ipfs]);
+  const { orbitDB } = useOrbitDB();
   const [formData, setFormData] = useState<DatabaseConfig>({
     address: "",
     params: {
@@ -103,11 +103,17 @@ const AddDatabase = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    // const orbitdb = await createOrbitDB(ipfs, "LinSoap");
-    // console.log(formData.address);
-    const db = await orbitDB.open(formData.address);
-    console.log(db);
-    // e.preventDefault();
+    try {
+      if (orbitDB) {
+        const db = await orbitDB.open(formData.address);
+        if (db) {
+          console.log(db.address);
+          navigate("/database-info" + db.address);
+        }
+      }
+    } catch (error) {
+      console.error("Error opening database:", error);
+    }
   };
 
   return (

@@ -7,6 +7,9 @@ import ErrorPage from "./components/pages/ErrorPage";
 import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import Home from "./components/pages/Home";
 import AddDatabase from "./components/pages/AddDatabase";
+import DatabaseInfo from "./components/pages/DatabaseInfo";
+import { IpfsProvider } from "./context/IpfsProvider";
+import { OrbitDBProvider } from "./context/OrbitDBProvier";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -22,11 +25,19 @@ const router = createBrowserRouter([
         path: "/add-database",
         element: <AddDatabase />,
       },
+      {
+        path: "/database-info/orbitdb/:address",
+        element: <DatabaseInfo />,
+      },
     ],
   },
 ]);
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <IpfsProvider>
+      <OrbitDBProvider>
+        <RouterProvider router={router} />
+      </OrbitDBProvider>
+    </IpfsProvider>
   </React.StrictMode>
 );
