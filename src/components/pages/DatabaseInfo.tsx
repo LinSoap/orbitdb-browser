@@ -1,9 +1,14 @@
-import { Box, Heading, List, ListItem } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { Box, Heading } from "@chakra-ui/react";
+
 import { useParams } from "react-router-dom";
+import { useOrbitDB } from "../../context/OrbitDBProvier";
 
 const DatabaseInfo = () => {
   let { address } = useParams();
+  const { orbitDB } = useOrbitDB();
+  console.log(
+    orbitDB.open("/orbitdb/zdpuAtGdti2PiNsfr3ac3dpARr2fTi7eUeMVe6mb9YocA2CWK")
+  );
   // const data = orbitDB
   //   .open("/orbitdb/zdpuAzqNqnKfPihAMV2qpNob8vdDWhLtZEuaGLQendHm8jh1Y")
   //   .all();

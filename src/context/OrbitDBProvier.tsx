@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { createOrbitDB } from "@orbitdb/core";
 import { useIpfs } from "./IpfsProvider";
 
-const OrbitDBContext = createContext({ orbitDB: null });
+const OrbitDBContext = createContext<{ orbitDB: any } | undefined>(undefined);
 
 export const OrbitDBProvider = ({
   children,
@@ -45,5 +45,9 @@ export const OrbitDBProvider = ({
 };
 
 export const useOrbitDB = () => {
-  return useContext(OrbitDBContext);
+  const context = useContext(OrbitDBContext);
+  if (context === undefined) {
+    throw new Error("useOrbitDB must be used within an OrbitDBProvider");
+  }
+  return context;
 };

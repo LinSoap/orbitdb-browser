@@ -36,11 +36,11 @@ const Libp2pBrowserOptions = {
   },
 };
 
-const IpfsContext = createContext({ ipfs: null, error: "" });
+const IpfsContext = createContext<{ ipfs: any } | undefined>(undefined);
 
 export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
   const [ipfs, setIpfs] = useState<any>(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     const initIpfs = async () => {
@@ -63,6 +63,7 @@ export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
 
     initIpfs();
   }, []);
+
   if (error) {
     return <div>{error}</div>;
   }
@@ -70,13 +71,16 @@ export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
   if (!ipfs) {
     return <div>Loading IPFS...</div>;
   }
+
   return (
-    <IpfsContext.Provider value={{ ipfs, error }}>
-      {children}
-    </IpfsContext.Provider>
+    <IpfsContext.Provider value={{ ipfs }}>{children}</IpfsContext.Provider>
   );
 };
 
 export const useIpfs = () => {
-  return useContext(IpfsContext);
+  const context = useContext(IpfsContext);
+  if (context === undefined) {
+    throw new Error("useIpfs must be used within an IpfsProvider");
+  }
+  return context;
 };
