@@ -30,9 +30,11 @@ const Welcome = () => {
               Connect New Database
             </Button>
           </Link>
-          <Button leftIcon={<FaCog />} variant="outline" size="lg">
-            Setting
-          </Button>
+          <Link to="/libp2p-status">
+            <Button leftIcon={<FaCog />} variant="outline" size="lg">
+              Libp2p Connect Status
+            </Button>
+          </Link>
         </VStack>
         <Divider my={6} />
         <Stack direction={["column", "row"]} spacing={4} justify="center">

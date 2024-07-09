@@ -8,10 +8,10 @@ import { gossipsub } from "@chainsafe/libp2p-gossipsub";
 import { all } from "@libp2p/websockets/filters";
 import { identify } from "@libp2p/identify";
 import { createLibp2p } from "libp2p";
-import { MemoryBlockstore } from "blockstore-core";
 import { createHelia } from "helia";
-import { bitswap } from "@helia/block-brokers";
-
+import { LevelBlockstore } from "blockstore-level";
+import { bootstrap } from "@libp2p/bootstrap";
+import { pubsubPeerDiscovery } from "@libp2p/pubsub-peer-discovery";
 const Libp2pBrowserOptions = {
   addresses: {
     listen: ["/webrtc"],
@@ -20,7 +20,19 @@ const Libp2pBrowserOptions = {
     webSockets({
       filter: all,
     }),
-    webRTC(),
+    webRTC({
+      rtcConfiguration: {
+        iceServers: [
+          {
+            // STUN servers help the browser discover its own public IPs
+            urls: [
+              "stun:stun.l.google.com:19302",
+              "stun:global.stun.twilio.com:3478",
+            ],
+          },
+        ],
+      },
+    }),
     circuitRelayTransport({
       discoverRelays: 1,
     }),
@@ -30,6 +42,17 @@ const Libp2pBrowserOptions = {
   connectionGater: {
     denyDialMultiaddr: () => false,
   },
+  peerDiscovery: [
+    bootstrap({
+      list: [
+        "/ip4/127.0.0.1/tcp/9001/ws/p2p/12D3KooWET25VtX6h5RZwJ8xUJACDLmTgD7sQ6ZqKzuuxs7csqtH",
+      ],
+    }),
+    pubsubPeerDiscovery({
+      interval: 10_000,
+      topics: ["orbitdb"],
+    }),
+  ],
   services: {
     identify: identify(),
     pubsub: gossipsub({ allowPublishToZeroTopicPeers: true }),
@@ -47,14 +70,10 @@ export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const libp2pOptions = Libp2pBrowserOptions;
         const libp2p = await createLibp2p({ ...libp2pOptions });
-        const blockstore = new MemoryBlockstore();
-
-        const heliaOptions = {
-          blockstore,
-          libp2p,
-          blockBrokers: [bitswap()],
-        };
-        const ipfs = await createHelia({ ...heliaOptions });
+        const blockstore = new LevelBlockstore("./ipfs/blocks");
+        // const blockstore = new MemoryBlockstore();
+        const ipfs = await createHelia({ libp2p, blockstore });
+        console.log("IPFS instance:", ipfs.libp2p.peerId);
         setIpfs(ipfs);
       } catch (error: any) {
         setError(`Error creating IPFS: ${error.message}`);

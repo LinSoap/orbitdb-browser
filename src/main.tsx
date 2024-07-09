@@ -10,6 +10,7 @@ import AddDatabase from "./components/pages/AddDatabase";
 import DatabaseInfo from "./components/pages/DatabaseInfo";
 import { IpfsProvider } from "./context/IpfsProvider";
 import { OrbitDBProvider } from "./context/OrbitDBProvier";
+import Libp2pStatus from "./components/pages/Libp2pStatus";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "/add-database",
         element: <AddDatabase />,
+      },
+      {
+        path: "/libp2p-status",
+        element: <Libp2pStatus />,
       },
       {
         path: "/database-info/orbitdb/:address",
