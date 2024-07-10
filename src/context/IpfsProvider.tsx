@@ -45,7 +45,7 @@ const Libp2pBrowserOptions = {
   peerDiscovery: [
     bootstrap({
       list: [
-        "/ip4/127.0.0.1/tcp/9001/ws/p2p/12D3KooWET25VtX6h5RZwJ8xUJACDLmTgD7sQ6ZqKzuuxs7csqtH",
+        "/ip4/127.0.0.1/tcp/9001/ws/p2p/12D3KooWHfYXdvp5yHsjmTLReoWdfV6HbUoScdBy3HVnD4544NtL",
       ],
     }),
     pubsubPeerDiscovery({

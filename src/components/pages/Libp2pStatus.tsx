@@ -19,8 +19,6 @@ const Libp2pStatus = () => {
       setConnections(libp2p.getConnections());
       setMultiaddrs(libp2p.getMultiaddrs());
       setPeerTypes(getPeerTypes(libp2p));
-      console.log("Refreshed libp2p status");
-      console.log(libp2p.getMultiaddrs());
     }, 5000); // 每5秒刷新一次数据
 
     return () => clearInterval(interval); // 清除定时器

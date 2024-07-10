@@ -30,7 +30,7 @@ import { useOrbitDB } from "../../context/OrbitDBProvier";
 const AddDatabase = () => {
   const navigate = useNavigate();
   const { ipfs } = useIpfs();
-  const { orbitDB } = useOrbitDB();
+  const { orbitDB, addDatabase } = useOrbitDB();
   const [formData, setFormData] = useState<DatabaseConfig>({
     address: "",
     params: {
@@ -107,7 +107,12 @@ const AddDatabase = () => {
       if (orbitDB) {
         const db = await orbitDB.open(formData.address);
         if (db) {
+          // Print out the above records.
+          for await (const event of db.iterator()) {
+            console.log(event);
+          }
           console.log(db.address);
+          addDatabase(db);
           navigate("/database-info" + db.address);
         }
       }
