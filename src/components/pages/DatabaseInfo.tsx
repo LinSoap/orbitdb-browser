@@ -23,7 +23,7 @@ const DatabaseInfo = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [address]);
 
   return (
     <Box p={4}>
