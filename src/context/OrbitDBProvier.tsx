@@ -1,19 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { createOrbitDB } from "@orbitdb/core";
 import { useIpfs } from "./IpfsProvider";
-
-export interface OrbitDBDataType {
-  hash: string;
-  value: string;
-}
-
-interface OrbitDBContextType {
-  orbitDB: any;
-  databases: any[];
-  getDatabase: (address: string) => any;
-  addDatabase: (database: any) => void;
-  closeDatabase: (database: any) => void;
-}
+import { OrbitDBContextType } from "../types/Orbitdb";
 
 const OrbitDBContext = createContext<OrbitDBContextType | undefined>(undefined);
 
