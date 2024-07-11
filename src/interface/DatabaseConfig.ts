@@ -15,7 +15,7 @@ import {
 export interface DatabaseConfig {
     address: string; // The address of an existing database to open, or the name of a new database.
     params: {
-      type: "event" | "documents" | "keyvalue"; // <optional> The database's type.
+      type: "events" | "documents" | "keyvalue"; // <optional> The database's type.
       meta?: any; // <optional> The database's metadata. Only applies when creating a database and is not used when opening an existing database.
       sync?: boolean; // <optional> If true, sync databases automatically. Otherwise, false.
       Database?: Documents | Events | KeyValueIndexed | KeyValue; // <optional> A Database-compatible module.

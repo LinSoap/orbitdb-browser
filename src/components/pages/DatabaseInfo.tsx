@@ -3,20 +3,26 @@ import { Box, Heading } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import { useOrbitDB } from "../../context/OrbitDBProvier";
 import { useEffect, useState } from "react";
-import DataForm from "../common/DataForm";
-import { DatabaseType } from "../../types/Database";
+import {
+  DocumentsDatabaseType,
+  EventsDatabaseType,
+} from "../../types/Database";
+import EventDataForm from "../common/form/EventForm";
+import DocumentDataForm from "../common/form/DocumentForm";
 
 const DatabaseInfo = () => {
   let { address } = useParams<{ address: string }>();
   const [error, setError] = useState<string | null>(null);
   const { getDatabase } = useOrbitDB();
-  const [Database, setDatabase] = useState<DatabaseType | null>(null);
+  const [Database, setDatabase] = useState<
+    EventsDatabaseType | DocumentsDatabaseType | null
+  >(null);
   useEffect(() => {
     const fetchData = async () => {
       setError(null);
       try {
         if (address) {
-          const db = getDatabase(address);
+          const db = await getDatabase(address);
           console.log(db);
           setDatabase(db);
         }
@@ -25,14 +31,26 @@ const DatabaseInfo = () => {
       }
     };
     fetchData();
-  }, [address]);
+  }, [address, getDatabase]);
 
+  const renderDataForm = () => {
+    if (error) {
+      return <p>{error}</p>;
+    }
+    switch (Database?.type) {
+      case "events":
+        return <EventDataForm Database={Database} />;
+      case "documents":
+        return <DocumentDataForm Database={Database} />;
+      default:
+        return null;
+    }
+  };
   return (
     <Box p={4}>
-      <Heading as="h1" mb={4}>
-        OrbitDB Data
-      </Heading>
-      {error ? <p>{error}</p> : Database && <DataForm Database={Database} />}
+      <Heading fontSize={20}>OrbitDB Database: {Database?.address}</Heading>
+      <Heading fontSize={18}>Type: {Database?.type}</Heading>
+      {renderDataForm()}
     </Box>
   );
 };

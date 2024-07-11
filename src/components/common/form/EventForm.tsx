@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {} from "../../context/OrbitDBProvier";
+import {} from "../../../context/OrbitDBProvier";
 import {
   Button,
   Input,
@@ -12,11 +12,11 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { DatabaseType } from "../../types/Database";
-import { OrbitDBDataType } from "../../types/Orbitdb";
+import { EventsDataType } from "../../../types/Orbitdb";
+import { EventsDatabaseType } from "../../../types/Database";
 
-const DataForm = ({ Database }: { Database: DatabaseType }) => {
-  const [data, setData] = useState<OrbitDBDataType[] | null>(null);
+const EventForm = ({ Database }: { Database: EventsDatabaseType }) => {
+  const [data, setData] = useState<EventsDataType[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [newRow, setNewRow] = useState<string>("");
   const fetchData = async () => {
@@ -33,8 +33,8 @@ const DataForm = ({ Database }: { Database: DatabaseType }) => {
     fetchData();
   }, [Database]);
 
-  const onAddNewRow = async (data: string) => {
-    await Database.add(data);
+  const onAddNewRow = async () => {
+    await Database.add(newRow);
     fetchData();
   };
 
@@ -44,13 +44,15 @@ const DataForm = ({ Database }: { Database: DatabaseType }) => {
       <TableContainer>
         <Table variant="simple">
           <Thead>
-            <Th>Data</Th>
-            <Th>Hash</Th>
+            <Tr>
+              <Th>Data</Th>
+              <Th>Hash</Th>
+            </Tr>
           </Thead>
           <Tbody>
             {data &&
               data.map((data) => (
-                <Tr>
+                <Tr key={data.hash}>
                   <Td>{data.value}</Td>
                   <Td>{data.hash}</Td>
                 </Tr>
@@ -61,12 +63,11 @@ const DataForm = ({ Database }: { Database: DatabaseType }) => {
               <Td>
                 <Input
                   htmlSize={4}
-                  width="auto"
                   onChange={(event) => setNewRow(event.target.value)}
                 />
               </Td>
               <Td>
-                <Button colorScheme="blue" onClick={() => onAddNewRow(newRow)}>
+                <Button colorScheme="blue" onClick={() => onAddNewRow()}>
                   Add New Row
                 </Button>
               </Td>
@@ -78,4 +79,4 @@ const DataForm = ({ Database }: { Database: DatabaseType }) => {
   );
 };
 
-export default DataForm;
+export default EventForm;

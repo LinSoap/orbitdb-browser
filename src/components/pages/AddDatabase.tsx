@@ -34,7 +34,7 @@ const AddDatabase = () => {
   const [formData, setFormData] = useState<DatabaseConfig>({
     address: "",
     params: {
-      type: "event",
+      type: "events",
       meta: "",
       sync: true,
       Database: Events,
@@ -105,7 +105,9 @@ const AddDatabase = () => {
     e.preventDefault();
     try {
       if (orbitDB) {
-        const db = await orbitDB.open(formData.address);
+        const db = await orbitDB.open(formData.address, {
+          type: formData.params.type,
+        });
         if (db) {
           // Print out the above records.
           for await (const event of db.iterator()) {
@@ -148,7 +150,7 @@ const AddDatabase = () => {
                   value={formData.params.type}
                   onChange={handleChange}
                 >
-                  <option value="event">Event</option>
+                  <option value="events">Event</option>
                   <option value="documents">Documents</option>
                   <option value="keyvalue">Key-Value</option>
                 </Select>
