@@ -41,6 +41,11 @@ const EventForm = ({ Database }: { Database: EventsDatabaseType }) => {
   return (
     <div>
       {error && <p>{error}</p>}
+      {data?.length === 0 ? (
+        <p>This Database is Empty </p>
+      ) : (
+        <p>Count DataItem:{data?.length}</p>
+      )}
       <TableContainer>
         <Table variant="simple">
           <Thead>

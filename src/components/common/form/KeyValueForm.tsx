@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { KeyValueDatabaseType } from "../../../types/Database";
 import { KeyValueDataType } from "../../../types/Orbitdb";
-import KeyValueItem from "../KeyValueItem";
+import KeyValueItem from "./KeyValueItem";
 
 const KeyValueForm = ({ Database }: { Database: KeyValueDatabaseType }) => {
   const [data, setData] = useState<KeyValueDataType[] | null>(null);
@@ -54,6 +54,11 @@ const KeyValueForm = ({ Database }: { Database: KeyValueDatabaseType }) => {
   return (
     <div>
       {error && <p>{error}</p>}
+      {data?.length === 0 ? (
+        <p>This Database is Empty </p>
+      ) : (
+        <p>Count DataItem:{data?.length}</p>
+      )}
       <TableContainer>
         <Table variant="simple">
           <Thead>
