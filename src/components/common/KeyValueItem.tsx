@@ -13,18 +13,11 @@ const KeyValueItem = ({
   deleteItem: (key: string) => Promise<void>;
 }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [key, setKey] = useState<string>(data.key);
   const [value, setValue] = useState<string>(data.value);
 
   return isEditing ? (
     <Tr key={data.hash}>
-      <Td>
-        <Input
-          htmlSize={4}
-          value={key}
-          onChange={(e) => setKey(e.target.value)}
-        />
-      </Td>
+      <Td>{data.key}</Td>
       <Td>
         <Input
           htmlSize={4}
@@ -39,7 +32,7 @@ const KeyValueItem = ({
           icon={<CheckIcon />}
           onClick={() => {
             setIsEditing(!isEditing);
-            updateItem(key, value);
+            updateItem(data.key, value);
           }}
         />
         <IconButton
