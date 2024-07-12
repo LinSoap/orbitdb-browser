@@ -10,6 +10,11 @@ export type DocumentsDataType =  {
         [key: string]: any;
     }
 }
+export type KeyValueDataType =  {
+    key: string;
+    hash: string;
+    value: string;
+}
   
 export type OrbitDBContextType =  {
     orbitDB: any;

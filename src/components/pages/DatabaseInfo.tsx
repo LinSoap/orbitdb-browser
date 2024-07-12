@@ -6,16 +6,18 @@ import { useEffect, useState } from "react";
 import {
   DocumentsDatabaseType,
   EventsDatabaseType,
+  KeyValueDatabaseType,
 } from "../../types/Database";
 import EventDataForm from "../common/form/EventForm";
 import DocumentDataForm from "../common/form/DocumentForm";
+import KeyValueForm from "../common/form/KeyValueForm";
 
 const DatabaseInfo = () => {
   let { address } = useParams<{ address: string }>();
   const [error, setError] = useState<string | null>(null);
   const { getDatabase } = useOrbitDB();
   const [Database, setDatabase] = useState<
-    EventsDatabaseType | DocumentsDatabaseType | null
+    EventsDatabaseType | DocumentsDatabaseType | KeyValueDatabaseType | null
   >(null);
   useEffect(() => {
     const fetchData = async () => {
@@ -42,6 +44,8 @@ const DatabaseInfo = () => {
         return <EventDataForm Database={Database} />;
       case "documents":
         return <DocumentDataForm Database={Database} />;
+      case "keyvalue":
+        return <KeyValueForm Database={Database} />;
       default:
         return null;
     }
