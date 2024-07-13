@@ -14,6 +14,7 @@ import Libp2pStatus from "./components/pages/Libp2pStatus";
 import { IdentitiesProvider } from "./context/IdentitiesProvider";
 import IdentityInfo from "./components/pages/IdentityInfo";
 import DatabaseDetail from "./components/pages/DatabaseDetail";
+import ConnectDatabse from "./components/pages/ConnectDatabse";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: "/add-database",
         element: <AddDatabase />,
+      },
+      {
+        path: "/connect-database",
+        element: <ConnectDatabse />,
       },
       {
         path: "/libp2p-status",

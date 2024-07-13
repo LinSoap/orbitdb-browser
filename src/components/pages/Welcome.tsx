@@ -8,7 +8,7 @@ import {
   Stack,
   AbsoluteCenter,
 } from "@chakra-ui/react";
-import { FaBook, FaPlay, FaCog, FaAt } from "react-icons/fa";
+import { FaBook, FaPlay, FaCog, FaAt, FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const Welcome = () => {
@@ -30,9 +30,14 @@ const Welcome = () => {
               Identity Management
             </Button>
           </Link>
-          <Link to="/add-database">
+          <Link to="/connect-database">
             <Button leftIcon={<FaPlay />} variant="outline" size="lg">
-              Connect New Database
+              Connect Database
+            </Button>
+          </Link>
+          <Link to="/add-database">
+            <Button leftIcon={<FaPlus />} variant="outline" size="lg">
+              Create New Database
             </Button>
           </Link>
           <Link to="/libp2p-status">
