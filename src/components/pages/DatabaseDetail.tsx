@@ -31,9 +31,21 @@ const DatabaseDetail = () => {
   return (
     <>
       {error && <div>{error}</div>}
+      <h1>Address : {Database?.address}</h1>
+      <h1>name : {Database?.name}</h1>
+
+      <h1>Address : {JSON.stringify(Database?.meta)}</h1>
+
       <h1>Access Info</h1>
       <div>Access address:{Database?.access.address}</div>
       <div>Access type:{Database?.access.type}</div>
+
+      <h1>
+        Peers:
+        {Array.from(Database?.peers || []).map((peer: string) => (
+          <div key={peer}>{peer}</div>
+        ))}
+      </h1>
       <div>
         Access writable
         {Database?.access.write.map((id) => {

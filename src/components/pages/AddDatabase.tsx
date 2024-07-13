@@ -58,6 +58,13 @@ const AddDatabase = () => {
     }
   }, [identity]);
 
+  const accessControllerMapping: {
+    [key: string]: DatabaseConfig["params"]["AccessController"];
+  } = {
+    IPFSAccessController: IPFSAccessController,
+    OrbitDBAccessController: OrbitDBAccessController,
+  };
+
   const databaseMapping: {
     [key: string]: DatabaseConfig["params"]["Database"];
   } = {
@@ -94,6 +101,9 @@ const AddDatabase = () => {
     };
     if (name === "type") {
       newParams.Database = databaseMapping[value];
+    }
+    if (name === "AccessController") {
+      newParams.AccessController = accessControllerMapping[value];
     }
     if (
       name === "headsStorage" ||
@@ -187,7 +197,13 @@ const AddDatabase = () => {
                 <FormLabel>AccessController</FormLabel>
                 <Select
                   name="AccessController"
-                  value={formData.params.AccessController}
+                  value={
+                    Object.keys(accessControllerMapping).find(
+                      (key) =>
+                        accessControllerMapping[key] ===
+                        formData.params.AccessController
+                    ) || ""
+                  }
                   onChange={handleChange}
                 >
                   <option value="IPFSAccessController">
@@ -216,7 +232,7 @@ const AddDatabase = () => {
                           prevWriters.filter((_, i) => i !== index)
                         )
                       }
-                    ></IconButton>
+                    />
                   </HStack>
                 ))}
                 <Button

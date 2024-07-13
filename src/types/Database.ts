@@ -13,9 +13,9 @@ export type EventsDatabaseType = {
     identity: any;
     iterator: any;
     log: any;
-    meta: Record<string, any>;
+    meta: Record<string, string>;
     name: string;
-    peers: Set<any>;
+    peers: Set<string>;
     sync: any;
     type: string;
 }
@@ -34,9 +34,9 @@ export type DocumentsDatabaseType = {
     indexBy: string;
     iterator: any;
     log: any;
-    meta: Record<string, any>;
+    meta: Record<string, string>;
     name: string;
-    peers: Set<any>;
+    peers: Set<string>;
     put: (doc: any) => Promise<void>;
     query: (findFn: (doc: any) => boolean) => Promise<any>;
     sync: any;
@@ -56,9 +56,9 @@ export type DocumentsDatabaseType = {
     identity: any;
     iterator: any;
     log: any;
-    meta: Record<string, any>;
+    meta: Record<string, string>;
     name: string;
-    peers: Set<any>;
+    peers: Set<string>;
     put: (key: string, value: any) => Promise<void>;
     set: (key: string, value: any) => Promise<void>;
     sync: any;
