@@ -11,6 +11,8 @@ import DatabaseInfo from "./components/pages/DatabaseInfo";
 import { IpfsProvider } from "./context/IpfsProvider";
 import { OrbitDBProvider } from "./context/OrbitDBProvier";
 import Libp2pStatus from "./components/pages/Libp2pStatus";
+import { IdentitiesProvider } from "./context/IdentitiesProvider";
+import IdentityInfo from "./components/pages/IdentityInfo";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -34,15 +36,21 @@ const router = createBrowserRouter([
         path: "/database-info/orbitdb/:address",
         element: <DatabaseInfo />,
       },
+      {
+        path: "/identity",
+        element: <IdentityInfo />,
+      },
     ],
   },
 ]);
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <IpfsProvider>
-      <OrbitDBProvider>
-        <RouterProvider router={router} />
-      </OrbitDBProvider>
+      <IdentitiesProvider>
+        <OrbitDBProvider>
+          <RouterProvider router={router} />
+        </OrbitDBProvider>
+      </IdentitiesProvider>
     </IpfsProvider>
   </React.StrictMode>
 );

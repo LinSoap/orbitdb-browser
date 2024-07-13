@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { createOrbitDB } from "@orbitdb/core";
 import { useIpfs } from "./IpfsProvider";
 import { OrbitDBContextType } from "../types/Orbitdb";
+import { useIdentities } from "./IdentitiesProvider";
 
 const OrbitDBContext = createContext<OrbitDBContextType | undefined>(undefined);
 
@@ -14,12 +15,13 @@ export const OrbitDBProvider = ({
   const [databases, setDatabases] = useState<any[]>([]);
   const [error, setError] = useState("");
   const { ipfs } = useIpfs(); // 使用 useIpfs 自定义钩子获取 ipfs 实例
+  const { identity } = useIdentities();
 
   useEffect(() => {
     const initOrbitdb = async () => {
       if (ipfs) {
         try {
-          const orbitdbInstance = await createOrbitDB({ ipfs, id: "LinSoap" });
+          const orbitdbInstance = await createOrbitDB({ ipfs, identity });
           // console.log("OrbitDB instance:", orbitdbInstance);
           setOrbitDB(orbitdbInstance);
         } catch (error: any) {

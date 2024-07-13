@@ -68,6 +68,7 @@ const EventForm = ({ Database }: { Database: EventsDatabaseType }) => {
               <Td>
                 <Input
                   htmlSize={4}
+                  value={newRow}
                   onChange={(event) => setNewRow(event.target.value)}
                 />
               </Td>
