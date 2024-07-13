@@ -1,4 +1,4 @@
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Button, Heading } from "@chakra-ui/react";
 
 import { useParams } from "react-router-dom";
 import { useOrbitDB } from "../../context/OrbitDBProvier";
@@ -15,7 +15,7 @@ import KeyValueForm from "../common/form/KeyValueForm";
 const DatabaseInfo = () => {
   let { address } = useParams<{ address: string }>();
   const [error, setError] = useState<string | null>(null);
-  const { getDatabase } = useOrbitDB();
+  const { getDatabase, closeDatabase } = useOrbitDB();
   const [Database, setDatabase] = useState<
     EventsDatabaseType | DocumentsDatabaseType | KeyValueDatabaseType | null
   >(null);
@@ -54,6 +54,7 @@ const DatabaseInfo = () => {
     <Box p={4}>
       <Heading fontSize={20}>OrbitDB Database: {Database?.address}</Heading>
       <Heading fontSize={18}>Type: {Database?.type}</Heading>
+      <Button onClick={() => closeDatabase(Database)}>Close Database</Button>
       {renderDataForm()}
     </Box>
   );

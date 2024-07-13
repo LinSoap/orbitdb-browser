@@ -31,7 +31,7 @@ export const OrbitDBProvider = ({
     };
 
     initOrbitdb();
-  }, [ipfs]); // 确保依赖项数组中包含 ipfs，以便在 ipfs 实例准备就绪时触发 useEffect
+  }, [ipfs, identity]); // 确保依赖项数组中包含 ipfs，以便在 ipfs 实例准备就绪时触发 useEffect
   const getDatabase = (address: string) => {
     const db = databases.find(
       (db) => db.address.toString() === "/orbitdb/" + address
