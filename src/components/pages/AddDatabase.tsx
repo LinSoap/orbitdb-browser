@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
   Checkbox,
   FormControl,
   FormLabel,
+  HStack,
+  IconButton,
   Input,
   Select,
   VStack,
@@ -26,11 +28,15 @@ import { useNavigate } from "react-router-dom";
 import { useIpfs } from "../../context/IpfsProvider";
 import { DatabaseConfig } from "../../interface/DatabaseConfig";
 import { useOrbitDB } from "../../context/OrbitDBProvier";
+import { useIdentities } from "../../context/IdentitiesProvider";
+import { CloseIcon } from "@chakra-ui/icons";
 
 const AddDatabase = () => {
   const navigate = useNavigate();
   const { ipfs } = useIpfs();
+  const { identity } = useIdentities();
   const { orbitDB, addDatabase, databases } = useOrbitDB();
+  const [writers, setWriters] = useState<string[]>([]);
   const [formData, setFormData] = useState<DatabaseConfig>({
     address: "",
     params: {
@@ -46,19 +52,18 @@ const AddDatabase = () => {
     },
   });
 
+  useEffect(() => {
+    if (identity) {
+      setWriters([identity.id]);
+    }
+  }, [identity]);
+
   const databaseMapping: {
     [key: string]: DatabaseConfig["params"]["Database"];
   } = {
     event: Events,
     documents: Documents,
     keyvalue: KeyValue,
-  };
-
-  const accessControllerMapping: {
-    [key: string]: DatabaseConfig["params"]["AccessController"];
-  } = {
-    IPFSAccessController: IPFSAccessController,
-    OrbitDBAccessController: OrbitDBAccessController,
   };
 
   const storageMapping: {
@@ -75,6 +80,12 @@ const AddDatabase = () => {
     return Object.keys(mapping).find((key) => mapping[key] === value) || "";
   };
 
+  const handleWriterChange = (e: any, index: number) => {
+    const { value } = e.target;
+    const newWriters = [...writers];
+    newWriters[index] = value;
+    setWriters(newWriters);
+  };
   const handleChange = (e: any) => {
     const { name, value, type, checked } = e.target;
     const newParams = {
@@ -83,9 +94,6 @@ const AddDatabase = () => {
     };
     if (name === "type") {
       newParams.Database = databaseMapping[value];
-    }
-    if (name === "AccessController") {
-      newParams.AccessController = accessControllerMapping[value];
     }
     if (
       name === "headsStorage" ||
@@ -107,12 +115,14 @@ const AddDatabase = () => {
       if (orbitDB) {
         const db = await orbitDB.open(formData.address, {
           type: formData.params.type,
+          AccessController:
+            formData.params.AccessController === IPFSAccessController
+              ? IPFSAccessController({
+                  write: writers,
+                })
+              : OrbitDBAccessController({ write: writers }),
         });
         if (db) {
-          // Print out the above records.
-          for await (const event of db.iterator()) {
-            console.log(event);
-          }
           console.log(db.address);
           if (!databases.some((database) => database.address === db.address)) {
             addDatabase(db);
@@ -178,13 +188,7 @@ const AddDatabase = () => {
                 <FormLabel>AccessController</FormLabel>
                 <Select
                   name="AccessController"
-                  value={
-                    Object.keys(accessControllerMapping).find(
-                      (key) =>
-                        accessControllerMapping[key] ===
-                        formData.params.AccessController
-                    ) || ""
-                  }
+                  value={formData.params.AccessController}
                   onChange={handleChange}
                 >
                   <option value="IPFSAccessController">
@@ -194,6 +198,35 @@ const AddDatabase = () => {
                     OrbitDBAccessController
                   </option>
                 </Select>
+              </FormControl>
+              <FormControl>
+                <FormLabel>Writable ID:</FormLabel>
+                {writers.map((id, index) => (
+                  <HStack key={index}>
+                    <Input
+                      type="text"
+                      placeholder="Wriable ID"
+                      value={id}
+                      onChange={(e) => handleWriterChange(e, index)}
+                    />
+                    <IconButton
+                      aria-label="drop"
+                      icon={<CloseIcon />}
+                      onClick={() =>
+                        setWriters((prevWriters) =>
+                          prevWriters.filter((_, i) => i !== index)
+                        )
+                      }
+                    ></IconButton>
+                  </HStack>
+                ))}
+                <Button
+                  onClick={() =>
+                    setWriters((prevWriters) => [...prevWriters, ""])
+                  }
+                >
+                  Add ID
+                </Button>
               </FormControl>
               <FormControl>
                 <FormLabel>headsStorage</FormLabel>

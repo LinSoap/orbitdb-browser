@@ -1,5 +1,7 @@
+import { Access } from "./Access";
+
 export type EventsDatabaseType = {
-    access: any;
+    access: Access;
     add: (value: any) => Promise<void>;
     addOperation: (op: any) => Promise<void>;
     address: string;
@@ -19,7 +21,7 @@ export type EventsDatabaseType = {
 }
 
 export type DocumentsDatabaseType = {
-    access: any;
+    access: Access;
     addOperation: (op: any) => Promise<void>;
     address: string;
     all: () => Promise<any>;
@@ -42,7 +44,7 @@ export type DocumentsDatabaseType = {
   };
 
   export type KeyValueDatabaseType = {
-    access: any;
+    access: Access;
     addOperation: (op: any) => Promise<void>;
     address: string;
     all: () => Promise<any>;

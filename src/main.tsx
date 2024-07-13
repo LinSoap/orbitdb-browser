@@ -13,6 +13,7 @@ import { OrbitDBProvider } from "./context/OrbitDBProvier";
 import Libp2pStatus from "./components/pages/Libp2pStatus";
 import { IdentitiesProvider } from "./context/IdentitiesProvider";
 import IdentityInfo from "./components/pages/IdentityInfo";
+import DatabaseDetail from "./components/pages/DatabaseDetail";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "/database-info/orbitdb/:address",
         element: <DatabaseInfo />,
+      },
+      {
+        path: "/database-info/orbitdb/:address/detail",
+        element: <DatabaseDetail />,
       },
       {
         path: "/identity",
