@@ -1,18 +1,10 @@
 import { Button, Input } from "@chakra-ui/react";
 import { useIdentities } from "../../context/IdentitiesProvider";
-import { IdentityType } from "../../types/Identities";
 import { useState } from "react";
 
 const IdentityInfo = () => {
-  const { identities, identity, setIdentity } = useIdentities();
+  const { identity, createIdentity } = useIdentities();
   const [id, setId] = useState<string>("");
-
-  const createIdentity = async () => {
-    const identity: IdentityType = await identities.createIdentity({
-      id: id,
-    });
-    setIdentity(identity);
-  };
 
   return (
     <div>
@@ -22,7 +14,7 @@ const IdentityInfo = () => {
       <p>hash:{identity?.hash}</p>
       <p>type:{identity?.type}</p>
       <Input value={id} onChange={(event) => setId(event.target.value)}></Input>
-      <Button onClick={createIdentity}>Create Identity</Button>
+      <Button onClick={() => createIdentity(id)}>Create Identity</Button>
     </div>
   );
 };

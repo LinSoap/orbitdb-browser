@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Identities } from "@orbitdb/core";
 import { useIpfs } from "./IpfsProvider";
-import { IdentityType } from "../types/Identities";
+import { IdentitiesInstance, IdentityType } from "../types/Identities";
+import { useCookies } from "react-cookie";
 
 const IdentitiesContext = createContext<any | undefined>(undefined);
 
@@ -10,26 +11,44 @@ export const IdentitiesProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [identities, setIdentities] = useState(null);
-  const [identity, setIdentity] = useState<IdentityType | null>(null);
+  const [cookies, setCookie] = useCookies(["identityID"]);
+  const [identities, setIdentities] = useState<IdentitiesInstance>();
+  const [identity, setIdentity] = useState<IdentityType>();
   const [error, setError] = useState("");
-  const { ipfs } = useIpfs(); // 使用 useIpfs 自定义钩子获取 ipfs 实例
+  const { ipfs } = useIpfs();
+
+  const createIdentity = async (id: string) => {
+    try {
+      const identityInstance = await identities.createIdentity({ id });
+      setIdentity(identityInstance);
+      setCookie("identityID", id);
+    } catch (error: any) {
+      setError(`Error creating identity: ${error.message}`);
+    }
+  };
+
+  const initIdentities = async () => {
+    if (ipfs) {
+      try {
+        const IdentitiesInstance = await Identities({ ipfs });
+        console.log("Identities instance:", IdentitiesInstance);
+        // console.log("OrbitDB instance:", orbitdbInstance);
+        setIdentities(IdentitiesInstance);
+      } catch (error: any) {
+        setError(`Error creating Identities: ${error.message}`);
+      }
+    }
+  };
 
   useEffect(() => {
-    const initIdentities = async () => {
-      if (ipfs) {
-        try {
-          const IdentitiesInstance = await Identities({ ipfs });
-          // console.log("OrbitDB instance:", orbitdbInstance);
-          setIdentities(IdentitiesInstance);
-        } catch (error: any) {
-          setError(`Error creating Identities: ${error.message}`);
-        }
-      }
-    };
-
     initIdentities();
-  }, [ipfs]); // 确保依赖项数组中包含 ipfs，以便在 ipfs 实例准备就绪时触发 useEffect
+  }, [ipfs]);
+
+  useEffect(() => {
+    if (identities && cookies.identityID) {
+      createIdentity(cookies.identityID);
+    }
+  }, [identities]);
 
   if (error) {
     return <div>{error}</div>;
@@ -40,7 +59,7 @@ export const IdentitiesProvider = ({
   }
 
   return (
-    <IdentitiesContext.Provider value={{ identities, identity, setIdentity }}>
+    <IdentitiesContext.Provider value={{ identity, createIdentity }}>
       {children}
     </IdentitiesContext.Provider>
   );
