@@ -1,7 +1,8 @@
-import { Access } from "./Access";
+import { IPFSAccessControllerType, OrbitDBAccessControllerType } from "./Access";
+
 
 export type EventsDatabaseType = {
-    access: Access;
+    access: OrbitDBAccessControllerType|IPFSAccessControllerType;
     add: (value: any) => Promise<void>;
     addOperation: (op: any) => Promise<void>;
     address: string;
@@ -21,7 +22,7 @@ export type EventsDatabaseType = {
 }
 
 export type DocumentsDatabaseType = {
-    access: Access;
+    access: OrbitDBAccessControllerType|IPFSAccessControllerType;
     addOperation: (op: any) => Promise<void>;
     address: string;
     all: () => Promise<any>;
@@ -44,7 +45,7 @@ export type DocumentsDatabaseType = {
   };
 
   export type KeyValueDatabaseType = {
-    access: Access;
+    access: OrbitDBAccessControllerType|IPFSAccessControllerType;
     addOperation: (op: any) => Promise<void>;
     address: string;
     all: () => Promise<any>;

@@ -42,11 +42,13 @@ const DatabaseInfo = () => {
     }
     switch (Database?.type) {
       case "events":
-        return <EventDataForm Database={Database} />;
+        return <EventDataForm Database={Database as EventsDatabaseType} />;
       case "documents":
-        return <DocumentDataForm Database={Database} />;
+        return (
+          <DocumentDataForm Database={Database as DocumentsDatabaseType} />
+        );
       case "keyvalue":
-        return <KeyValueForm Database={Database} />;
+        return <KeyValueForm Database={Database as KeyValueDatabaseType} />;
       default:
         return null;
     }
