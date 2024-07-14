@@ -15,6 +15,7 @@ import { IdentitiesProvider } from "./context/IdentitiesProvider";
 import IdentityInfo from "./components/pages/IdentityInfo";
 import DatabaseDetail from "./components/pages/DatabaseDetail";
 import ConnectDatabse from "./components/pages/ConnectDatabse";
+import { CookiesProvider } from "react-cookie";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -55,12 +56,14 @@ const router = createBrowserRouter([
 ]);
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <IpfsProvider>
-      <IdentitiesProvider>
-        <OrbitDBProvider>
-          <RouterProvider router={router} />
-        </OrbitDBProvider>
-      </IdentitiesProvider>
-    </IpfsProvider>
+    <CookiesProvider>
+      <IpfsProvider>
+        <IdentitiesProvider>
+          <OrbitDBProvider>
+            <RouterProvider router={router} />
+          </OrbitDBProvider>
+        </IdentitiesProvider>
+      </IpfsProvider>
+    </CookiesProvider>
   </React.StrictMode>
 );

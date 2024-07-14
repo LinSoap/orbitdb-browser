@@ -12,19 +12,23 @@ import { createHelia } from "helia";
 import { LevelBlockstore } from "blockstore-level";
 import { bootstrap } from "@libp2p/bootstrap";
 import { pubsubPeerDiscovery } from "@libp2p/pubsub-peer-discovery";
+import { useCookies } from "react-cookie";
 
 const IpfsContext = createContext<any | undefined>(undefined);
 
 export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
+  const [cookies, setCookie] = useCookies(["stuns", "topics", "bootstrap"]);
   const [ipfs, setIpfs] = useState<any>(null);
-  const [stuns, setStuns] = useState([
-    "stun:stun.l.google.com:19302",
-    "stun:global.stun.twilio.com:3478",
-  ]);
-  const [bootstrapsList, setBootstrapsList] = useState([
-    "/ip4/127.0.0.1/tcp/9001/ws/p2p/12D3KooWGe3h6rJVycQx5XVq81wgH32hZDk1atTqUw2yKeevrK19",
-  ]);
-  const [topics, setTopics] = useState(["orbitdb"]);
+  const [stuns, setStuns] = useState(
+    cookies.stuns || [
+      "stun:stun.l.google.com:19302",
+      "stun:global.stun.twilio.com:3478",
+    ]
+  );
+  const [bootstrapsList, setBootstrapsList] = useState(
+    cookies.bootstrap || [""]
+  );
+  const [topics, setTopics] = useState<string[]>(cookies.topics || []);
   const [error, setError] = useState<string>("");
 
   const createOptions = () => {
@@ -74,6 +78,9 @@ export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
 
   const updateLibp2pOptions = () => {
     setLibp2pOptions(createOptions());
+    setCookie("stuns", stuns);
+    setCookie("topics", topics);
+    setCookie("bootstrap", bootstrapsList);
   };
 
   const initIpfs = async () => {
