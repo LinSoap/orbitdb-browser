@@ -12,76 +12,86 @@ import { createHelia } from "helia";
 import { LevelBlockstore } from "blockstore-level";
 import { bootstrap } from "@libp2p/bootstrap";
 import { pubsubPeerDiscovery } from "@libp2p/pubsub-peer-discovery";
-const Libp2pBrowserOptions = {
-  addresses: {
-    listen: ["/webrtc"],
-  },
-  transports: [
-    webSockets({
-      filter: all,
-    }),
-    webRTC({
-      rtcConfiguration: {
-        iceServers: [
-          {
-            // STUN servers help the browser discover its own public IPs
-            urls: [
-              "stun:stun.l.google.com:19302",
-              "stun:global.stun.twilio.com:3478",
-            ],
-          },
-        ],
-      },
-    }),
-    circuitRelayTransport({
-      discoverRelays: 1,
-    }),
-  ],
-  connectionEncryption: [noise()],
-  streamMuxers: [yamux()],
-  connectionGater: {
-    denyDialMultiaddr: () => false,
-  },
-  peerDiscovery: [
-    bootstrap({
-      list: [
-        "/ip4/127.0.0.1/tcp/9001/ws/p2p/12D3KooWHfYXdvp5yHsjmTLReoWdfV6HbUoScdBy3HVnD4544NtL",
-      ],
-    }),
-    pubsubPeerDiscovery({
-      interval: 10_000,
-      topics: ["orbitdb"],
-    }),
-  ],
-  services: {
-    identify: identify(),
-    pubsub: gossipsub({ allowPublishToZeroTopicPeers: true }),
-  },
-};
 
-const IpfsContext = createContext<{ ipfs: any } | undefined>(undefined);
+const IpfsContext = createContext<any | undefined>(undefined);
 
 export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
   const [ipfs, setIpfs] = useState<any>(null);
+  const [stuns, setStuns] = useState([
+    "stun:stun.l.google.com:19302",
+    "stun:global.stun.twilio.com:3478",
+  ]);
+  const [bootstrapsList, setBootstrapsList] = useState([
+    "/ip4/127.0.0.1/tcp/9001/ws/p2p/12D3KooWGe3h6rJVycQx5XVq81wgH32hZDk1atTqUw2yKeevrK19",
+  ]);
+  const [topics, setTopics] = useState(["orbitdb"]);
   const [error, setError] = useState<string>("");
 
-  useEffect(() => {
-    const initIpfs = async () => {
-      try {
-        const libp2pOptions = Libp2pBrowserOptions;
-        const libp2p = await createLibp2p({ ...libp2pOptions });
-        const blockstore = new LevelBlockstore("./ipfs/blocks");
-        // const blockstore = new MemoryBlockstore();
-        const ipfs = await createHelia({ libp2p, blockstore });
-        console.log("IPFS instance:", ipfs.libp2p.peerId);
-        setIpfs(ipfs);
-      } catch (error: any) {
-        setError(`Error creating IPFS: ${error.message}`);
-      }
+  const createOptions = () => {
+    return {
+      addresses: {
+        listen: ["/webrtc"],
+      },
+      transports: [
+        webSockets({
+          filter: all,
+        }),
+        webRTC({
+          rtcConfiguration: {
+            iceServers: [
+              {
+                urls: stuns,
+              },
+            ],
+          },
+        }),
+        circuitRelayTransport({
+          discoverRelays: 1,
+        }),
+      ],
+      connectionEncryption: [noise()],
+      streamMuxers: [yamux()],
+      connectionGater: {
+        denyDialMultiaddr: () => false,
+      },
+      peerDiscovery: [
+        bootstrap({
+          list: bootstrapsList,
+        }),
+        pubsubPeerDiscovery({
+          interval: 10_000,
+          topics: topics,
+        }),
+      ],
+      services: {
+        identify: identify(),
+        pubsub: gossipsub({ allowPublishToZeroTopicPeers: true }),
+      },
     };
+  };
 
+  const [libp2pOptions, setLibp2pOptions] = useState(createOptions);
+
+  const updateLibp2pOptions = () => {
+    setLibp2pOptions(createOptions());
+  };
+
+  const initIpfs = async () => {
+    try {
+      const libp2p = await createLibp2p({ ...libp2pOptions });
+      const blockstore = new LevelBlockstore("./ipfs/blocks");
+      // const blockstore = new MemoryBlockstore();
+      const ipfs = await createHelia({ libp2p, blockstore });
+      console.log("IPFS instance:", ipfs.libp2p.peerId);
+      setIpfs(ipfs);
+    } catch (error: any) {
+      setError(`Error creating IPFS: ${error.message}`);
+    }
+  };
+
+  useEffect(() => {
     initIpfs();
-  }, []);
+  }, [libp2pOptions]);
 
   if (error) {
     return <div>{error}</div>;
@@ -92,7 +102,20 @@ export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <IpfsContext.Provider value={{ ipfs }}>{children}</IpfsContext.Provider>
+    <IpfsContext.Provider
+      value={{
+        ipfs,
+        topics,
+        setTopics,
+        stuns,
+        setStuns,
+        bootstrapsList,
+        setBootstrapsList,
+        updateLibp2pOptions,
+      }}
+    >
+      {children}
+    </IpfsContext.Provider>
   );
 };
 
