@@ -1,4 +1,4 @@
-import { Button, List, ListItem } from "@chakra-ui/react";
+import { Button, List, ListItem, Tooltip } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { useOrbitDB } from "../../context/OrbitDBProvier";
 
@@ -27,9 +27,11 @@ const DatabaseList = () => {
         <ul>
           {databases.map((database) => (
             <li key={database.address}>
-              <Button onClick={() => onClickDatabaseItem(database.address)}>
-                {database.address}
-              </Button>
+              <Tooltip label={database.address}>
+                <Button onClick={() => onClickDatabaseItem(database.address)}>
+                  {database.name}
+                </Button>
+              </Tooltip>
             </li>
           ))}
         </ul>
