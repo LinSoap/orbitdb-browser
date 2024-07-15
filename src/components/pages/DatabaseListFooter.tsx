@@ -1,4 +1,4 @@
-import { Box, List, ListIcon, ListItem, Text, Tooltip } from "@chakra-ui/react";
+import { Box, List, ListIcon, ListItem, Tooltip } from "@chakra-ui/react";
 import { useIdentities } from "../../context/IdentitiesProvider";
 import { useIpfs } from "../../context/IpfsProvider";
 import { FaBan, FaCheckCircle } from "react-icons/fa";

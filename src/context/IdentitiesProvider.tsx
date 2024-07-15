@@ -11,7 +11,7 @@ export const IdentitiesProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [cookies, setCookie] = useCookies(["identityID"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["identityID"]);
   const [identities, setIdentities] = useState<IdentitiesInstance>();
   const [identity, setIdentity] = useState<IdentityType>();
   const [error, setError] = useState("");
@@ -22,6 +22,15 @@ export const IdentitiesProvider = ({
       const identityInstance = await identities.createIdentity({ id });
       setIdentity(identityInstance);
       setCookie("identityID", id);
+    } catch (error: any) {
+      setError(`Error creating identity: ${error.message}`);
+    }
+  };
+
+  const removeIdentity = async () => {
+    try {
+      setIdentity(undefined);
+      removeCookie("identityID");
     } catch (error: any) {
       setError(`Error creating identity: ${error.message}`);
     }
@@ -59,7 +68,9 @@ export const IdentitiesProvider = ({
   }
 
   return (
-    <IdentitiesContext.Provider value={{ identity, createIdentity }}>
+    <IdentitiesContext.Provider
+      value={{ identity, createIdentity, removeIdentity }}
+    >
       {children}
     </IdentitiesContext.Provider>
   );
