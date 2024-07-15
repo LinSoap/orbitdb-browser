@@ -1,4 +1,4 @@
-import { Button, Input } from "@chakra-ui/react";
+import { Button, Input, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useOrbitDB } from "../../context/OrbitDBProvier";
@@ -6,14 +6,16 @@ import { useOrbitDB } from "../../context/OrbitDBProvier";
 const ConnectDatabse = () => {
   const navigate = useNavigate();
   const [address, setAddress] = useState<string>("");
-  const { orbitDB, addDatabase, databases } = useOrbitDB();
+  const { orbitDB, addDatabase, databases, recentDatabase } = useOrbitDB();
 
-  const handleClick = async () => {
+  const handleClick = async (address: string) => {
     try {
       if (orbitDB) {
         const db = await orbitDB.open(address);
         if (db) {
-          if (!databases.some((database) => database.address === db.address)) {
+          if (
+            !databases.some((database: any) => database.address === db.address)
+          ) {
             addDatabase(db);
           }
           navigate("/database-info" + db.address);
@@ -29,7 +31,15 @@ const ConnectDatabse = () => {
         value={address}
         onChange={(e) => setAddress(e.target.value)}
       ></Input>
-      <Button onClick={handleClick}>Connect</Button>
+      <Button onClick={() => handleClick(address)}>Connect</Button>
+
+      <VStack>
+        {recentDatabase.map((address: string) => (
+          <Button key={address} onClick={() => handleClick(address)}>
+            {address}
+          </Button>
+        ))}
+      </VStack>
     </>
   );
 };

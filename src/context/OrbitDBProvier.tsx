@@ -1,16 +1,25 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { createOrbitDB } from "@orbitdb/core";
 import { useIpfs } from "./IpfsProvider";
-import { OrbitDBContextType } from "../types/Orbitdb";
 import { useIdentities } from "./IdentitiesProvider";
+import { useCookies } from "react-cookie";
+import {
+  DocumentsDatabaseType,
+  EventsDatabaseType,
+  KeyValueDatabaseType,
+} from "../types/Database";
 
-const OrbitDBContext = createContext<OrbitDBContextType | undefined>(undefined);
+const OrbitDBContext = createContext<any | undefined>(undefined);
 
 export const OrbitDBProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
+  const [cookies, setCookie] = useCookies(["recentDatabase"]);
+  const [recentDatabase, setRecentDatabase] = useState<string[]>(
+    cookies.recentDatabase || []
+  );
   const [orbitDB, setOrbitDB] = useState(null);
   const [databases, setDatabases] = useState<any[]>([]);
   const [error, setError] = useState("");
@@ -40,10 +49,18 @@ export const OrbitDBProvider = ({
     return db ? db : null;
   };
 
-  const addDatabase = async (database: any) => {
+  const addDatabase = async (
+    database: EventsDatabaseType | DocumentsDatabaseType | KeyValueDatabaseType
+  ) => {
     try {
       setDatabases((prevDatabases) => [...prevDatabases, database]);
-      console.log(databases);
+      setRecentDatabase((prevRecentDatabase) => [
+        database.address,
+        ...prevRecentDatabase.filter(
+          (address: string) => address !== database.address
+        ),
+      ]);
+      setCookie("recentDatabase", recentDatabase);
     } catch (error: any) {
       setError(`Error opening database: ${error.message}`);
       throw error;
@@ -67,7 +84,14 @@ export const OrbitDBProvider = ({
 
   return (
     <OrbitDBContext.Provider
-      value={{ orbitDB, databases, getDatabase, addDatabase, closeDatabase }}
+      value={{
+        orbitDB,
+        databases,
+        getDatabase,
+        addDatabase,
+        closeDatabase,
+        recentDatabase,
+      }}
     >
       {children}
     </OrbitDBContext.Provider>

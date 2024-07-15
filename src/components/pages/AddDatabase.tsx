@@ -133,7 +133,9 @@ const AddDatabase = () => {
               : OrbitDBAccessController({ write: writers }),
         });
         if (db) {
-          if (!databases.some((database) => database.address === db.address)) {
+          if (
+            !databases.some((database: any) => database.address === db.address)
+          ) {
             addDatabase(db);
           }
           navigate("/database-info" + db.address);
