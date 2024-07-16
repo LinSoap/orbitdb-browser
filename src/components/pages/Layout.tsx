@@ -1,9 +1,9 @@
 import { Box, Grid, GridItem, Show, useColorMode } from "@chakra-ui/react";
 import { Outlet, useLocation } from "react-router-dom";
-import DatabaseListContainer from "./DatabaseListContainer";
 import Welcome from "./Welcome";
+import SideBarContainer from "../common/SideBarContainer";
 
-const Home = () => {
+const Layout = () => {
   const { colorMode } = useColorMode();
   const location = useLocation();
   const isRoot = location.pathname === "/";
@@ -23,7 +23,7 @@ const Home = () => {
     >
       <Show above="lg">
         <GridItem area="aside" bg={bgColorAside} position={"fixed"}>
-          <DatabaseListContainer />
+          <SideBarContainer />
         </GridItem>
       </Show>
       <GridItem area="main" bg={bgColorMain} minHeight={"100vh"}>
@@ -43,4 +43,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Layout;

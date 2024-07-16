@@ -21,11 +21,11 @@ const DatabaseList = () => {
             textAlign="left"
             fontSize="md"
           >
-            Connect Database
+            Home
           </Button>
         </Link>
         <ul>
-          {databases.map((database) => (
+          {databases.map((database: any) => (
             <li key={database.address}>
               <Tooltip label={database.address}>
                 <Button onClick={() => onClickDatabaseItem(database.address)}>

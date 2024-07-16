@@ -5,7 +5,7 @@ import { FaBan, FaCheckCircle } from "react-icons/fa";
 import { useOrbitDB } from "../../context/OrbitDBProvier";
 import { Link } from "react-router-dom";
 
-const DatabaseListFooter = () => {
+const SideBarFooter = () => {
   const { ipfs } = useIpfs();
   const { identity } = useIdentities();
   const { orbitDB } = useOrbitDB();
@@ -66,4 +66,4 @@ const DatabaseListFooter = () => {
   );
 };
 
-export default DatabaseListFooter;
+export default SideBarFooter;

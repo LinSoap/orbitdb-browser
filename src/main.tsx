@@ -5,7 +5,6 @@ import "./index.css";
 import theme from "./theme";
 import ErrorPage from "./components/pages/ErrorPage";
 import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
-import Home from "./components/pages/Home";
 import AddDatabase from "./components/pages/AddDatabase";
 import DatabaseInfo from "./components/pages/DatabaseInfo";
 import { IpfsProvider } from "./context/IpfsProvider";
@@ -16,6 +15,7 @@ import IdentityInfo from "./components/pages/IdentityInfo";
 import DatabaseDetail from "./components/pages/DatabaseDetail";
 import ConnectDatabse from "./components/pages/ConnectDatabse";
 import { CookiesProvider } from "react-cookie";
+import Layout from "./components/pages/layout";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,7 +23,7 @@ const router = createBrowserRouter([
     element: (
       <ChakraProvider theme={theme}>
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-        <Home />
+        <Layout />
       </ChakraProvider>
     ),
     children: [
