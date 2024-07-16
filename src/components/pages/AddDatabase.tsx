@@ -219,7 +219,7 @@ const AddDatabase = () => {
               <FormControl>
                 <FormLabel>Writable ID:</FormLabel>
                 {writers.map((id, index) => (
-                  <HStack key={index}>
+                  <HStack key={index} p={"3px"}>
                     <Input
                       type="text"
                       placeholder="Wriable ID"
