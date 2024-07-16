@@ -1,6 +1,6 @@
-import { Box, Button, Heading } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useOrbitDB } from "../../context/OrbitDBProvier";
 import { useEffect, useState } from "react";
 import {

@@ -13,12 +13,12 @@ import {
   Flex,
   Tooltip,
   HStack,
-  Text,
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import { FaAlignJustify, FaBan, FaCheck } from "react-icons/fa";
 import { useIdentities } from "../../context/IdentitiesProvider";
 import { useEffect, useState } from "react";
+import { OrbitDBAccessControllerType } from "../../types/Access";
 
 const DatabaseInfoHeader = ({
   Database,
@@ -35,20 +35,20 @@ const DatabaseInfoHeader = ({
   const [writerble, setWriteable] = useState<boolean>(false);
 
   const hasWriteable = async () => {
-    if (Database?.access.type === "orbitdb") {
-      const writerSet = await Database?.access?.get("write");
-      return writerSet.has(identity.id);
-    } else {
-      const writerSet = new Set(Database?.access?.write);
-      return writerSet.has(identity.id);
-    }
+    const { access } = Database || {};
+    const writerSet = new Set(
+      access?.type === "orbitdb"
+        ? await (access as OrbitDBAccessControllerType).get("write")
+        : access?.write
+    );
+
+    return writerSet.has(identity.id) || writerSet.has("*");
   };
 
   useEffect(() => {
     hasWriteable().then((result) => {
       setWriteable(result);
     });
-    console.log(writerble);
   }, [Database, identity]);
 
   const handleClose = () => {
@@ -94,7 +94,7 @@ const DatabaseInfoHeader = ({
             AccessController: {Database?.access.type}
           </Heading>
           <HStack>
-            <Text>Writeable:</Text>
+            <Heading fontSize="lg">Writeable:</Heading>
             {writerble ? <FaCheck /> : <FaBan />}
           </HStack>
         </Flex>
