@@ -21,30 +21,26 @@ const Welcome = () => {
         <Text fontSize="lg" color="gray.600" mb={6}>
           Easily manage your OrbitDB.
         </Text>
-        <VStack spacing={4} align="stretch">
-          <Button leftIcon={<FaBook />} variant="outline" size="lg">
-            Read Documentation
+        <VStack spacing={4} align="center">
+          <Button leftIcon={<FaBook />} variant="outline" size="lg" w={"60%"}>
+            <Link to="/">Read Documentation</Link>
           </Button>
-          <Link to="/identity">
-            <Button leftIcon={<FaAt />} variant="outline" size="lg">
-              Identity Management
-            </Button>
-          </Link>
-          <Link to="/connect-database">
-            <Button leftIcon={<FaPlay />} variant="outline" size="lg">
-              Connect Database
-            </Button>
-          </Link>
-          <Link to="/add-database">
-            <Button leftIcon={<FaPlus />} variant="outline" size="lg">
-              Create New Database
-            </Button>
-          </Link>
-          <Link to="/libp2p-status">
-            <Button leftIcon={<FaCog />} variant="outline" size="lg">
-              Libp2p Connect Status
-            </Button>
-          </Link>
+
+          <Button leftIcon={<FaAt />} variant="outline" size="lg" w={"60%"}>
+            <Link to="/identity">Identity Management</Link>
+          </Button>
+
+          <Button leftIcon={<FaPlay />} variant="outline" size="lg" w={"60%"}>
+            <Link to="/connect-database">Connect Database</Link>
+          </Button>
+
+          <Button leftIcon={<FaPlus />} variant="outline" size="lg" w={"60%"}>
+            <Link to="/add-database">Create New Database</Link>
+          </Button>
+
+          <Button leftIcon={<FaCog />} variant="outline" size="lg" w={"60%"}>
+            <Link to="/libp2p-status">Libp2p Connect Status</Link>
+          </Button>
         </VStack>
         <Divider my={6} />
         <Stack direction={["column", "row"]} spacing={4} justify="center">
