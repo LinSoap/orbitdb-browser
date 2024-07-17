@@ -9,6 +9,7 @@ import {
   AbsoluteCenter,
 } from "@chakra-ui/react";
 import { FaBook, FaPlay, FaCog, FaAt, FaPlus } from "react-icons/fa";
+import { RiP2pFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
 const Welcome = () => {
@@ -37,8 +38,15 @@ const Welcome = () => {
           <Button leftIcon={<FaPlus />} variant="outline" size="lg" w={"60%"}>
             <Link to="/add-database">Create New Database</Link>
           </Button>
-
           <Button leftIcon={<FaCog />} variant="outline" size="lg" w={"60%"}>
+            <Link to="/libp2p-config">Libp2p Config</Link>
+          </Button>
+          <Button
+            leftIcon={<RiP2pFill />}
+            variant="outline"
+            size="lg"
+            w={"60%"}
+          >
             <Link to="/libp2p-status">Libp2p Connect Status</Link>
           </Button>
         </VStack>

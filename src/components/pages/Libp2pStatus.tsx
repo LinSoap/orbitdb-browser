@@ -1,27 +1,34 @@
 import { useState, useEffect } from "react";
 import { useIpfs } from "../../context/IpfsProvider";
 import { getPeerTypes } from "../../utils/libp2p";
-import { Button, HStack, IconButton, Input } from "@chakra-ui/react";
-import { CloseIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Text,
+  Card,
+  Flex,
+  useColorMode,
+  useTheme,
+  IconButton,
+  Code,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Collapse,
+} from "@chakra-ui/react";
+import { CopyIcon, ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 
 const Libp2pStatus = () => {
-  const {
-    ipfs,
-    topics,
-    setTopics,
-    stuns,
-    setStuns,
-    bootstrapsList,
-    setBootstrapsList,
-    updateLibp2pOptions,
-  } = useIpfs();
-  //   console.log(Libp2pBrowserOptions);
+  const { ipfs } = useIpfs();
   const libp2p = ipfs.libp2p;
   const [peerId, setPeerId] = useState(libp2p.peerId.string);
   const [status, setStatus] = useState(libp2p.status);
   const [connections, setConnections] = useState(libp2p.getConnections());
   const [multiaddrs, setMultiaddrs] = useState(libp2p.getMultiaddrs());
   const [peerTypes, setPeerTypes] = useState(getPeerTypes(libp2p));
+  const [isMultiaddrsOpen, setIsMultiaddrsOpen] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -35,135 +42,109 @@ const Libp2pStatus = () => {
     return () => clearInterval(interval); // 清除定时器
   }, [libp2p]);
 
-  const handleTopicChange = (index: number, newValue: string) => {
-    setTopics((prevTopics: string[]) => {
-      const updatedTopics = [...prevTopics];
-      updatedTopics[index] = newValue;
-      return updatedTopics;
-    });
-  };
-  const handleStunChange = (index: number, newValue: string) => {
-    setStuns((prevStuns: string[]) => {
-      const updatedStuns = [...prevStuns];
-      updatedStuns[index] = newValue;
-      return updatedStuns;
-    });
-  };
-  const handleBootstrapsChange = (index: number, newValue: string) => {
-    setBootstrapsList((prevBootstraps: string[]) => {
-      const updatedBootstraps = [...prevBootstraps];
-      updatedBootstraps[index] = newValue;
-      return updatedBootstraps;
-    });
-  };
+  const { colorMode } = useColorMode();
+  const theme = useTheme();
+  const bgColorMain = theme.colors.custom.bgColorMain[colorMode];
 
   const statusList = Object.entries(peerTypes).map(([key, value]) => (
-    <li key={key}>
-      {key}: {value}
-    </li>
+    <Tr key={key}>
+      <Td>{key}</Td>
+      <Td>{value}</Td>
+      <Td />
+    </Tr>
   ));
-  const multiaddrList = Object.entries(multiaddrs).map((ma) => (
-    <li key={ma.toString()}>{ma.toString()}</li>
+
+  const multiaddrList = multiaddrs.map((multiaddr: string) => (
+    <Tr key={multiaddr.toString()}>
+      <Td>
+        <Flex alignItems="center">
+          <IconButton
+            aria-label="Copy multiaddr"
+            icon={<CopyIcon />}
+            size="sm"
+            ml={2}
+            onClick={() => navigator.clipboard.writeText(multiaddr.toString())}
+          />
+          <Code>{multiaddr.toString()}</Code>
+        </Flex>
+      </Td>
+    </Tr>
   ));
+
   return (
-    <>
-      <section>
-        <h1>PubSub Topics:</h1>
-        {topics.map((topic: string, index: number) => (
-          <HStack key={index}>
-            <Input
-              type="text"
-              placeholder="PubSub Topic"
-              value={topic}
-              onChange={(e) => handleTopicChange(index, e.target.value)}
-            />
-            <IconButton
-              aria-label="drop"
-              icon={<CloseIcon />}
-              onClick={() =>
-                setTopics((prevTopics: string[]) =>
-                  prevTopics.filter((_, i) => i !== index)
-                )
-              }
-            />
-          </HStack>
-        ))}
-        <Button
-          onClick={() => setTopics((prevTopic: string[]) => [...prevTopic, ""])}
-        >
-          Add Topics
-        </Button>
-        {stuns.map((stun: string, index: number) => (
-          <HStack key={index}>
-            <Input
-              type="text"
-              placeholder="Stun Server"
-              value={stun}
-              onChange={(e) => handleStunChange(index, e.target.value)}
-            />
-            <IconButton
-              aria-label="drop"
-              icon={<CloseIcon />}
-              onClick={() =>
-                setStuns((prevStuns: string[]) =>
-                  prevStuns.filter((_, i) => i !== index)
-                )
-              }
-            />
-          </HStack>
-        ))}
-        <Button
-          onClick={() => setStuns((prevStuns: string[]) => [...prevStuns, ""])}
-        >
-          Add Stuns
-        </Button>
-        {bootstrapsList.map((bootstraps: string, index: number) => (
-          <HStack key={index}>
-            <Input
-              type="text"
-              placeholder="Relay Server multiaddr"
-              value={bootstraps}
-              onChange={(e) => handleBootstrapsChange(index, e.target.value)}
-            />
-            <IconButton
-              aria-label="drop"
-              icon={<CloseIcon />}
-              onClick={() =>
-                setBootstrapsList((prevBootstraps: string[]) =>
-                  prevBootstraps.filter((_, i) => i !== index)
-                )
-              }
-            />
-          </HStack>
-        ))}
-        <Button
-          onClick={() =>
-            setBootstrapsList((prevBootstraps: string[]) => [
-              ...prevBootstraps,
-              "",
-            ])
-          }
-        >
-          Add Relay Server
-        </Button>
-        <Button onClick={() => updateLibp2pOptions()}>
-          Save Libp2p Options
-        </Button>
-        <h2>Node</h2>
-        <ul>
-          <li>Peer ID: {peerId}</li>
-          <li>Status: {status}</li>
-          <li>
-            Connections: {connections.length}
-            <ul>{statusList}</ul>
-          </li>
-          <li>
-            Addresses: {multiaddrs.length}
-            <ul>{multiaddrList}</ul>
-          </li>
-        </ul>
-      </section>
-    </>
+    <Card bg={bgColorMain}>
+      <Box p={4} borderBottom="1px solid #e2e8f0">
+        <Flex>
+          <Text fontSize="xl" fontWeight="bold">
+            Node Status
+          </Text>
+        </Flex>
+      </Box>
+      <Box p={4}>
+        <Table variant="simple">
+          <Thead></Thead>
+          <Tbody>
+            <Tr>
+              <Td fontWeight="bold">Peer ID:</Td>
+              <Td>{peerId}</Td>
+              <Td />
+            </Tr>
+            <Tr>
+              <Td fontWeight="bold">Status:</Td>
+              <Td>{status}</Td>
+              <Td />
+            </Tr>
+            <Tr>
+              <Td fontWeight="bold">Connections:</Td>
+              <Td>{connections.length}</Td>
+              <Td />
+            </Tr>
+            {statusList.length > 0 && (
+              <Tr>
+                <Td colSpan={2}>
+                  <Table variant="simple">
+                    <Thead>
+                      <Tr>
+                        <Th>Peer Type</Th>
+                        <Th>Count</Th>
+                        <Th />
+                      </Tr>
+                    </Thead>
+                    <Tbody>{statusList}</Tbody>
+                  </Table>
+                </Td>
+                <Td />
+              </Tr>
+            )}
+            <Tr>
+              <Td fontWeight="bold">Multiaddr:</Td>
+              <Td>{multiaddrs.length}</Td>
+              <Td>
+                <IconButton
+                  size="sm"
+                  onClick={() => setIsMultiaddrsOpen(!isMultiaddrsOpen)}
+                  aria-label="Toggle multiaddrs"
+                  icon={
+                    isMultiaddrsOpen ? <ChevronUpIcon /> : <ChevronDownIcon />
+                  }
+                />
+              </Td>
+            </Tr>
+            {multiaddrList.length > 0 && (
+              <Tr>
+                <Td colSpan={2}>
+                  <Collapse in={isMultiaddrsOpen}>
+                    <Table variant="simple">
+                      <Tbody>{multiaddrList}</Tbody>
+                    </Table>
+                  </Collapse>
+                </Td>
+              </Tr>
+            )}
+          </Tbody>
+        </Table>
+      </Box>
+    </Card>
   );
 };
 

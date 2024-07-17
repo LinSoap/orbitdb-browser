@@ -1,7 +1,7 @@
 import { extendTheme, ThemeConfig } from "@chakra-ui/react";
 
 const config: ThemeConfig = {
-  initialColorMode: 'dark',
+  initialColorMode: 'light',
 };
 
 // 扩展主题，添加自定义颜色

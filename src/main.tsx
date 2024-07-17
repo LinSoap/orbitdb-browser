@@ -16,6 +16,7 @@ import DatabaseDetail from "./components/pages/DatabaseDetail";
 import ConnectDatabse from "./components/pages/ConnectDatabse";
 import { CookiesProvider } from "react-cookie";
 import Layout from "./components/pages/_Layout";
+import Libp2pConfig from "./components/pages/Libp2pConfig";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "/connect-database",
         element: <ConnectDatabse />,
+      },
+      {
+        path: "/libp2p-config",
+        element: <Libp2pConfig />,
       },
       {
         path: "/libp2p-status",

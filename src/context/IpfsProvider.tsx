@@ -28,7 +28,7 @@ export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
   const [bootstrapsList, setBootstrapsList] = useState(
     cookies.bootstrap || [""]
   );
-  const [topics, setTopics] = useState<string[]>(cookies.topics || []);
+  const [topics, setTopics] = useState<string[]>(cookies.topics || [""]);
   const [error, setError] = useState<string>("");
 
   const createOptions = () => {
