@@ -15,7 +15,7 @@ import IdentityInfo from "./components/pages/IdentityInfo";
 import DatabaseDetail from "./components/pages/DatabaseDetail";
 import ConnectDatabse from "./components/pages/ConnectDatabse";
 import { CookiesProvider } from "react-cookie";
-import Layout from "./components/pages/layout";
+import Layout from "./components/pages/_Layout";
 const router = createBrowserRouter([
   {
     path: "/",

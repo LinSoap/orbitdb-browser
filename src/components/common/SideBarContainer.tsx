@@ -13,10 +13,13 @@ const SideBarContainer = () => {
       top={0}
       height={"100vh"}
       width={250}
+      padding={0}
     >
       <SideBarHeader />
-      <DatabaseList />
-      <Box marginTop={"auto"} padding={"1rem"}>
+      <Box flex={1} overflowY={"auto"}>
+        <DatabaseList />
+      </Box>
+      <Box marginTop={"auto"}>
         <SideBarFooter />
       </Box>
     </Container>

@@ -1,14 +1,22 @@
-import { Box, Grid, GridItem, Show, useColorMode } from "@chakra-ui/react";
+import {
+  Box,
+  Grid,
+  GridItem,
+  Show,
+  useColorMode,
+  useTheme,
+} from "@chakra-ui/react";
 import { Outlet, useLocation } from "react-router-dom";
 import Welcome from "./Welcome";
 import SideBarContainer from "../common/SideBarContainer";
 
 const Layout = () => {
   const { colorMode } = useColorMode();
+  const theme = useTheme();
   const location = useLocation();
   const isRoot = location.pathname === "/";
-  const bgColorMain = colorMode === "dark" ? "gray.800" : "gray.100";
-  const bgColorAside = colorMode === "dark" ? "gray.700" : "gray.200";
+  const bgColorMain = theme.colors.custom.bgColorMain[colorMode];
+  const bgColorAside = theme.colors.custom.bgColorAside[colorMode];
 
   return (
     <Grid
