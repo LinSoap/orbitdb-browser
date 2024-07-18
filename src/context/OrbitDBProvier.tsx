@@ -80,10 +80,6 @@ export const OrbitDBProvider = ({
     return <div>{error}</div>;
   }
 
-  if (!orbitDB) {
-    return <div>Loading OrbitDB...</div>;
-  }
-
   return (
     <OrbitDBContext.Provider
       value={{
