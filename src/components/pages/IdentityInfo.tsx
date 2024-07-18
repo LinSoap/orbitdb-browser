@@ -1,22 +1,76 @@
-import { Button, Input } from "@chakra-ui/react";
+import {
+  Button,
+  Input,
+  Box,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Text,
+  Card,
+  Flex,
+  useTheme,
+  useColorMode,
+} from "@chakra-ui/react";
 import { useIdentities } from "../../context/IdentitiesProvider";
 import { useState } from "react";
 
 const IdentityInfo = () => {
   const { identity, createIdentity, removeIdentity } = useIdentities();
   const [id, setId] = useState<string>("");
-
+  const { colorMode } = useColorMode();
+  const theme = useTheme();
+  const bgColorMain = theme.colors.custom.bgColorMain[colorMode];
   return (
-    <div>
-      <h1>Identity Info</h1>
-      <p>id:{identity?.id}</p>
-      <p>publickKey:{identity?.publicKey}</p>
-      <p>hash:{identity?.hash}</p>
-      <p>type:{identity?.type}</p>
-      <Input value={id} onChange={(event) => setId(event.target.value)}></Input>
-      <Button onClick={() => createIdentity(id)}>Create Identity</Button>
-      <Button onClick={() => removeIdentity()}>Remove Identity</Button>
-    </div>
+    <Card bg={bgColorMain}>
+      <Box p={4} borderBottom="1px solid #e2e8f0">
+        <Text fontSize="xl" fontWeight="bold">
+          Identity Info
+        </Text>
+      </Box>
+      <Table>
+        <Thead>
+          <Tr>
+            <Th>Property</Th>
+            <Th>Value</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          <Tr>
+            <Td>Id</Td>
+            <Td>{identity?.id}</Td>
+          </Tr>
+          <Tr>
+            <Td>Public Key</Td>
+            <Td>{identity?.publicKey}</Td>
+          </Tr>
+          <Tr>
+            <Td>Hash</Td>
+            <Td>{identity?.hash}</Td>
+          </Tr>
+          <Tr>
+            <Td>Type</Td>
+            <Td>{identity?.type}</Td>
+          </Tr>
+        </Tbody>
+      </Table>
+      <Box mt={4} paddingX={20}>
+        <Flex align="center">
+          <Input
+            placeholder="Enter new id"
+            value={id}
+            onChange={(event) => setId(event.target.value)}
+            mr={2}
+          />
+          <Button onClick={() => createIdentity(id)} mr={2}>
+            Create Identity
+          </Button>
+          <Button onClick={() => removeIdentity()}>Remove Identity</Button>
+        </Flex>
+      </Box>
+    </Card>
   );
 };
 
