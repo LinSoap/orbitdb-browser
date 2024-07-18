@@ -23,15 +23,17 @@ export const OrbitDBProvider = ({
   const [orbitDB, setOrbitDB] = useState(null);
   const [databases, setDatabases] = useState<any[]>([]);
   const [error, setError] = useState("");
-  const { ipfs } = useIpfs(); // 使用 useIpfs 自定义钩子获取 ipfs 实例
+  const { ipfs } = useIpfs();
   const { identity } = useIdentities();
 
   useEffect(() => {
     const initOrbitdb = async () => {
-      if (ipfs) {
+      if (ipfs && identity) {
         try {
-          const orbitdbInstance = await createOrbitDB({ ipfs, identity });
-          // console.log("OrbitDB instance:", orbitdbInstance);
+          const orbitdbInstance = await createOrbitDB({
+            ipfs,
+            identity,
+          });
           setOrbitDB(orbitdbInstance);
         } catch (error: any) {
           setError(`Error creating OrbitDB: ${error.message}`);

@@ -1,5 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Identities } from "@orbitdb/core";
+import {
+  ComposedStorage,
+  Identities,
+  IPFSBlockStorage,
+  KeyStore,
+  LevelStorage,
+  LRUStorage,
+} from "@orbitdb/core";
 import { useIpfs } from "./IpfsProvider";
 import { IdentitiesInstance, IdentityType } from "../types/Identities";
 import { useCookies } from "react-cookie";
@@ -39,8 +46,14 @@ export const IdentitiesProvider = ({
   const initIdentities = async () => {
     if (ipfs) {
       try {
-        const IdentitiesInstance = await Identities({ ipfs });
-        console.log("Identities instance:", IdentitiesInstance);
+        const storage1 = await ComposedStorage(
+          await LRUStorage(),
+          await LevelStorage()
+        );
+        const keystore = await KeyStore(
+          await ComposedStorage(storage1, await IPFSBlockStorage({ ipfs }))
+        );
+        const IdentitiesInstance = await Identities({ ipfs, keystore });
         // console.log("OrbitDB instance:", orbitdbInstance);
         setIdentities(IdentitiesInstance);
       } catch (error: any) {
