@@ -1,12 +1,45 @@
-import { Button, Input, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Card,
+  Input,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  useColorMode,
+  useTheme,
+  VStack,
+  Text,
+  InputGroup,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useOrbitDB } from "../../context/OrbitDBProvier";
+import { RecentDatabaseType } from "../../types/Orbitdb";
 
 const ConnectDatabse = () => {
   const navigate = useNavigate();
   const [address, setAddress] = useState<string>("");
   const { orbitDB, addDatabase, databases, recentDatabase } = useOrbitDB();
+
+  const { colorMode } = useColorMode();
+  const theme = useTheme();
+  const bgColorMain = theme.colors.custom.bgColorMain[colorMode];
+
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+    };
+    return new Date(dateString).toLocaleString(undefined, options);
+  };
 
   const handleClick = async (address: string) => {
     try {
@@ -25,22 +58,65 @@ const ConnectDatabse = () => {
       console.error("Error opening database:", error);
     }
   };
-  return (
-    <>
-      <Input
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
-      ></Input>
-      <Button onClick={() => handleClick(address)}>Connect</Button>
 
-      <VStack>
-        {recentDatabase.map((address: string) => (
-          <Button key={address} onClick={() => handleClick(address)}>
-            {address}
-          </Button>
-        ))}
+  return (
+    <Card bg={bgColorMain}>
+      <Box p={4} borderBottom="1px solid #e2e8f0">
+        <Text fontSize="xl" fontWeight="bold">
+          Connect Database
+        </Text>
+      </Box>
+      <Box p={4}>
+        <VStack align="stretch" spacing={4}>
+          <Box display="flex" alignItems="center">
+            <InputGroup flex="1" mr={4}>
+              <Input
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="Connect by Database Address Or Name"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleClick(address);
+                  }
+                }}
+              />
+            </InputGroup>
+            <Button onClick={() => handleClick(address)} colorScheme="blue">
+              Connect
+            </Button>
+          </Box>
+        </VStack>
+      </Box>
+      <VStack p={4} align="stretch">
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              <Th>Name</Th>
+              <Th>Database ID</Th>
+              <Th>Latest Opened</Th>
+              <Th>Action</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {recentDatabase.map((db: RecentDatabaseType) => (
+              <Tr key={db.DatabaseAddress}>
+                <Td>{db.name}</Td>
+                <Td>{db.DatabaseAddress}</Td>
+                <Td>{formatDate(db.latestOpened)}</Td>
+                <Td>
+                  <Button
+                    onClick={() => handleClick(db.DatabaseAddress)}
+                    colorScheme="blue"
+                  >
+                    Open
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
       </VStack>
-    </>
+    </Card>
   );
 };
 

@@ -8,6 +8,7 @@ import {
   EventsDatabaseType,
   KeyValueDatabaseType,
 } from "../types/Database";
+import { RecentDatabaseType } from "../types/Orbitdb";
 
 const OrbitDBContext = createContext<any | undefined>(undefined);
 
@@ -17,7 +18,7 @@ export const OrbitDBProvider = ({
   children: React.ReactNode;
 }) => {
   const [cookies, setCookie] = useCookies(["recentDatabase"]);
-  const [recentDatabase, setRecentDatabase] = useState<string[]>(
+  const [recentDatabase, setRecentDatabase] = useState<RecentDatabaseType[]>(
     cookies.recentDatabase || []
   );
   const [orbitDB, setOrbitDB] = useState(null);
@@ -55,14 +56,28 @@ export const OrbitDBProvider = ({
     database: EventsDatabaseType | DocumentsDatabaseType | KeyValueDatabaseType
   ) => {
     try {
+      const currentTime = new Date().toISOString();
+
+      const newRecentDatabase: RecentDatabaseType = {
+        name: database.name,
+        DatabaseAddress: database.address,
+        latestOpened: currentTime,
+      };
+
       setDatabases((prevDatabases) => [...prevDatabases, database]);
       setRecentDatabase((prevRecentDatabase) => [
-        database.address,
+        newRecentDatabase,
         ...prevRecentDatabase.filter(
-          (address: string) => address !== database.address
+          (db) => db.DatabaseAddress !== database.address
         ),
       ]);
-      setCookie("recentDatabase", recentDatabase);
+
+      setCookie("recentDatabase", [
+        newRecentDatabase,
+        ...recentDatabase.filter(
+          (db) => db.DatabaseAddress !== database.address
+        ),
+      ]);
     } catch (error: any) {
       setError(`Error opening database: ${error.message}`);
       throw error;

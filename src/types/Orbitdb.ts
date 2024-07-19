@@ -23,3 +23,9 @@ export type OrbitDBContextType =  {
     addDatabase: (database: any) => void;
     closeDatabase: (database: any) => void;
 }
+
+export type RecentDatabaseType = {
+    name: string;
+    DatabaseAddress: string;
+    latestOpened: string;
+}
