@@ -64,10 +64,16 @@ const IdentityInfo = () => {
             onChange={(event) => setId(event.target.value)}
             mr={2}
           />
-          <Button onClick={() => createIdentity(id)} mr={2}>
-            Create Identity
+          <Button
+            colorScheme="messenger"
+            onClick={() => createIdentity(id)}
+            mr={2}
+          >
+            Create
           </Button>
-          <Button onClick={() => removeIdentity()}>Remove Identity</Button>
+          <Button colorScheme="messenger" onClick={() => removeIdentity()}>
+            Remove
+          </Button>
         </Flex>
       </Box>
     </Card>

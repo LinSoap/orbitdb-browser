@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   Box,
   Button,
+  Card,
   Checkbox,
   FormControl,
   FormLabel,
@@ -9,7 +10,10 @@ import {
   IconButton,
   Input,
   Select,
+  useColorMode,
+  useTheme,
   VStack,
+  Text,
 } from "@chakra-ui/react";
 
 import {
@@ -37,6 +41,10 @@ const AddDatabase = () => {
   const { identity } = useIdentities();
   const { orbitDB, addDatabase, databases } = useOrbitDB();
   const [writers, setWriters] = useState<string[]>([]);
+  const { colorMode } = useColorMode();
+  const theme = useTheme();
+  const bgColorMain = theme.colors.custom.bgColorMain[colorMode];
+
   const [formData, setFormData] = useState<DatabaseConfig>({
     address: "",
     params: {
@@ -147,9 +155,15 @@ const AddDatabase = () => {
   };
 
   return (
-    <Box p={5}>
+    <Card bg={bgColorMain}>
+      <Box p={4} borderBottom="1px solid #e2e8f0">
+        <Text fontSize="xl" fontWeight="bold">
+          Create Database
+        </Text>
+      </Box>
+
       {ipfs ? (
-        <Box>
+        <Box p={4}>
           <form onSubmit={handleSubmit}>
             <VStack spacing={4}>
               <FormControl>
@@ -308,7 +322,7 @@ const AddDatabase = () => {
                   onChange={handleChange}
                 />
               </FormControl>
-              <Button type="submit" colorScheme="teal">
+              <Button type="submit" colorScheme="messenger">
                 Create Database
               </Button>
             </VStack>
@@ -317,7 +331,7 @@ const AddDatabase = () => {
       ) : (
         <Box>Loading IPFS Service...</Box>
       )}
-    </Box>
+    </Card>
   );
 };
 

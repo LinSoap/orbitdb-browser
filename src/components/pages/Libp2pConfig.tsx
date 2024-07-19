@@ -58,7 +58,7 @@ const Libp2pConfig = () => {
             Libp2p Config
           </Text>
           <Spacer />
-          <Button onClick={() => updateLibp2pOptions()}>
+          <Button colorScheme="messenger" onClick={() => updateLibp2pOptions()}>
             Save Libp2p Options
           </Button>
         </Flex>
