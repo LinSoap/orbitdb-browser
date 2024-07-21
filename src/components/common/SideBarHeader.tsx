@@ -1,19 +1,22 @@
-import { Button } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Box, Button, Card, Text } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 const SideBarHeader = () => {
+  const navigate = useNavigate();
   return (
-    <Link to="/">
-      <Button
-        width={"100%"}
-        colorScheme="messenger"
-        whiteSpace="normal"
-        textAlign="left"
-        fontSize="md"
-      >
-        Home
-      </Button>
-    </Link>
+    <Card>
+      <Box p={3}>
+        <Button
+          colorScheme="messenger"
+          w={"full"}
+          onClick={() => navigate("/")}
+        >
+          <Text fontSize="xl" fontWeight="bold">
+            Home
+          </Text>
+        </Button>
+      </Box>
+    </Card>
   );
 };
 
