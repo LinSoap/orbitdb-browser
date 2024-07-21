@@ -87,7 +87,6 @@ export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const libp2p = await createLibp2p({ ...libp2pOptions });
       const blockstore = new LevelBlockstore("./ipfs/blocks");
-      // const blockstore = new MemoryBlockstore();
       const ipfs = await createHelia({ libp2p, blockstore });
       setIpfs(ipfs);
     } catch (error: any) {
