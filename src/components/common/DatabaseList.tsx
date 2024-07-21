@@ -19,6 +19,13 @@ const DatabaseList = () => {
   const theme = useTheme();
   const bgColorAside = theme.colors.custom.bgColorAside[colorMode];
 
+  const formatDatabaseName = (name: string) => {
+    if (name.length > 20) {
+      return `${name.slice(0, 15)}...${name.slice(-8)}`;
+    }
+    return name;
+  };
+
   return (
     <Box>
       <Text marginLeft={"15px"}>DataBase List</Text>
@@ -32,12 +39,12 @@ const DatabaseList = () => {
                 isActive={"/orbitdb/" + address === database.address}
                 onClick={() => navigate("/database-info" + database.address)}
                 bg={bgColorAside}
-                display="flex" // 设置为flex
-                justifyContent="flex-start" // 左对齐
-                textAlign="left" // 文字左对齐
-                padding="1rem" // 添加内边距以增加可点击区域
+                display="flex"
+                justifyContent="flex-start"
+                textAlign="left"
+                padding="1rem"
               >
-                {database.name}
+                {formatDatabaseName(database.name)}
               </Button>
             </Tooltip>
           </ListItem>
