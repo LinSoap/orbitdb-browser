@@ -36,12 +36,13 @@ const DatabaseInfoHeader = ({
 
   const hasWriteable = async () => {
     const { access } = Database || {};
-    const writerSet = new Set(
+    if (!access) return false;
+    const orbitdbWriterSet = new Set(
       access?.type === "orbitdb"
         ? await (access as OrbitDBAccessControllerType).get("write")
-        : access?.write
+        : []
     );
-
+    const writerSet = new Set([...orbitdbWriterSet, ...access?.write]);
     return writerSet.has(identity.id) || writerSet.has("*");
   };
 
