@@ -23,6 +23,7 @@ import {
 import { CopyIcon, ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { Circuit } from "@multiformats/multiaddr-matcher";
 import { protocols } from "@multiformats/multiaddr";
+import Loading from "../common/Loading";
 const Libp2pStatus = () => {
   const { ipfs, bootstrapsList } = useIpfs();
   const libp2p = ipfs.libp2p;
@@ -33,6 +34,7 @@ const Libp2pStatus = () => {
   const [peerTypes, setPeerTypes] = useState(getPeerTypes(libp2p));
   const [isMultiaddrsOpen, setIsMultiaddrsOpen] = useState(false);
   const [isConnectPeersOpen, setIsConnectPeersOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -44,8 +46,8 @@ const Libp2pStatus = () => {
       multiaddrs.map((multiaddr: string) => {
         extractProtocols(multiaddr.toString());
       });
+      setLoading(false);
     }, 5000); // 每5秒刷新一次数据
-
     return () => clearInterval(interval); // 清除定时器
   }, [libp2p]);
 
@@ -171,95 +173,103 @@ const Libp2pStatus = () => {
           </Text>
         </Flex>
       </Box>
-      <Box p={4}>
-        <Table variant="simple">
-          <Thead></Thead>
-          <Tbody>
-            <Tr>
-              <Td fontWeight="bold">Peer ID:</Td>
-              <Td>{peerId}</Td>
-              <Td />
-            </Tr>
-            <Tr>
-              <Td fontWeight="bold">Status:</Td>
-              <Td>{status}</Td>
-              <Td />
-            </Tr>
-            <Tr>
-              <Td fontWeight="bold">Connections:</Td>
-              <Td>{connections.length}</Td>
-              <Td />
-            </Tr>
-            {statusList.length > 0 && (
+      {loading ? (
+        <Loading />
+      ) : (
+        <Box p={4}>
+          <Table variant="simple">
+            <Thead></Thead>
+            <Tbody>
               <Tr>
-                <Td colSpan={2}>
-                  <Table variant="simple">
-                    <Thead>
-                      <Tr>
-                        <Th>Peer Type</Th>
-                        <Th>Count</Th>
-                        <Th />
-                      </Tr>
-                    </Thead>
-                    <Tbody>{statusList}</Tbody>
-                  </Table>
-                </Td>
+                <Td fontWeight="bold">Peer ID:</Td>
+                <Td>{peerId}</Td>
                 <Td />
               </Tr>
-            )}
-            <Tr>
-              <Td fontWeight="bold">Multiaddr:</Td>
-              <Td>{multiaddrs.length}</Td>
-              <Td>
-                <IconButton
-                  size="sm"
-                  onClick={() => setIsMultiaddrsOpen(!isMultiaddrsOpen)}
-                  aria-label="Toggle multiaddrs"
-                  icon={
-                    isMultiaddrsOpen ? <ChevronUpIcon /> : <ChevronDownIcon />
-                  }
-                />
-              </Td>
-            </Tr>
-            {multiaddrList.length > 0 && (
               <Tr>
-                <Td colSpan={2}>
-                  <Collapse in={isMultiaddrsOpen}>
+                <Td fontWeight="bold">Status:</Td>
+                <Td>{status}</Td>
+                <Td />
+              </Tr>
+              <Tr>
+                <Td fontWeight="bold">Connections:</Td>
+                <Td>{connections.length}</Td>
+                <Td />
+              </Tr>
+              {statusList.length > 0 && (
+                <Tr>
+                  <Td colSpan={2}>
                     <Table variant="simple">
-                      <Tbody>{multiaddrList}</Tbody>
+                      <Thead>
+                        <Tr>
+                          <Th>Peer Type</Th>
+                          <Th>Count</Th>
+                          <Th />
+                        </Tr>
+                      </Thead>
+                      <Tbody>{statusList}</Tbody>
                     </Table>
-                  </Collapse>
+                  </Td>
+                  <Td />
+                </Tr>
+              )}
+              <Tr>
+                <Td fontWeight="bold">Multiaddr:</Td>
+                <Td>{multiaddrs.length}</Td>
+                <Td>
+                  <IconButton
+                    size="sm"
+                    onClick={() => setIsMultiaddrsOpen(!isMultiaddrsOpen)}
+                    aria-label="Toggle multiaddrs"
+                    icon={
+                      isMultiaddrsOpen ? <ChevronUpIcon /> : <ChevronDownIcon />
+                    }
+                  />
                 </Td>
               </Tr>
-            )}
-            <Tr>
-              <Td fontWeight="bold">Connected Peer:</Td>
-              <Td>{peers.length}</Td>
-              <Td>
-                <IconButton
-                  size="sm"
-                  onClick={() => setIsConnectPeersOpen(!isConnectPeersOpen)}
-                  aria-label="Toggle Connected Peer"
-                  icon={
-                    isConnectPeersOpen ? <ChevronUpIcon /> : <ChevronDownIcon />
-                  }
-                />
-              </Td>
-            </Tr>
-            {peers.length > 0 && (
+              {multiaddrList.length > 0 && (
+                <Tr>
+                  <Td colSpan={2}>
+                    <Collapse in={isMultiaddrsOpen}>
+                      <Table variant="simple">
+                        <Tbody>{multiaddrList}</Tbody>
+                      </Table>
+                    </Collapse>
+                  </Td>
+                </Tr>
+              )}
               <Tr>
-                <Td colSpan={2}>
-                  <Collapse in={isConnectPeersOpen}>
-                    <Table variant="simple">
-                      <Tbody>{connectPeersList}</Tbody>
-                    </Table>
-                  </Collapse>
+                <Td fontWeight="bold">Connected Peer:</Td>
+                <Td>{peers.length}</Td>
+                <Td>
+                  <IconButton
+                    size="sm"
+                    onClick={() => setIsConnectPeersOpen(!isConnectPeersOpen)}
+                    aria-label="Toggle Connected Peer"
+                    icon={
+                      isConnectPeersOpen ? (
+                        <ChevronUpIcon />
+                      ) : (
+                        <ChevronDownIcon />
+                      )
+                    }
+                  />
                 </Td>
               </Tr>
-            )}
-          </Tbody>
-        </Table>
-      </Box>
+              {peers.length > 0 && (
+                <Tr>
+                  <Td colSpan={2}>
+                    <Collapse in={isConnectPeersOpen}>
+                      <Table variant="simple">
+                        <Tbody>{connectPeersList}</Tbody>
+                      </Table>
+                    </Collapse>
+                  </Td>
+                </Tr>
+              )}
+            </Tbody>
+          </Table>
+        </Box>
+      )}
     </Card>
   );
 };
