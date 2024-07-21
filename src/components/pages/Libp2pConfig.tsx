@@ -49,6 +49,14 @@ const Libp2pConfig = () => {
       return updatedBootstraps;
     });
   };
+  const handleBootstrapsDelete = (index: number) => {
+    setBootstrapsList((prevBootstraps: string[]) => {
+      if (prevBootstraps.length <= 1) {
+        return prevBootstraps;
+      }
+      return prevBootstraps.filter((_, i) => i !== index);
+    });
+  };
 
   return (
     <Card bg={bgColorMain}>
@@ -141,11 +149,7 @@ const Libp2pConfig = () => {
               <IconButton
                 aria-label="drop"
                 icon={<CloseIcon />}
-                onClick={() =>
-                  setBootstrapsList((prevBootstraps: string[]) =>
-                    prevBootstraps.filter((_, i) => i !== index)
-                  )
-                }
+                onClick={() => handleBootstrapsDelete(index)}
               />
             </HStack>
           ))}

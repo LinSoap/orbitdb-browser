@@ -4,7 +4,6 @@ import {
   List,
   ListItem,
   Tooltip,
-  Text,
   useColorMode,
   useTheme,
   Heading,

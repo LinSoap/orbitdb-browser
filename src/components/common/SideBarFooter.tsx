@@ -1,34 +1,52 @@
 import { Box, List, ListIcon, ListItem, Tooltip } from "@chakra-ui/react";
 import { useIdentities } from "../../context/IdentitiesProvider";
 import { useIpfs } from "../../context/IpfsProvider";
-import { FaBan, FaCheckCircle } from "react-icons/fa";
+import { FaBan, FaCheckCircle, FaQuestionCircle } from "react-icons/fa";
 import { useOrbitDB } from "../../context/OrbitDBProvier";
 import { Link } from "react-router-dom";
 
 const SideBarFooter = () => {
-  const { ipfs } = useIpfs();
+  const { ipfs, topics, stuns, bootstrapsList } = useIpfs();
   const { identity } = useIdentities();
   const { orbitDB } = useOrbitDB();
+
+  const IPFSStatus = () => {
+    let statusIcon = FaQuestionCircle;
+    let statusText = "IPFS Partially Available";
+
+    if (!ipfs) {
+      statusIcon = FaBan;
+      statusText = "IPFS Unavailable";
+    } else if (
+      topics.length !== 0 &&
+      topics[0] !== "" &&
+      stuns.length !== 0 &&
+      bootstrapsList[0] !== ""
+    ) {
+      statusIcon = FaCheckCircle;
+      statusText = "IPFS Available";
+    }
+
+    return (
+      <ListItem>
+        <Link to="/libp2p-status">
+          <Box>
+            <ListIcon as={statusIcon} />
+            <Tooltip
+              label={ipfs ? `Peer ID: ${ipfs.libp2p.peerId.string}` : undefined}
+            >
+              {statusText}
+            </Tooltip>
+          </Box>
+        </Link>
+      </ListItem>
+    );
+  };
+
   return (
     <Box p={4}>
       <List spacing={3}>
-        <ListItem>
-          <Link to="/libp2p-status">
-            {ipfs ? (
-              <Box>
-                <ListIcon as={FaCheckCircle} />
-                <Tooltip label={"Peer ID:" + ipfs.libp2p.peerId.string}>
-                  IPFS Available
-                </Tooltip>
-              </Box>
-            ) : (
-              <Box>
-                <ListIcon as={FaBan} />
-                IPFS Unavailable
-              </Box>
-            )}
-          </Link>
-        </ListItem>
+        {IPFSStatus()}
         <ListItem>
           <Link to="/identity">
             {identity?.id ? (
