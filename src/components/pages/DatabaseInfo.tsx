@@ -27,7 +27,6 @@ const DatabaseInfo = () => {
       try {
         if (address) {
           const db = await getDatabase(address);
-          console.log(db);
           setDatabase(db);
         }
       } catch (err: any) {
