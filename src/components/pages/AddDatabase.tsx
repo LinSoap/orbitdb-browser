@@ -44,6 +44,7 @@ const AddDatabase = () => {
   const { colorMode } = useColorMode();
   const theme = useTheme();
   const bgColorMain = theme.colors.custom.bgColorMain[colorMode];
+  const bgButton = theme.colors.custom.bgButton[colorMode];
 
   const [formData, setFormData] = useState<DatabaseConfig>({
     address: "",
@@ -255,6 +256,7 @@ const AddDatabase = () => {
                   onClick={() =>
                     setWriters((prevWriters) => [...prevWriters, ""])
                   }
+                  bg={bgButton}
                 >
                   Add ID
                 </Button>
@@ -322,7 +324,7 @@ const AddDatabase = () => {
                   onChange={handleChange}
                 />
               </FormControl>
-              <Button type="submit" colorScheme="messenger">
+              <Button type="submit" bg={bgButton}>
                 Create Database
               </Button>
             </VStack>

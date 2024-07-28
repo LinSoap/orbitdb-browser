@@ -28,6 +28,7 @@ const ConnectDatabse = () => {
   const { colorMode } = useColorMode();
   const theme = useTheme();
   const bgColorMain = theme.colors.custom.bgColorMain[colorMode];
+  const bgButton = theme.colors.custom.bgButton[colorMode];
 
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -81,7 +82,7 @@ const ConnectDatabse = () => {
                 }}
               />
             </InputGroup>
-            <Button onClick={() => handleClick(address)} colorScheme="blue">
+            <Button onClick={() => handleClick(address)} bg={bgButton}>
               Connect
             </Button>
           </Box>

@@ -23,6 +23,8 @@ const IdentityInfo = () => {
   const { colorMode } = useColorMode();
   const theme = useTheme();
   const bgColorMain = theme.colors.custom.bgColorMain[colorMode];
+  const bgButton = theme.colors.custom.bgButton[colorMode];
+
   return (
     <Card bg={bgColorMain}>
       <Box p={4} borderBottom="1px solid #e2e8f0">
@@ -64,14 +66,10 @@ const IdentityInfo = () => {
             onChange={(event) => setId(event.target.value)}
             mr={2}
           />
-          <Button
-            colorScheme="messenger"
-            onClick={() => createIdentity(id)}
-            mr={2}
-          >
+          <Button bg={bgButton} onClick={() => createIdentity(id)} mr={2}>
             Create
           </Button>
-          <Button colorScheme="messenger" onClick={() => removeIdentity()}>
+          <Button bg={bgButton} onClick={() => removeIdentity()}>
             Remove
           </Button>
         </Flex>

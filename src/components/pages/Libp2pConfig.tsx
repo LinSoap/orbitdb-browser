@@ -28,6 +28,8 @@ const Libp2pConfig = () => {
   const { colorMode } = useColorMode();
   const theme = useTheme();
   const bgColorMain = theme.colors.custom.bgColorMain[colorMode];
+  const bgButton = theme.colors.custom.bgButton[colorMode];
+
   const handleTopicChange = (index: number, newValue: string) => {
     setTopics((prevTopics: string[]) => {
       const updatedTopics = [...prevTopics];
@@ -66,7 +68,7 @@ const Libp2pConfig = () => {
             Libp2p Config
           </Text>
           <Spacer />
-          <Button colorScheme="messenger" onClick={() => updateLibp2pOptions()}>
+          <Button bg={bgButton} onClick={() => updateLibp2pOptions()}>
             Save Libp2p Options
           </Button>
         </Flex>
@@ -86,6 +88,7 @@ const Libp2pConfig = () => {
               />
               <IconButton
                 aria-label="drop"
+                bg={bgButton}
                 icon={<CloseIcon />}
                 onClick={() =>
                   setTopics((prevTopics: string[]) =>
@@ -97,6 +100,7 @@ const Libp2pConfig = () => {
           ))}
           <IconButton
             aria-label="add"
+            bg={bgButton}
             icon={<AddIcon />}
             onClick={() =>
               setTopics((prevTopics: string[]) => [...prevTopics, ""])
@@ -117,6 +121,7 @@ const Libp2pConfig = () => {
               />
               <IconButton
                 aria-label="drop"
+                bg={bgButton}
                 icon={<CloseIcon />}
                 onClick={() =>
                   setStuns((prevStuns: string[]) =>
@@ -128,6 +133,7 @@ const Libp2pConfig = () => {
           ))}
           <IconButton
             aria-label="add"
+            bg={bgButton}
             icon={<AddIcon />}
             onClick={() =>
               setStuns((prevStuns: string[]) => [...prevStuns, ""])
@@ -148,6 +154,7 @@ const Libp2pConfig = () => {
               />
               <IconButton
                 aria-label="drop"
+                bg={bgButton}
                 icon={<CloseIcon />}
                 onClick={() => handleBootstrapsDelete(index)}
               />
@@ -155,6 +162,7 @@ const Libp2pConfig = () => {
           ))}
           <IconButton
             aria-label="add"
+            bg={bgButton}
             icon={<AddIcon />}
             onClick={() =>
               setBootstrapsList((prevBootstraps: string[]) => [
