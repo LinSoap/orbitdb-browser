@@ -1,7 +1,7 @@
 import { extendTheme, ThemeConfig } from "@chakra-ui/react";
 
 const config: ThemeConfig = {
-  initialColorMode: 'light',
+  initialColorMode: 'dark',
 };
 
 // 扩展主题，添加自定义颜色
@@ -10,13 +10,17 @@ const theme = extendTheme({
   colors: {
     custom: {
       bgColorMain: {
-        light: "gray.100",
+        light: "white",
         dark: "gray.800",
       },
       bgColorAside: {
-        light: "gray.200",
+        light: "#f8f8f8",
         dark: "gray.700",
       },
+      bgButton: {
+        light: "#d8d8d8",
+        dark: "gray.600",
+      }
     },
   },
 });
