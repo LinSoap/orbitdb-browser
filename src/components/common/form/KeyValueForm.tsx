@@ -11,6 +11,8 @@ import {
   Th,
   Thead,
   Tr,
+  useColorMode,
+  useTheme,
 } from "@chakra-ui/react";
 import { KeyValueDatabaseType } from "../../../types/Database";
 import { KeyValueDataType } from "../../../types/Orbitdb";
@@ -21,7 +23,9 @@ const KeyValueForm = ({ Database }: { Database: KeyValueDatabaseType }) => {
   const [error, setError] = useState<string | null>(null);
   const [key, setKey] = useState<string>("");
   const [value, setValue] = useState<string>("");
-
+  const { colorMode } = useColorMode();
+  const theme = useTheme();
+  const bgButton = theme.colors.custom.bgButton[colorMode];
   const fetchData = async () => {
     setError(null);
     setKey("");
@@ -97,7 +101,7 @@ const KeyValueForm = ({ Database }: { Database: KeyValueDatabaseType }) => {
                 />
               </Td>
               <Td>
-                <Button colorScheme="blue" onClick={() => addNewItem()}>
+                <Button bg={bgButton} onClick={() => addNewItem()}>
                   Add New Row
                 </Button>
               </Td>

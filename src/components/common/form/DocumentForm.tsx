@@ -11,6 +11,8 @@ import {
   Th,
   Thead,
   Tr,
+  useColorMode,
+  useTheme,
 } from "@chakra-ui/react";
 import { DocumentsDataType } from "../../../types/Orbitdb";
 import { DocumentsDatabaseType } from "../../../types/Database";
@@ -20,6 +22,9 @@ const DocumentForm = ({ Database }: { Database: DocumentsDatabaseType }) => {
   const [error, setError] = useState<string | null>(null);
   const [newKey, setNewkey] = useState<string>("");
   const [newValue, setNewValue] = useState<string>("");
+  const { colorMode } = useColorMode();
+  const theme = useTheme();
+  const bgButton = theme.colors.custom.bgButton[colorMode];
 
   const fetchData = async () => {
     setError(null);
@@ -90,7 +95,7 @@ const DocumentForm = ({ Database }: { Database: DocumentsDatabaseType }) => {
                 />
               </Td>
               <Td>
-                <Button colorScheme="blue" onClick={() => onAddNewRow()}>
+                <Button bg={bgButton} onClick={() => onAddNewRow()}>
                   Add New Row
                 </Button>
               </Td>

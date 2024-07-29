@@ -11,6 +11,8 @@ import {
   Th,
   Thead,
   Tr,
+  useColorMode,
+  useTheme,
 } from "@chakra-ui/react";
 import { EventsDataType } from "../../../types/Orbitdb";
 import { EventsDatabaseType } from "../../../types/Database";
@@ -19,6 +21,9 @@ const EventForm = ({ Database }: { Database: EventsDatabaseType }) => {
   const [data, setData] = useState<EventsDataType[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [newRow, setNewRow] = useState<string>("");
+  const { colorMode } = useColorMode();
+  const theme = useTheme();
+  const bgButton = theme.colors.custom.bgButton[colorMode];
   const fetchData = async () => {
     setError(null);
     setNewRow("");
@@ -73,7 +78,7 @@ const EventForm = ({ Database }: { Database: EventsDatabaseType }) => {
                 />
               </Td>
               <Td>
-                <Button colorScheme="blue" onClick={() => onAddNewRow()}>
+                <Button bg={bgButton} onClick={() => onAddNewRow()}>
                   Add New Row
                 </Button>
               </Td>
