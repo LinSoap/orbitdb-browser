@@ -6,8 +6,6 @@ import {
   Table,
   Tbody,
   Td,
-  Th,
-  Thead,
   Tr,
   useColorMode,
   useTheme,
@@ -90,15 +88,13 @@ const ConnectDatabse = () => {
       </Box>
       <VStack p={4} align="stretch">
         <Table variant="simple">
-          <Thead>
-            <Tr>
-              <Th>Name</Th>
-              <Th>Database ID</Th>
-              <Th>Latest Opened</Th>
-              <Th>Action</Th>
-            </Tr>
-          </Thead>
           <Tbody>
+            <Tr>
+              <Td>Name</Td>
+              <Td>Database ID</Td>
+              <Td>Latest Opened</Td>
+              <Td>Action</Td>
+            </Tr>
             {recentDatabase.map((db: RecentDatabaseType) => (
               <Tr key={db.DatabaseAddress}>
                 <Td>{db.name}</Td>

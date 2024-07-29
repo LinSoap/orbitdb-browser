@@ -5,7 +5,6 @@ import "./index.css";
 import theme from "./theme";
 import ErrorPage from "./components/pages/ErrorPage";
 import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
-import AddDatabase from "./components/pages/AddDatabase";
 import DatabaseInfo from "./components/pages/DatabaseInfo";
 import { IpfsProvider } from "./context/IpfsProvider";
 import { OrbitDBProvider } from "./context/OrbitDBProvier";
@@ -17,6 +16,7 @@ import ConnectDatabse from "./components/pages/ConnectDatabse";
 import { CookiesProvider } from "react-cookie";
 import Layout from "./components/pages/_Layout";
 import Libp2pConfig from "./components/pages/Libp2pConfig";
+import CreateDatabase from "./components/pages/CreateDatabase";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -30,7 +30,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/add-database",
-        element: <AddDatabase />,
+        element: <CreateDatabase />,
       },
       {
         path: "/connect-database",

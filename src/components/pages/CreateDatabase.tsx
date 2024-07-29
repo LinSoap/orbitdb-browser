@@ -35,7 +35,7 @@ import { useOrbitDB } from "../../context/OrbitDBProvier";
 import { useIdentities } from "../../context/IdentitiesProvider";
 import { CloseIcon } from "@chakra-ui/icons";
 
-const AddDatabase = () => {
+const CreateDatabase = () => {
   const navigate = useNavigate();
   const { ipfs } = useIpfs();
   const { identity } = useIdentities();
@@ -337,4 +337,4 @@ const AddDatabase = () => {
   );
 };
 
-export default AddDatabase;
+export default CreateDatabase;

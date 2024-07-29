@@ -16,11 +16,11 @@ const Welcome = () => {
   const navigate = useNavigate();
   return (
     <Box textAlign="center" py={10} px={6} minH={"100vh"} position="relative">
-      <AbsoluteCenter p="4" color="white" axis="both">
+      <AbsoluteCenter p="4" axis="both">
         <Heading as="h1" size="xl" mb={4}>
           Welcome to OrbitDB-Browser
         </Heading>
-        <Text fontSize="lg" color="gray.600" mb={6}>
+        <Text fontSize="lg" mb={6}>
           Easily manage your OrbitDB.
         </Text>
         <VStack spacing={4} align="center">

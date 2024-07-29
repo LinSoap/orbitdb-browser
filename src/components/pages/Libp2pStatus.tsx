@@ -11,10 +11,8 @@ import {
   IconButton,
   Code,
   Table,
-  Thead,
   Tbody,
   Tr,
-  Th,
   Td,
   Collapse,
   Tag,
@@ -178,7 +176,6 @@ const Libp2pStatus = () => {
       ) : (
         <Box p={4}>
           <Table variant="simple">
-            <Thead></Thead>
             <Tbody>
               <Tr>
                 <Td fontWeight="bold">Peer ID:</Td>
@@ -199,14 +196,14 @@ const Libp2pStatus = () => {
                 <Tr>
                   <Td colSpan={2}>
                     <Table variant="simple">
-                      <Thead>
+                      <Tbody>
                         <Tr>
-                          <Th>Peer Type</Th>
-                          <Th>Count</Th>
-                          <Th />
+                          <Td>Peer Type</Td>
+                          <Td>Count</Td>
+                          <Td />
                         </Tr>
-                      </Thead>
-                      <Tbody>{statusList}</Tbody>
+                        {statusList}
+                      </Tbody>
                     </Table>
                   </Td>
                   <Td />

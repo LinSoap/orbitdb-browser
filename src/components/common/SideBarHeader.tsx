@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Card,
-  Text,
-  useColorMode,
-  useTheme,
-} from "@chakra-ui/react";
+import { Box, Button, Text, useColorMode, useTheme } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 const SideBarHeader = () => {

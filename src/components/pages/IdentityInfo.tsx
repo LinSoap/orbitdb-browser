@@ -3,10 +3,8 @@ import {
   Input,
   Box,
   Table,
-  Thead,
   Tbody,
   Tr,
-  Th,
   Td,
   Text,
   Card,
@@ -33,13 +31,11 @@ const IdentityInfo = () => {
         </Text>
       </Box>
       <Table>
-        <Thead>
-          <Tr>
-            <Th>Property</Th>
-            <Th>Value</Th>
-          </Tr>
-        </Thead>
         <Tbody>
+          <Tr>
+            <Td>Property</Td>
+            <Td>Value</Td>
+          </Tr>
           <Tr>
             <Td>Id</Td>
             <Td>{identity?.id}</Td>

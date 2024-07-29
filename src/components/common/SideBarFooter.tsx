@@ -1,14 +1,31 @@
-import { Box, List, ListIcon, ListItem, Tooltip } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  IconButton,
+  List,
+  ListIcon,
+  ListItem,
+  Tooltip,
+  Link,
+  useColorMode,
+} from "@chakra-ui/react";
 import { useIdentities } from "../../context/IdentitiesProvider";
 import { useIpfs } from "../../context/IpfsProvider";
-import { FaBan, FaCheckCircle, FaQuestionCircle } from "react-icons/fa";
+import {
+  FaBan,
+  FaCheckCircle,
+  FaGithub,
+  FaMoon,
+  FaQuestionCircle,
+  FaSun,
+} from "react-icons/fa";
 import { useOrbitDB } from "../../context/OrbitDBProvier";
-import { Link } from "react-router-dom";
 
 const SideBarFooter = () => {
   const { ipfs, topics, stuns, bootstrapsList } = useIpfs();
   const { identity } = useIdentities();
   const { orbitDB } = useOrbitDB();
+  const { colorMode, toggleColorMode } = useColorMode();
 
   const IPFSStatus = () => {
     let statusIcon = FaQuestionCircle;
@@ -78,6 +95,25 @@ const SideBarFooter = () => {
               OrbitDB Unavailable
             </Box>
           )}
+        </ListItem>
+        <ListItem>
+          <HStack>
+            <IconButton
+              aria-label="Switch Color Mode"
+              isRound={true}
+              bg={"transparent"}
+              icon={colorMode === "light" ? <FaSun /> : <FaMoon />}
+              onClick={toggleColorMode}
+            />
+            <Link href="https://github.com/LinSoap/orbitdb-browser" isExternal>
+              <IconButton
+                aria-label="Github"
+                icon={<FaGithub />}
+                isRound={true}
+                bg={"transparent"}
+              />
+            </Link>
+          </HStack>
         </ListItem>
       </List>
     </Box>
