@@ -163,7 +163,7 @@ const Libp2pStatus = () => {
   ));
 
   return (
-    <Card bg={bgColorMain}>
+    <Card bg={bgColorMain} h={"full"}>
       <Box p={4} borderBottom="1px solid #e2e8f0">
         <Flex>
           <Text fontSize="xl" fontWeight="bold">
@@ -184,7 +184,7 @@ const Libp2pStatus = () => {
               </Tr>
               <Tr>
                 <Td fontWeight="bold">Status:</Td>
-                <Td>{status}</Td>
+                <Td textTransform={"uppercase"}>{status}</Td>
                 <Td />
               </Tr>
               <Tr>

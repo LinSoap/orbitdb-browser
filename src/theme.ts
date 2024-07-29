@@ -1,4 +1,4 @@
-import { extendTheme, ThemeConfig } from "@chakra-ui/react";
+import { extendTheme,ThemeConfig } from "@chakra-ui/react";
 
 const config: ThemeConfig = {
   initialColorMode: 'dark',
@@ -44,6 +44,9 @@ const theme = extendTheme({
     },
   },
   components:{
+    Input:{
+      focusBorderColor: "#2f2f2f",
+    },
     Table:{
       baseStyle:{
         th:{
@@ -59,5 +62,4 @@ const theme = extendTheme({
 });
 
 
-console.log("Default Table styles:", theme.components.Table);
 export default theme;

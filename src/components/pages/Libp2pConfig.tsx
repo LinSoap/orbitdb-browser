@@ -61,7 +61,7 @@ const Libp2pConfig = () => {
   };
 
   return (
-    <Card bg={bgColorMain}>
+    <Card bg={bgColorMain} h={"full"}>
       <Box p={3} borderBottom="1px solid #e2e8f0">
         <Flex>
           <Text fontSize="xl" fontWeight="bold">

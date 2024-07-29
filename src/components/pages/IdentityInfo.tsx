@@ -24,7 +24,7 @@ const IdentityInfo = () => {
   const bgButton = theme.colors.custom.bgButton[colorMode];
 
   return (
-    <Card bg={bgColorMain}>
+    <Card bg={bgColorMain} h={"full"}>
       <Box p={4} borderBottom="1px solid #e2e8f0">
         <Text fontSize="xl" fontWeight="bold">
           Identity Info

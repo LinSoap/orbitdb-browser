@@ -204,6 +204,7 @@ const CreateDatabase = () => {
               <FormControl display="flex" alignItems="center">
                 <Checkbox
                   name="sync"
+                  colorScheme="gray"
                   isChecked={formData.params.sync}
                   onChange={(e) => handleChange(e)}
                 >
