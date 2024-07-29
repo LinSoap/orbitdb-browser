@@ -1,6 +1,5 @@
 import {
   Box,
-  HStack,
   IconButton,
   List,
   ListIcon,
@@ -8,6 +7,8 @@ import {
   Tooltip,
   Link,
   useColorMode,
+  Flex,
+  Heading,
 } from "@chakra-ui/react";
 import { useIdentities } from "../../context/IdentitiesProvider";
 import { useIpfs } from "../../context/IpfsProvider";
@@ -20,8 +21,10 @@ import {
   FaSun,
 } from "react-icons/fa";
 import { useOrbitDB } from "../../context/OrbitDBProvier";
+import { useNavigate } from "react-router-dom";
 
 const SideBarFooter = () => {
+  const navigate = useNavigate();
   const { ipfs, topics, stuns, bootstrapsList } = useIpfs();
   const { identity } = useIdentities();
   const { orbitDB } = useOrbitDB();
@@ -46,16 +49,14 @@ const SideBarFooter = () => {
 
     return (
       <ListItem>
-        <Link to="/libp2p-status">
-          <Box>
-            <ListIcon as={statusIcon} />
-            <Tooltip
-              label={ipfs ? `Peer ID: ${ipfs.libp2p.peerId.string}` : undefined}
-            >
-              {statusText}
-            </Tooltip>
-          </Box>
-        </Link>
+        <Box as="button" onClick={() => navigate("/libp2p-status")}>
+          <ListIcon as={statusIcon} />
+          <Tooltip
+            label={ipfs ? `Peer ID: ${ipfs.libp2p.peerId.string}` : undefined}
+          >
+            {statusText}
+          </Tooltip>
+        </Box>
       </ListItem>
     );
   };
@@ -65,7 +66,7 @@ const SideBarFooter = () => {
       <List spacing={3}>
         {IPFSStatus()}
         <ListItem>
-          <Link to="/identity">
+          <Box as="button" onClick={() => navigate("/identity")}>
             {identity?.id ? (
               <Box>
                 <ListIcon as={FaCheckCircle} />
@@ -79,7 +80,7 @@ const SideBarFooter = () => {
                 Identity Unavailable
               </Box>
             )}
-          </Link>
+          </Box>
         </ListItem>
         <ListItem>
           {orbitDB ? (
@@ -97,14 +98,8 @@ const SideBarFooter = () => {
           )}
         </ListItem>
         <ListItem>
-          <HStack>
-            <IconButton
-              aria-label="Switch Color Mode"
-              isRound={true}
-              bg={"transparent"}
-              icon={colorMode === "light" ? <FaSun /> : <FaMoon />}
-              onClick={toggleColorMode}
-            />
+          <Flex justify={"space-between"} alignItems={"center"}>
+            <Heading fontSize={"14px"}>Built with LinSoap</Heading>
             <Link href="https://github.com/LinSoap/orbitdb-browser" isExternal>
               <IconButton
                 aria-label="Github"
@@ -113,7 +108,14 @@ const SideBarFooter = () => {
                 bg={"transparent"}
               />
             </Link>
-          </HStack>
+            <IconButton
+              aria-label="Switch Color Mode"
+              isRound={true}
+              bg={"transparent"}
+              icon={colorMode === "light" ? <FaSun /> : <FaMoon />}
+              onClick={toggleColorMode}
+            />
+          </Flex>
         </ListItem>
       </List>
     </Box>

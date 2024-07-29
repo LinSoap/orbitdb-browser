@@ -103,7 +103,7 @@ const ConnectDatabse = () => {
                 <Td>
                   <Button
                     onClick={() => handleClick(db.DatabaseAddress)}
-                    colorScheme="blue"
+                    bg={bgButton}
                   >
                     Open
                   </Button>
