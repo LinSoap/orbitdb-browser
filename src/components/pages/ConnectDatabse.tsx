@@ -10,13 +10,13 @@ import {
   useColorMode,
   useTheme,
   VStack,
-  Text,
   InputGroup,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useOrbitDB } from "../../context/OrbitDBProvier";
 import { RecentDatabaseType } from "../../types/Orbitdb";
+import MainTitle from "../common/MainTitle";
 
 const ConnectDatabse = () => {
   const navigate = useNavigate();
@@ -60,11 +60,7 @@ const ConnectDatabse = () => {
 
   return (
     <Card bg={bgColorMain} h={"full"}>
-      <Box p={4} borderBottom="1px solid #e2e8f0">
-        <Text fontSize="xl" fontWeight="bold">
-          Connect Database
-        </Text>
-      </Box>
+      <MainTitle title="Connect Database" />
       <Box p={4}>
         <VStack align="stretch" spacing={4}>
           <Box display="flex" alignItems="center">

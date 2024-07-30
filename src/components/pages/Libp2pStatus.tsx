@@ -22,6 +22,7 @@ import { CopyIcon, ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { Circuit } from "@multiformats/multiaddr-matcher";
 import { protocols } from "@multiformats/multiaddr";
 import Loading from "../common/Loading";
+import MainTitle from "../common/MainTitle";
 const Libp2pStatus = () => {
   const { ipfs, bootstrapsList } = useIpfs();
   const libp2p = ipfs.libp2p;
@@ -164,13 +165,7 @@ const Libp2pStatus = () => {
 
   return (
     <Card bg={bgColorMain} h={"full"}>
-      <Box p={4} borderBottom="1px solid #e2e8f0">
-        <Flex>
-          <Text fontSize="xl" fontWeight="bold">
-            Node Status
-          </Text>
-        </Flex>
-      </Box>
+      <MainTitle title="Libp2p Status" />
       {loading ? (
         <Loading />
       ) : (

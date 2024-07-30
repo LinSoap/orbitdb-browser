@@ -9,7 +9,6 @@ import {
 import OrbitDBController from "../common/OrbitDBController";
 import { OrbitDBAccessControllerType } from "../../types/Access";
 import {
-  Box,
   Table,
   Thead,
   Tbody,
@@ -23,6 +22,7 @@ import {
   useTheme,
   Card,
 } from "@chakra-ui/react";
+import MainTitle from "../common/MainTitle";
 
 const DatabaseDetail = () => {
   const { address } = useParams<{ address: string }>();
@@ -82,11 +82,7 @@ const DatabaseDetail = () => {
 
   return (
     <Card bg={bgColorMain}>
-      <Box p={4} borderBottom="1px solid #e2e8f0">
-        <Text fontSize="xl" fontWeight="bold">
-          Database Detail
-        </Text>
-      </Box>
+      <MainTitle title="Database Detail" />
       <VStack spacing={4} align="stretch">
         <TableContainer>
           <Table variant="simple">

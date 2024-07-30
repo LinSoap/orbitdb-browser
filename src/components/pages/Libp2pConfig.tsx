@@ -8,12 +8,12 @@ import {
   Button,
   Box,
   Text,
-  Flex,
-  Spacer,
-  Card,
   useColorMode,
   useTheme,
+  Card,
+  Center,
 } from "@chakra-ui/react";
+import MainTitle from "../common/MainTitle";
 
 const Libp2pConfig = () => {
   const {
@@ -62,17 +62,7 @@ const Libp2pConfig = () => {
 
   return (
     <Card bg={bgColorMain} h={"full"}>
-      <Box p={3} borderBottom="1px solid #e2e8f0">
-        <Flex>
-          <Text fontSize="xl" fontWeight="bold">
-            Libp2p Config
-          </Text>
-          <Spacer />
-          <Button bg={bgButton} onClick={() => updateLibp2pOptions()}>
-            Save Libp2p Options
-          </Button>
-        </Flex>
-      </Box>
+      <MainTitle title="Libp2p Configuration" />
       <Box p={4}>
         <Text fontSize="lg" mb={2}>
           PubSub Topics:
@@ -171,6 +161,15 @@ const Libp2pConfig = () => {
               ])
             }
           />
+          <Center>
+            <Button
+              w={"auto"}
+              bg={bgButton}
+              onClick={() => updateLibp2pOptions()}
+            >
+              Save Libp2p Options
+            </Button>
+          </Center>
         </VStack>
       </Box>
     </Card>

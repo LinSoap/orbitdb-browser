@@ -13,7 +13,6 @@ import {
   useColorMode,
   useTheme,
   VStack,
-  Text,
 } from "@chakra-ui/react";
 
 import {
@@ -34,6 +33,7 @@ import { DatabaseConfig } from "../../interface/DatabaseConfig";
 import { useOrbitDB } from "../../context/OrbitDBProvier";
 import { useIdentities } from "../../context/IdentitiesProvider";
 import { CloseIcon } from "@chakra-ui/icons";
+import MainTitle from "../common/MainTitle";
 
 const CreateDatabase = () => {
   const navigate = useNavigate();
@@ -157,12 +157,7 @@ const CreateDatabase = () => {
 
   return (
     <Card bg={bgColorMain}>
-      <Box p={4} borderBottom="1px solid #e2e8f0">
-        <Text fontSize="xl" fontWeight="bold">
-          Create Database
-        </Text>
-      </Box>
-
+      <MainTitle title="Create Database" />
       {ipfs ? (
         <Box p={4}>
           <form onSubmit={handleSubmit}>

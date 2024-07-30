@@ -6,7 +6,6 @@ import {
   Tbody,
   Tr,
   Td,
-  Text,
   Card,
   Flex,
   useTheme,
@@ -14,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useIdentities } from "../../context/IdentitiesProvider";
 import { useState } from "react";
+import MainTitle from "../common/MainTitle";
 
 const IdentityInfo = () => {
   const { identity, createIdentity, removeIdentity } = useIdentities();
@@ -25,11 +25,7 @@ const IdentityInfo = () => {
 
   return (
     <Card bg={bgColorMain} h={"full"}>
-      <Box p={4} borderBottom="1px solid #e2e8f0">
-        <Text fontSize="xl" fontWeight="bold">
-          Identity Info
-        </Text>
-      </Box>
+      <MainTitle title="Identity Info" />
       <Table>
         <Tbody>
           <Tr>
