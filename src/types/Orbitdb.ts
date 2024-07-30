@@ -26,6 +26,7 @@ export type OrbitDBContextType =  {
 
 export type RecentDatabaseType = {
     name: string;
-    DatabaseAddress: string;
+    address: string;
+    type:string;
     latestOpened: string;
 }

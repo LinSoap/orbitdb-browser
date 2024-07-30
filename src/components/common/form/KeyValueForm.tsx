@@ -78,6 +78,7 @@ const KeyValueForm = ({ Database }: { Database: KeyValueDatabaseType }) => {
             {data &&
               data.map((data) => (
                 <KeyValueItem
+                  key={data.hash}
                   data={data}
                   updateItem={updateItem}
                   deleteItem={deleteItem}
@@ -105,6 +106,8 @@ const KeyValueForm = ({ Database }: { Database: KeyValueDatabaseType }) => {
                   Add New Row
                 </Button>
               </Td>
+              <Td />
+              <Td />
             </Tr>
           </Tfoot>
         </Table>

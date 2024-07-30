@@ -58,25 +58,23 @@ export const OrbitDBProvider = ({
     try {
       const currentTime = new Date().toISOString();
 
+      console.log("addDatabase!!!" + database.type);
       const newRecentDatabase: RecentDatabaseType = {
         name: database.name,
-        DatabaseAddress: database.address,
+        address: database.address,
+        type: database.type,
         latestOpened: currentTime,
       };
 
       setDatabases((prevDatabases) => [...prevDatabases, database]);
       setRecentDatabase((prevRecentDatabase) => [
         newRecentDatabase,
-        ...prevRecentDatabase.filter(
-          (db) => db.DatabaseAddress !== database.address
-        ),
+        ...prevRecentDatabase.filter((db) => db.address !== database.address),
       ]);
 
       setCookie("recentDatabase", [
         newRecentDatabase,
-        ...recentDatabase.filter(
-          (db) => db.DatabaseAddress !== database.address
-        ),
+        ...recentDatabase.filter((db) => db.address !== database.address),
       ]);
     } catch (error: any) {
       setError(`Error opening database: ${error.message}`);

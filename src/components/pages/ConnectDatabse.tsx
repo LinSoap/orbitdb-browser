@@ -91,20 +91,19 @@ const ConnectDatabse = () => {
           <Tbody>
             <Tr>
               <Td>Name</Td>
-              <Td>Database ID</Td>
+              <Td>Address</Td>
+              <Td>Type</Td>
               <Td>Latest Opened</Td>
               <Td>Action</Td>
             </Tr>
             {recentDatabase.map((db: RecentDatabaseType) => (
-              <Tr key={db.DatabaseAddress}>
+              <Tr key={db.address}>
                 <Td>{db.name}</Td>
-                <Td>{db.DatabaseAddress}</Td>
+                <Td>{db.address}</Td>
+                <Td>{db.type}</Td>
                 <Td>{formatDate(db.latestOpened)}</Td>
                 <Td>
-                  <Button
-                    onClick={() => handleClick(db.DatabaseAddress)}
-                    bg={bgButton}
-                  >
+                  <Button onClick={() => handleClick(db.address)} bg={bgButton}>
                     Open
                   </Button>
                 </Td>

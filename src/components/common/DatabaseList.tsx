@@ -13,12 +13,13 @@ import { useOrbitDB } from "../../context/OrbitDBProvier";
 
 const DatabaseList = () => {
   const { address } = useParams<{ address: string }>();
-  const { databases } = useOrbitDB();
+  const { recentDatabase } = useOrbitDB();
   const navigate = useNavigate();
   const { colorMode } = useColorMode();
   const theme = useTheme();
   const bgColorAside = theme.colors.custom.bgColorAside[colorMode];
 
+  console.log(recentDatabase);
   const formatDatabaseName = (name: string) => {
     if (name.length > 20) {
       return `${name.slice(0, 15)}...${name.slice(-8)}`;
@@ -32,9 +33,17 @@ const DatabaseList = () => {
         DataBase:
       </Heading>
       <List>
-        {databases.map((database: any) => (
+        {recentDatabase.map((database: any) => (
           <ListItem key={database.address} paddingX={"4px"}>
-            <Tooltip label={database.address}>
+            <Tooltip
+              label={
+                <>
+                  {"Address: " + database.address}
+                  <br />
+                  {"Type: " + database.type}
+                </>
+              }
+            >
               <Button
                 w={"95%"}
                 border={"20px"}
