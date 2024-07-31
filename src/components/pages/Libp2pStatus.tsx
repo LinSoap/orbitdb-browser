@@ -3,7 +3,6 @@ import { useIpfs } from "../../context/IpfsProvider";
 import { getPeerTypes } from "../../utils/libp2p";
 import {
   Box,
-  Text,
   Card,
   Flex,
   useColorMode,

@@ -1,6 +1,5 @@
 import {
   Button,
-  Input,
   Box,
   Table,
   Tbody,
@@ -14,6 +13,7 @@ import {
 import { useIdentities } from "../../context/IdentitiesProvider";
 import { useState } from "react";
 import MainTitle from "../common/MainTitle";
+import StyledInput from "../common/StyledInput";
 
 const IdentityInfo = () => {
   const { identity, createIdentity, removeIdentity } = useIdentities();
@@ -52,7 +52,7 @@ const IdentityInfo = () => {
       </Table>
       <Box mt={4} paddingX={20}>
         <Flex align="center">
-          <Input
+          <StyledInput
             placeholder="Enter new id"
             value={id}
             onChange={(event) => setId(event.target.value)}

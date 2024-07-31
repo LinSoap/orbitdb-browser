@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Card,
-  Input,
   Table,
   Tbody,
   Td,
@@ -17,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useOrbitDB } from "../../context/OrbitDBProvier";
 import { RecentDatabaseType } from "../../types/Orbitdb";
 import MainTitle from "../common/MainTitle";
+import StyledInput from "../common/StyledInput";
 
 const ConnectDatabse = () => {
   const navigate = useNavigate();
@@ -65,7 +65,7 @@ const ConnectDatabse = () => {
         <VStack align="stretch" spacing={4}>
           <Box display="flex" alignItems="center">
             <InputGroup flex="1" mr={4}>
-              <Input
+              <StyledInput
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder="Connect by Database Address Or Name"

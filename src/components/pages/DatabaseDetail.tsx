@@ -13,7 +13,6 @@ import {
   Thead,
   Tbody,
   Tr,
-  Th,
   Td,
   TableContainer,
   Text,
@@ -82,33 +81,34 @@ const DatabaseDetail = () => {
 
   return (
     <Card bg={bgColorMain}>
+      {error && <Text>{error}</Text>}
       <MainTitle title="Database Detail" />
       <VStack spacing={4} align="stretch">
         <TableContainer>
           <Table variant="simple">
             <Tbody>
               <Tr>
-                <Th>Address</Th>
+                <Td>Address</Td>
                 <Td>{Database?.address}</Td>
               </Tr>
               <Tr>
-                <Th>Name</Th>
+                <Td>Name</Td>
                 <Td>{Database?.name}</Td>
               </Tr>
               <Tr>
-                <Th>Meta</Th>
+                <Td>Meta</Td>
                 <Td>{JSON.stringify(Database?.meta)}</Td>
               </Tr>
               <Tr>
-                <Th>Access Address</Th>
+                <Td>Access Address</Td>
                 <Td>{Database?.access.address}</Td>
               </Tr>
               <Tr>
-                <Th>Access Type</Th>
+                <Td>Access Type</Td>
                 <Td>{Database?.access.type}</Td>
               </Tr>
               <Tr>
-                <Th>Peers</Th>
+                <Td>Peers</Td>
                 <Td>
                   {Database?.peers.length > 0 ? (
                     <Text>hello</Text>
@@ -125,7 +125,7 @@ const DatabaseDetail = () => {
             <Table variant="simple">
               <Thead>
                 <Tr>
-                  <Th>Writable ID</Th>
+                  <Td>Writable ID</Td>
                 </Tr>
               </Thead>
               <Tbody>

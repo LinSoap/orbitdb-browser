@@ -48,7 +48,6 @@ export const OrbitDBProvider = ({
     const db = databases.find(
       (db) => db.address.toString() === "/orbitdb/" + address
     );
-    console.log("find db!!!" + db);
     return db ? db : null;
   };
 
@@ -58,7 +57,6 @@ export const OrbitDBProvider = ({
     try {
       const currentTime = new Date().toISOString();
 
-      console.log("addDatabase!!!" + database.type);
       const newRecentDatabase: RecentDatabaseType = {
         name: database.name,
         address: database.address,

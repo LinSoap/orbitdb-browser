@@ -8,7 +8,6 @@ import {
   FormLabel,
   HStack,
   IconButton,
-  Input,
   Select,
   useColorMode,
   useTheme,
@@ -34,6 +33,7 @@ import { useOrbitDB } from "../../context/OrbitDBProvier";
 import { useIdentities } from "../../context/IdentitiesProvider";
 import { CloseIcon } from "@chakra-ui/icons";
 import MainTitle from "../common/MainTitle";
+import StyledInput from "../common/StyledInput";
 
 const CreateDatabase = () => {
   const navigate = useNavigate();
@@ -164,7 +164,7 @@ const CreateDatabase = () => {
             <VStack spacing={4}>
               <FormControl>
                 <FormLabel>Address</FormLabel>
-                <Input
+                <StyledInput
                   type="text"
                   name="address"
                   placeholder="String Or OrbitDB Address"
@@ -188,7 +188,7 @@ const CreateDatabase = () => {
               </FormControl>
               <FormControl>
                 <FormLabel>Meta</FormLabel>
-                <Input
+                <StyledInput
                   type="text"
                   name="meta"
                   placeholder="Char"
@@ -231,7 +231,7 @@ const CreateDatabase = () => {
                 <FormLabel>Writable ID:</FormLabel>
                 {writers.map((id, index) => (
                   <HStack key={index} p={"3px"}>
-                    <Input
+                    <StyledInput
                       type="text"
                       placeholder="Wriable ID"
                       value={id}
@@ -313,7 +313,7 @@ const CreateDatabase = () => {
               </FormControl>
               <FormControl>
                 <FormLabel>References Count</FormLabel>
-                <Input
+                <StyledInput
                   type="number"
                   name="referencesCount"
                   value={formData.params.referencesCount}

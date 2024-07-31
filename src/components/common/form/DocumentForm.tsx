@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import {} from "../../../context/OrbitDBProvier";
 import {
+  Box,
   Button,
-  Input,
   Table,
   TableContainer,
   Tbody,
@@ -16,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { DocumentsDataType } from "../../../types/Orbitdb";
 import { DocumentsDatabaseType } from "../../../types/Database";
+import StyledInput from "../StyledInput";
 
 const DocumentForm = ({ Database }: { Database: DocumentsDatabaseType }) => {
   const [data, setData] = useState<DocumentsDataType[] | null>(null);
@@ -83,16 +83,20 @@ const DocumentForm = ({ Database }: { Database: DocumentsDatabaseType }) => {
           <Tfoot>
             <Tr>
               <Td>
-                <Input
-                  htmlSize={4}
-                  onChange={(event) => setNewkey(event.target.value)}
-                />
+                <Box>
+                  <StyledInput
+                    htmlSize={4}
+                    onChange={(event) => setNewkey(event.target.value)}
+                  />
+                </Box>
               </Td>
               <Td>
-                <Input
-                  htmlSize={4}
-                  onChange={(event) => setNewValue(event.target.value)}
-                />
+                <Box>
+                  <StyledInput
+                    htmlSize={4}
+                    onChange={(event) => setNewValue(event.target.value)}
+                  />
+                </Box>
               </Td>
               <Td>
                 <Button bg={bgButton} onClick={() => onAddNewRow()}>

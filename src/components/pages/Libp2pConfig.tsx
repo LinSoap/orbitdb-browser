@@ -3,7 +3,6 @@ import { CloseIcon, AddIcon } from "@chakra-ui/icons";
 import {
   HStack,
   VStack,
-  Input,
   IconButton,
   Button,
   Box,
@@ -14,6 +13,7 @@ import {
   Center,
 } from "@chakra-ui/react";
 import MainTitle from "../common/MainTitle";
+import StyledInput from "../common/StyledInput";
 
 const Libp2pConfig = () => {
   const {
@@ -70,7 +70,7 @@ const Libp2pConfig = () => {
         <VStack spacing={4} align="stretch">
           {topics.map((topic: string, index: number) => (
             <HStack key={index}>
-              <Input
+              <StyledInput
                 type="text"
                 placeholder="PubSub Topic"
                 value={topic}
@@ -103,7 +103,7 @@ const Libp2pConfig = () => {
         <VStack spacing={4} align="stretch">
           {stuns.map((stun: string, index: number) => (
             <HStack key={index}>
-              <Input
+              <StyledInput
                 type="text"
                 placeholder="Stun Server"
                 value={stun}
@@ -136,7 +136,7 @@ const Libp2pConfig = () => {
         <VStack spacing={4} align="stretch">
           {bootstrapsList.map((bootstraps: string, index: number) => (
             <HStack key={index}>
-              <Input
+              <StyledInput
                 type="text"
                 placeholder="Relay Server multiaddr"
                 value={bootstraps}

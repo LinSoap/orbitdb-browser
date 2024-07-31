@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import {} from "../../../context/OrbitDBProvier";
 import {
+  Box,
   Button,
-  Input,
   Table,
   TableContainer,
   Tbody,
@@ -17,6 +17,7 @@ import {
 import { KeyValueDatabaseType } from "../../../types/Database";
 import { KeyValueDataType } from "../../../types/Orbitdb";
 import KeyValueItem from "./KeyValueItem";
+import StyledInput from "../StyledInput";
 
 const KeyValueForm = ({ Database }: { Database: KeyValueDatabaseType }) => {
   const [data, setData] = useState<KeyValueDataType[] | null>(null);
@@ -88,18 +89,22 @@ const KeyValueForm = ({ Database }: { Database: KeyValueDatabaseType }) => {
           <Tfoot>
             <Tr>
               <Td>
-                <Input
-                  htmlSize={4}
-                  value={key}
-                  onChange={(event) => setKey(event.target.value)}
-                />
+                <Box>
+                  <StyledInput
+                    htmlSize={4}
+                    value={key}
+                    onChange={(event) => setKey(event.target.value)}
+                  />
+                </Box>
               </Td>
               <Td>
-                <Input
-                  htmlSize={4}
-                  value={value}
-                  onChange={(event) => setValue(event.target.value)}
-                />
+                <Box>
+                  <StyledInput
+                    htmlSize={4}
+                    value={value}
+                    onChange={(event) => setValue(event.target.value)}
+                  />
+                </Box>
               </Td>
               <Td>
                 <Button bg={bgButton} onClick={() => addNewItem()}>

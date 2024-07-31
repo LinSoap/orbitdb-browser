@@ -19,7 +19,6 @@ const DatabaseList = () => {
   const theme = useTheme();
   const bgColorAside = theme.colors.custom.bgColorAside[colorMode];
 
-  console.log(recentDatabase);
   const formatDatabaseName = (name: string) => {
     if (name.length > 20) {
       return `${name.slice(0, 15)}...${name.slice(-8)}`;

@@ -40,12 +40,15 @@ const theme = extendTheme({
       lineColor:{
         light: "#e5e5e5",
         dark: "#2f2f2f"
+      },
+      inputFocusColor:{
+        light: "#0d0d0d",
+        dark: "#ececec"
       }
     },
   },
   components:{
     Input:{
-      focusBorderColor: "#2f2f2f",
     },
     Table:{
       baseStyle:{
