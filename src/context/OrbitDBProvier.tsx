@@ -60,6 +60,7 @@ export const OrbitDBProvider = ({
       const newRecentDatabase: RecentDatabaseType = {
         name: database.name,
         address: database.address,
+        acccess: database.access.type,
         type: database.type,
         latestOpened: currentTime,
       };

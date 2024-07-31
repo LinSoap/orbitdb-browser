@@ -89,6 +89,7 @@ const ConnectDatabse = () => {
               <Td>Name</Td>
               <Td>Address</Td>
               <Td>Type</Td>
+              <Td>Access</Td>
               <Td>Latest Opened</Td>
               <Td>Action</Td>
             </Tr>
@@ -97,6 +98,7 @@ const ConnectDatabse = () => {
                 <Td>{db.name}</Td>
                 <Td>{db.address}</Td>
                 <Td>{db.type}</Td>
+                <Td>{db.acccess}</Td>
                 <Td>{formatDate(db.latestOpened)}</Td>
                 <Td>
                   <Button onClick={() => handleClick(db.address)} bg={bgButton}>
