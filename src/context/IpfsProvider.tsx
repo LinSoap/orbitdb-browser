@@ -13,7 +13,7 @@ import { LevelBlockstore } from "blockstore-level";
 import { bootstrap } from "@libp2p/bootstrap";
 import { pubsubPeerDiscovery } from "@libp2p/pubsub-peer-discovery";
 import { useCookies } from "react-cookie";
-
+import { webTransport } from "@libp2p/webtransport";
 const IpfsContext = createContext<any | undefined>(undefined);
 
 export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
@@ -40,6 +40,7 @@ export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
         webSockets({
           filter: all,
         }),
+        webTransport(),
         webRTC({
           rtcConfiguration: {
             iceServers: [
