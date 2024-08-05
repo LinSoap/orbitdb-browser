@@ -16,11 +16,11 @@ import {
 
 import {
   ComposedStorage,
-  Documents,
-  Events,
   IPFSAccessController,
   IPFSBlockStorage,
   KeyValue,
+  Events,
+  Documents,
   LRUStorage,
   LevelStorage,
   MemoryStorage,

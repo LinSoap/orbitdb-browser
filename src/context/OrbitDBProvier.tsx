@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { createOrbitDB } from "@orbitdb/core";
+import { createOrbitDB, OrbitDB } from "@orbitdb/core";
 import { useIpfs } from "./IpfsProvider";
 import { useIdentities } from "./IdentitiesProvider";
 import { useCookies } from "react-cookie";
@@ -21,7 +21,7 @@ export const OrbitDBProvider = ({
   const [recentDatabase, setRecentDatabase] = useState<RecentDatabaseType[]>(
     cookies.recentDatabase || []
   );
-  const [orbitDB, setOrbitDB] = useState(null);
+  const [orbitDB, setOrbitDB] = useState<OrbitDB | undefined>();
   const [databases, setDatabases] = useState<any[]>([]);
   const [error, setError] = useState("");
   const { ipfs } = useIpfs();

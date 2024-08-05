@@ -14,12 +14,11 @@ import {
   useColorMode,
   useTheme,
 } from "@chakra-ui/react";
-import { EventsDataType } from "../../../types/Orbitdb";
-import { EventsDatabaseType } from "../../../types/Database";
 import StyledInput from "../StyledInput";
+import { EventsType } from "@orbitdb/core";
 
-const EventForm = ({ Database }: { Database: EventsDatabaseType }) => {
-  const [data, setData] = useState<EventsDataType[] | null>(null);
+const EventForm = ({ Database }: { Database: EventsType }) => {
+  const [data, setData] = useState<{ value: string; hash: string }[]>();
   const [error, setError] = useState<string | null>(null);
   const [newRow, setNewRow] = useState<string>("");
   const { colorMode } = useColorMode();

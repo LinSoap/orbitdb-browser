@@ -13,12 +13,12 @@ import {
   useColorMode,
   useTheme,
 } from "@chakra-ui/react";
-import { DocumentsDataType } from "../../../types/Orbitdb";
-import { DocumentsDatabaseType } from "../../../types/Database";
 import StyledInput from "../StyledInput";
+import { DocumentsType } from "@orbitdb/core";
 
-const DocumentForm = ({ Database }: { Database: DocumentsDatabaseType }) => {
-  const [data, setData] = useState<DocumentsDataType[] | null>(null);
+const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
+  const [data, setData] =
+    useState<{ key: string; value: any; hash: string }[]>();
   const [error, setError] = useState<string | null>(null);
   const [newKey, setNewkey] = useState<string>("");
   const [newValue, setNewValue] = useState<string>("");

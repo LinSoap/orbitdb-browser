@@ -14,13 +14,13 @@ import {
   useColorMode,
   useTheme,
 } from "@chakra-ui/react";
-import { KeyValueDatabaseType } from "../../../types/Database";
-import { KeyValueDataType } from "../../../types/Orbitdb";
 import KeyValueItem from "./KeyValueItem";
 import StyledInput from "../StyledInput";
+import { KeyValueType } from "@orbitdb/core";
 
-const KeyValueForm = ({ Database }: { Database: KeyValueDatabaseType }) => {
-  const [data, setData] = useState<KeyValueDataType[] | null>(null);
+const KeyValueForm = ({ Database }: { Database: KeyValueType }) => {
+  const [data, setData] =
+    useState<{ key: string; value: string; hash: string }[]>();
   const [error, setError] = useState<string | null>(null);
   const [key, setKey] = useState<string>("");
   const [value, setValue] = useState<string>("");

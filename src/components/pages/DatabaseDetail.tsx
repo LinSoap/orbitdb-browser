@@ -1,13 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useOrbitDB } from "../../context/OrbitDBProvier";
 import { useEffect, useState } from "react";
-import {
-  DocumentsDatabaseType,
-  EventsDatabaseType,
-  KeyValueDatabaseType,
-} from "../../types/Database";
 import OrbitDBController from "../common/OrbitDBController";
-import { OrbitDBAccessControllerType } from "../../types/Access";
 import {
   Table,
   Thead,
@@ -22,6 +16,12 @@ import {
   Card,
 } from "@chakra-ui/react";
 import MainTitle from "../common/MainTitle";
+import {
+  DocumentsType,
+  EventsType,
+  KeyValueType,
+  OrbitDBAccessControllerType,
+} from "@orbitdb/core";
 
 const DatabaseDetail = () => {
   const { address } = useParams<{ address: string }>();
@@ -31,8 +31,8 @@ const DatabaseDetail = () => {
     new Set<string>()
   );
   const [Database, setDatabase] = useState<
-    EventsDatabaseType | DocumentsDatabaseType | KeyValueDatabaseType | null
-  >(null);
+    EventsType | KeyValueType | DocumentsType
+  >();
   const { colorMode } = useColorMode();
   const theme = useTheme();
   const bgColorMain = theme.colors.custom.bgColorMain[colorMode];
@@ -120,7 +120,7 @@ const DatabaseDetail = () => {
             </Tbody>
           </Table>
         </TableContainer>
-        {Database?.access.write.length > 0 ? (
+        {Database && Database?.access.write.length > 0 ? (
           <TableContainer>
             <Table variant="simple">
               <Thead>

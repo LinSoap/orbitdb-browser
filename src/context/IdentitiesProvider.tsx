@@ -1,17 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import {
-  ComposedStorage,
-  Identities,
-  IPFSBlockStorage,
-  KeyStore,
-  LevelStorage,
-  LRUStorage,
-} from "@orbitdb/core";
+import { Identities, IdentitiesType, Identity } from "@orbitdb/core";
 import { useIpfs } from "./IpfsProvider";
-import { IdentitiesInstance, IdentityType } from "../types/Identities";
 import { useCookies } from "react-cookie";
 
-const IdentitiesContext = createContext<any | undefined>(undefined);
+const IdentitiesContext = createContext<any>(undefined);
 
 export const IdentitiesProvider = ({
   children,
@@ -19,14 +11,17 @@ export const IdentitiesProvider = ({
   children: React.ReactNode;
 }) => {
   const [cookies, setCookie, removeCookie] = useCookies(["identityID"]);
-  const [identities, setIdentities] = useState<IdentitiesInstance>();
-  const [identity, setIdentity] = useState<IdentityType>();
+  const [identities, setIdentities] = useState<IdentitiesType>();
+  const [identity, setIdentity] = useState<Identity>();
   const [error, setError] = useState("");
   const { ipfs } = useIpfs();
 
   const createIdentity = async (id: string) => {
     try {
       const identityInstance = await identities.createIdentity({ id });
+      console.log(identityInstance);
+      // const otherIdentity = decodeIdentity(identityInstance.bytes);
+      // console.log(isEqual(identityInstance, identityInstance));
       setIdentity(identityInstance);
       setCookie("identityID", id);
     } catch (error: any) {
@@ -46,14 +41,7 @@ export const IdentitiesProvider = ({
   const initIdentities = async () => {
     if (ipfs) {
       try {
-        const storage1 = await ComposedStorage(
-          await LRUStorage(),
-          await LevelStorage()
-        );
-        const keystore = await KeyStore(
-          await ComposedStorage(storage1, await IPFSBlockStorage({ ipfs }))
-        );
-        const IdentitiesInstance = await Identities({ ipfs, keystore });
+        const IdentitiesInstance = await Identities({ ipfs });
         // console.log("OrbitDB instance:", orbitdbInstance);
         setIdentities(IdentitiesInstance);
       } catch (error: any) {
