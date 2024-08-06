@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useOrbitDB } from "../../context/OrbitDBProvier";
 import { useEffect, useState } from "react";
 import EventDataForm from "../common/form/EventForm";
@@ -12,6 +12,7 @@ import { EventsType, DocumentsType, KeyValueType } from "@orbitdb/core";
 const DatabaseInfo = () => {
   let { address } = useParams<{ address: string }>();
 
+  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const { getDatabase } = useOrbitDB();
   const [Database, setDatabase] = useState<
@@ -23,7 +24,11 @@ const DatabaseInfo = () => {
       try {
         if (address) {
           const db = await getDatabase(address);
-          setDatabase(db);
+          if (db) {
+            setDatabase(db);
+          } else {
+            navigate("/");
+          }
         }
       } catch (err: any) {
         setError(`Error fetching data: ${err.message}`);

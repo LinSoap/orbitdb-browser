@@ -13,7 +13,7 @@ import { useOrbitDB } from "../../context/OrbitDBProvier";
 
 const DatabaseList = () => {
   const { address } = useParams<{ address: string }>();
-  const { recentDatabase } = useOrbitDB();
+  const { recentDatabase, databases, orbitDB, addDatabase } = useOrbitDB();
   const navigate = useNavigate();
   const { colorMode } = useColorMode();
   const theme = useTheme();
@@ -24,6 +24,15 @@ const DatabaseList = () => {
       return `${name.slice(0, 15)}...${name.slice(-8)}`;
     }
     return name;
+  };
+  console.log(databases);
+
+  const handleClick = async (address: string) => {
+    if (!databases.includes(address)) {
+      const db = await orbitDB.open(address);
+      addDatabase(db);
+    }
+    navigate("/database-info" + address);
   };
 
   return (
@@ -47,7 +56,7 @@ const DatabaseList = () => {
                 w={"95%"}
                 border={"20px"}
                 isActive={"/orbitdb/" + address === database.address}
-                onClick={() => navigate("/database-info" + database.address)}
+                onClick={() => handleClick(database.address)}
                 bg={bgColorAside}
                 display="flex"
                 justifyContent="flex-start"
