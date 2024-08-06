@@ -1,9 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import {
-  DocumentsDatabaseType,
-  EventsDatabaseType,
-  KeyValueDatabaseType,
-} from "../../types/Database";
+
 import { useOrbitDB } from "../../context/OrbitDBProvier";
 import {
   Heading,
@@ -18,16 +14,17 @@ import { CloseIcon } from "@chakra-ui/icons";
 import { FaAlignJustify, FaBan, FaCheck } from "react-icons/fa";
 import { useIdentities } from "../../context/IdentitiesProvider";
 import { useEffect, useState } from "react";
-import { OrbitDBAccessControllerType } from "../../types/Access";
+import {
+  DocumentsType,
+  EventsType,
+  KeyValueType,
+  OrbitDBAccessControllerType,
+} from "@orbitdb/core";
 
 const DatabaseInfoHeader = ({
   Database,
 }: {
-  Database:
-    | EventsDatabaseType
-    | DocumentsDatabaseType
-    | KeyValueDatabaseType
-    | null;
+  Database: EventsType | DocumentsType | KeyValueType;
 }) => {
   const navigate = useNavigate();
   const { closeDatabase } = useOrbitDB();

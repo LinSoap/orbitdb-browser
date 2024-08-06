@@ -1,13 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { createOrbitDB, OrbitDB } from "@orbitdb/core";
+import {
+  createOrbitDB,
+  DocumentsType,
+  EventsType,
+  KeyValueType,
+  OrbitDB,
+} from "@orbitdb/core";
 import { useIpfs } from "./IpfsProvider";
 import { useIdentities } from "./IdentitiesProvider";
 import { useCookies } from "react-cookie";
-import {
-  DocumentsDatabaseType,
-  EventsDatabaseType,
-  KeyValueDatabaseType,
-} from "../types/Database";
 import { RecentDatabaseType } from "../types/Orbitdb";
 
 const OrbitDBContext = createContext<any | undefined>(undefined);
@@ -52,7 +53,7 @@ export const OrbitDBProvider = ({
   };
 
   const addDatabase = async (
-    database: EventsDatabaseType | DocumentsDatabaseType | KeyValueDatabaseType
+    database: EventsType | KeyValueType | DocumentsType
   ) => {
     try {
       const currentTime = new Date().toISOString();

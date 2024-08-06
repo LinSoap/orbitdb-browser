@@ -116,7 +116,7 @@ declare module "@orbitdb/core" {
     write: string[];
     canAppend: (entry: LogEntry) => Promise<boolean>;
     capabilities: () => Promise<string[]>;
-    get: (capability: string) => Promise<Set>;
+    get: (capability: string) => Promise<Set<>>;
     grant: (capability: string, key: string) => Promise<void>;
     revoke: (capability: string, key: string) => Promise<void>;
     close: () => Promise<void>;
@@ -200,7 +200,7 @@ declare module "@orbitdb/core" {
     hash: string;
   };
 
- 
+  export type EventsReturn = { value:string ; hash:string }
 
   export type EventsType = {
     type: "events",
@@ -212,7 +212,7 @@ declare module "@orbitdb/core" {
     address: string;
     add(value: string): Promise<string>;
     get(key: string): Promise<string>;
-    all(): Promise<{ value:string ; hash:string }[]>
+    all(): Promise<EventsReturn[]>
     close(): Promise<void>;
     drop(): Promise<void>;
     events: EventEmitter;
@@ -221,6 +221,8 @@ declare module "@orbitdb/core" {
   };
 
   export function Events(args: DatabaseArgs): Promise<EventsType>;    
+
+  export type KeyValueReturn = { key: string; value: string; hash: string };
 
   export type KeyValueType = {
     type: "keyvalue";
@@ -233,8 +235,8 @@ declare module "@orbitdb/core" {
     put(key: string, value: unknown): Promise<string>;
     set: KeyValue["put"];
     del(key: string): Promise<string>;
-    get(key: string): Promise<unknown | undefined>;
-    all(): Promise<{ key: string; value: string; hash: string }[]>;
+    get(key: string): Promise<string>;
+    all(): Promise<KeyValueReturn[]>;
     close(): Promise<void>;
     drop(): Promise<void>;
     events: EventEmitter;
@@ -244,6 +246,15 @@ declare module "@orbitdb/core" {
 
   export function KeyValue(args: DatabaseArgs): Promise<KeyValueType>;
 
+  export type DocumentsValue = { _id: string; [key: string]: string };
+
+  export type DocumentsReturn = { 
+    key: string; 
+    value: DocumentsValue; 
+    hash: string 
+  };
+
+
   export type DocumentsType = {
     type: "documents",
     name: string;
@@ -252,10 +263,10 @@ declare module "@orbitdb/core" {
     sync: any;
     peers: any;
     address: string;
-    put(doc: unknown): Promise<string>;
+    put(doc: DocumentsValue): Promise<string>;
     del(key: string): Promise<string>;
-    get(key: string): Promise<{ key:string; value: unkonwn; hash: string }>
-    all(): Promise<{ key: string; value: any; hash: string }[]>;
+    get(key: string): Promise<DocumentsReturn>
+    all(): Promise<DocumentsReturn[]>;
     query(findFn: (args: unknown) => boolean): Promise<string[]>;
     close(): Promise<void>;
     drop(): Promise<void>;

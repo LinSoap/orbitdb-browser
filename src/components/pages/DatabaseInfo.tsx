@@ -15,8 +15,8 @@ const DatabaseInfo = () => {
   const [error, setError] = useState<string | null>(null);
   const { getDatabase } = useOrbitDB();
   const [Database, setDatabase] = useState<
-    EventsType | DocumentsType | KeyValueType | null
-  >(null);
+    EventsType | DocumentsType | KeyValueType
+  >();
   useEffect(() => {
     const fetchData = async () => {
       setError(null);
@@ -49,7 +49,11 @@ const DatabaseInfo = () => {
   };
   return (
     <Box p={4}>
-      <DatabaseInfoHeader Database={Database} />
+      {Database ? (
+        <DatabaseInfoHeader Database={Database} />
+      ) : (
+        <p>Database not init,Please from home open it again</p>
+      )}
       {renderDataForm()}
     </Box>
   );

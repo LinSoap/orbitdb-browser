@@ -1,14 +1,13 @@
 import { CheckIcon, CloseIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { IconButton, Input, Td, Tr } from "@chakra-ui/react";
 import { useState } from "react";
-import { KeyValueDataType } from "../../../types/Orbitdb";
 
 const KeyValueItem = ({
   data,
   updateItem,
   deleteItem,
 }: {
-  data: KeyValueDataType;
+  data: { key: string; value: string; hash: string };
   updateItem: (key: string, value: string) => Promise<void>;
   deleteItem: (key: string) => Promise<void>;
 }) => {

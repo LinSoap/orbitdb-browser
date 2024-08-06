@@ -14,11 +14,10 @@ import {
   useTheme,
 } from "@chakra-ui/react";
 import StyledInput from "../StyledInput";
-import { DocumentsType } from "@orbitdb/core";
+import { DocumentsReturn, DocumentsType } from "@orbitdb/core";
 
 const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
-  const [data, setData] =
-    useState<{ key: string; value: any; hash: string }[]>();
+  const [data, setData] = useState<DocumentsReturn[]>();
   const [error, setError] = useState<string | null>(null);
   const [newKey, setNewkey] = useState<string>("");
   const [newValue, setNewValue] = useState<string>("");
@@ -31,7 +30,6 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
     setNewkey("");
     setNewValue("");
     try {
-      await Database.put({ _id: "LinSoap", msg: "hello world" });
       setData(await Database.all());
     } catch (err: any) {
       setError(`Error fetching data: ${err.message}`);

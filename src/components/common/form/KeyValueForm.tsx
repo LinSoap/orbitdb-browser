@@ -16,11 +16,10 @@ import {
 } from "@chakra-ui/react";
 import KeyValueItem from "./KeyValueItem";
 import StyledInput from "../StyledInput";
-import { KeyValueType } from "@orbitdb/core";
+import { KeyValueReturn, KeyValueType } from "@orbitdb/core";
 
 const KeyValueForm = ({ Database }: { Database: KeyValueType }) => {
-  const [data, setData] =
-    useState<{ key: string; value: string; hash: string }[]>();
+  const [data, setData] = useState<KeyValueReturn[]>();
   const [error, setError] = useState<string | null>(null);
   const [key, setKey] = useState<string>("");
   const [value, setValue] = useState<string>("");
