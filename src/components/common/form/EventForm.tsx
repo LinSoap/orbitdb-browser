@@ -5,7 +5,6 @@ import {
   Button,
   IconButton,
   InputGroup,
-  InputRightElement,
   Select,
   Table,
   TableContainer,
@@ -56,15 +55,14 @@ const EventForm = ({ Database }: { Database: EventsType }) => {
         options[queryType] = queryHash;
       }
 
-      if (amount) {
-        options.amount = Number(amount);
+      const amountNumber = Number(amount);
+      if (amount && amountNumber > 0) {
+        options.amount = amountNumber; 
       }
       for await (const record of Database.iterator(options)) {
         all.unshift(record);
       }
       setData(all);
-      console.log(all);
-      console.log(queryHash, queryType, amount);
     } catch (err: any) {
       setError(`Error fetching data: ${err.message}`);
     }
@@ -107,14 +105,12 @@ const EventForm = ({ Database }: { Database: EventsType }) => {
           value={amount}
           onChange={(event) => setAmount(event.target.value)}
         />
-        <InputRightElement width="4.5rem">
           <IconButton
             colorScheme="gray"
             aria-label="Search database"
             icon={<FaSearch />}
             onClick={() => QueryData()}
           />
-        </InputRightElement>
       </InputGroup>
       {data?.length === 0 ? (
         <p>This Database is Empty </p>

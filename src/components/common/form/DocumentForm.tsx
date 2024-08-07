@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import {
   Box,
   Button,
+  IconButton,
+  InputGroup,
   Table,
   TableContainer,
   Tbody,
@@ -15,11 +17,13 @@ import {
 } from "@chakra-ui/react";
 import StyledInput from "../StyledInput";
 import { DocumentsReturn, DocumentsType } from "@orbitdb/core";
+import { FaSearch } from "react-icons/fa";
 
 const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
   const [data, setData] = useState<DocumentsReturn[]>();
   const [error, setError] = useState<string | null>(null);
   const [newKey, setNewkey] = useState<string>("");
+  const [amount, setAmount] = useState<string>("");
   const [newValue, setNewValue] = useState<string>("");
   const { colorMode } = useColorMode();
   const theme = useTheme();
@@ -45,15 +49,50 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
     await Database.put({ _id: newKey, newValue });
     fetchData();
   };
+
+  const QueryData = async () => {
+    const all = [];
+    try {
+      const amountNumber = Number(amount);
+      console.log(amountNumber)
+      if(amountNumber <= 0 ){
+        fetchData();
+      }else{
+        for await (const record of Database.iterator({amount:Number(amount)})) {
+         all.unshift(record);
+        }
+        setData(all);
+      }
+    } catch (err: any) {
+      setError(`Error fetching data: ${err.message}`);
+    }
+  };
+
+
   const replacer = (key: string, value: any) => {
     if (key === "_id") {
       return undefined; // 排除 _id 属性
     }
     return value;
   };
+
   return (
     <div>
       {error && <p>{error}</p>}
+      <InputGroup size="md" marginY={2}>
+        <StyledInput
+          placeholder="Amount(Number)"
+          value={amount}
+          onChange={(event) => setAmount(event.target.value)}
+        />
+          <IconButton
+            colorScheme="gray"
+            aria-label="Search database"
+            icon={<FaSearch />}
+            onClick={() => QueryData()}
+          />
+      </InputGroup>
+
       {data?.length === 0 ? (
         <p>This Database is Empty </p>
       ) : (
