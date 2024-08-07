@@ -213,6 +213,7 @@ declare module "@orbitdb/core" {
     add(value: string): Promise<string>;
     get(key: string): Promise<string>;
     all(): Promise<EventsReturn[]>
+    iterator({ gt, gte, lt, lte, amount } : { gt?: string, gte?: string, lt?: string, lte?: string, amount?: number }):AsyncGenerator<EventsReturn>
     close(): Promise<void>;
     drop(): Promise<void>;
     events: EventEmitter;
@@ -236,6 +237,7 @@ declare module "@orbitdb/core" {
     set: KeyValue["put"];
     del(key: string): Promise<string>;
     get(key: string): Promise<string>;
+    iterator({ amount }:{ amount:number }): AsyncGenerator<KeyValueReturn>;
     all(): Promise<KeyValueReturn[]>;
     close(): Promise<void>;
     drop(): Promise<void>;
@@ -266,6 +268,7 @@ declare module "@orbitdb/core" {
     put(doc: DocumentsValue): Promise<string>;
     del(key: string): Promise<string>;
     get(key: string): Promise<DocumentsReturn>
+    iterator({ amount }:{ amount:number }): AsyncGenerator<DocumentsReturn>;
     all(): Promise<DocumentsReturn[]>;
     query(findFn: (args: unknown) => boolean): Promise<string[]>;
     close(): Promise<void>;

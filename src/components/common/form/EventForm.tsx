@@ -3,6 +3,10 @@ import {} from "../../../context/OrbitDBProvier";
 import {
   Box,
   Button,
+  IconButton,
+  InputGroup,
+  InputRightElement,
+  Select,
   Table,
   TableContainer,
   Tbody,
@@ -16,14 +20,20 @@ import {
 } from "@chakra-ui/react";
 import StyledInput from "../StyledInput";
 import { EventsReturn, EventsType } from "@orbitdb/core";
+import { FaSearch } from "react-icons/fa";
+import { isBase58 } from "../../../utils/check";
 
 const EventForm = ({ Database }: { Database: EventsType }) => {
   const [data, setData] = useState<EventsReturn[]>();
+  const [queryHash, setQueryHash] = useState<string>("");
+  const [queryType, setQueryType] = useState<string>("gte");
+  const [amount, setAmount] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [newRow, setNewRow] = useState<string>("");
   const { colorMode } = useColorMode();
   const theme = useTheme();
   const bgButton = theme.colors.custom.bgButton[colorMode];
+
   const fetchData = async () => {
     setError(null);
     setNewRow("");
@@ -34,6 +44,32 @@ const EventForm = ({ Database }: { Database: EventsType }) => {
       setError(`Error fetching data: ${err.message}`);
     }
   };
+
+  const QueryData = async () => {
+    const all = [];
+    const options: { [key: string]: string | number | undefined } = {};
+    try {
+      if (!isBase58(queryHash)) {
+        throw new Error("Invalid Hash");
+      }
+      if (queryType && queryHash) {
+        options[queryType] = queryHash;
+      }
+
+      if (amount) {
+        options.amount = Number(amount);
+      }
+      for await (const record of Database.iterator(options)) {
+        all.unshift(record);
+      }
+      setData(all);
+      console.log(all);
+      console.log(queryHash, queryType, amount);
+    } catch (err: any) {
+      setError(`Error fetching data: ${err.message}`);
+    }
+  };
+
   useEffect(() => {
     fetchData();
   }, [Database]);
@@ -46,6 +82,40 @@ const EventForm = ({ Database }: { Database: EventsType }) => {
   return (
     <div>
       {error && <p>{error}</p>}
+      <InputGroup size="md" marginY={2}>
+        <Select
+          width={"auto"}
+          minWidth={"auto"}
+          whiteSpace={"nowrap"}
+          value={queryType}
+          onChange={(event) => setQueryType(event.target.value)}
+          style={{ width: "auto", whiteSpace: "nowrap" }}
+        >
+          <option value="gt">Greater than</option>
+          <option value="gte">Greater than and equal</option>
+          <option value="lt">Less than</option>
+          <option value="lte">Less than and equal</option>
+        </Select>
+        <StyledInput
+          placeholder="Hash(option)"
+          value={queryHash}
+          onChange={(event) => setQueryHash(event.target.value)}
+        />
+        <StyledInput
+          width={"auto"}
+          placeholder="Amount"
+          value={amount}
+          onChange={(event) => setAmount(event.target.value)}
+        />
+        <InputRightElement width="4.5rem">
+          <IconButton
+            colorScheme="gray"
+            aria-label="Search database"
+            icon={<FaSearch />}
+            onClick={() => QueryData()}
+          />
+        </InputRightElement>
+      </InputGroup>
       {data?.length === 0 ? (
         <p>This Database is Empty </p>
       ) : (

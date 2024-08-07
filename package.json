@@ -21,6 +21,7 @@
     "abstract-level": "^2.0.0",
     "blockstore-level": "^1.1.8",
     "browser-level": "^1.0.1",
+    "bs58": "^6.0.0",
     "framer-motion": "^11.2.11",
     "helia": "^4.2.4",
     "level": "^8.0.1",
