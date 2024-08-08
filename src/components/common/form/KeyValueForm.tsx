@@ -3,6 +3,8 @@ import {} from "../../../context/OrbitDBProvier";
 import {
   Box,
   Button,
+  IconButton,
+  InputGroup,
   Table,
   TableContainer,
   Tbody,
@@ -17,12 +19,14 @@ import {
 import KeyValueItem from "./KeyValueItem";
 import StyledInput from "../StyledInput";
 import { KeyValueReturn, KeyValueType } from "@orbitdb/core";
+import { FaSearch } from "react-icons/fa";
 
 const KeyValueForm = ({ Database }: { Database: KeyValueType }) => {
   const [data, setData] = useState<KeyValueReturn[]>();
   const [error, setError] = useState<string | null>(null);
   const [key, setKey] = useState<string>("");
   const [value, setValue] = useState<string>("");
+  const [amount, setAmount] = useState<string>("");
   const { colorMode } = useColorMode();
   const theme = useTheme();
   const bgButton = theme.colors.custom.bgButton[colorMode];
@@ -55,10 +59,43 @@ const KeyValueForm = ({ Database }: { Database: KeyValueType }) => {
     fetchData();
   };
 
+  const QueryData = async () => {
+    const all = [];
+    try {
+      const amountNumber = Number(amount);
+      console.log(amountNumber)
+      if(amountNumber <= 0 ){
+        fetchData();
+      }else{
+        for await (const record of Database.iterator({amount:Number(amount)})) {
+         all.unshift(record);
+        }
+        setData(all);
+      }
+    } catch (err: any) {
+      setError(`Error fetching data: ${err.message}`);
+    }
+  };
+
+
   return (
     <div>
       {error && <p>{error}</p>}
-      {data?.length === 0 ? (
+        <InputGroup size="md" marginY={2}>
+        <StyledInput
+          placeholder="Amount(Number)"
+          value={amount}
+          onChange={(event) => setAmount(event.target.value)}
+        />
+          <IconButton
+            colorScheme="gray"
+            aria-label="Search database"
+            icon={<FaSearch />}
+            onClick={() => QueryData()}
+          />
+      </InputGroup>
+
+     {data?.length === 0 ? (
         <p>This Database is Empty </p>
       ) : (
         <p>Count DataItem:{data?.length}</p>
