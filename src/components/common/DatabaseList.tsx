@@ -27,7 +27,7 @@ const DatabaseList = () => {
   };
 
   const handleClick = async (address: string) => {
-    if (!databases.includes(address)) {
+    if (databases.includes(address)) {
       const db = await orbitDB.open(address);
       addDatabase(db);
     }
