@@ -53,7 +53,7 @@ const DatabaseInfo = () => {
     }
   };
   return (
-    <Box p={4}>
+    <Box p={4} minH={"101%"}>
       {Database ? (
         <DatabaseInfoHeader Database={Database} />
       ) : (
