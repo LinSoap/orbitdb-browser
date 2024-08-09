@@ -3,6 +3,7 @@ import {} from "../../../context/OrbitDBProvier";
 import {
   Box,
   Button,
+  HStack,
   IconButton,
   InputGroup,
   Select,
@@ -21,12 +22,15 @@ import StyledInput from "../StyledInput";
 import { EventsReturn, EventsType } from "@orbitdb/core";
 import { FaSearch } from "react-icons/fa";
 import { isBase58 } from "../../../utils/check";
+import Pagination from "./Pagination";
 
 const EventForm = ({ Database }: { Database: EventsType }) => {
   const [data, setData] = useState<EventsReturn[]>();
   const [queryHash, setQueryHash] = useState<string>("");
   const [queryType, setQueryType] = useState<string>("gte");
   const [amount, setAmount] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPage, setTotalPage] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [newRow, setNewRow] = useState<string>("");
   const { colorMode } = useColorMode();
@@ -37,7 +41,6 @@ const EventForm = ({ Database }: { Database: EventsType }) => {
     setError(null);
     setNewRow("");
     try {
-      console.log(Database.type);
       setData(await Database.all());
     } catch (err: any) {
       setError(`Error fetching data: ${err.message}`);
@@ -57,7 +60,7 @@ const EventForm = ({ Database }: { Database: EventsType }) => {
 
       const amountNumber = Number(amount);
       if (amount && amountNumber > 0) {
-        options.amount = amountNumber; 
+        options.amount = amountNumber;
       }
       for await (const record of Database.iterator(options)) {
         all.unshift(record);
@@ -71,6 +74,13 @@ const EventForm = ({ Database }: { Database: EventsType }) => {
   useEffect(() => {
     fetchData();
   }, [Database]);
+
+  useEffect(() => {
+    if (data) {
+      setTotalPage(Math.ceil(data.length / 10));
+      setCurrentPage(1);
+    }
+  }, [data]);
 
   const onAddNewRow = async () => {
     await Database.add(newRow);
@@ -105,18 +115,25 @@ const EventForm = ({ Database }: { Database: EventsType }) => {
           value={amount}
           onChange={(event) => setAmount(event.target.value)}
         />
-          <IconButton
-            colorScheme="gray"
-            aria-label="Search database"
-            icon={<FaSearch />}
-            onClick={() => QueryData()}
-          />
+        <IconButton
+          colorScheme="gray"
+          aria-label="Search database"
+          icon={<FaSearch />}
+          onClick={() => QueryData()}
+        />
       </InputGroup>
-      {data?.length === 0 ? (
-        <p>This Database is Empty </p>
-      ) : (
-        <p>Count DataItem:{data?.length}</p>
-      )}
+      <HStack justifyContent={"space-between"}>
+        {data?.length === 0 ? (
+          <p>This Database is Empty </p>
+        ) : (
+          <p>Total Item:{data?.length}</p>
+        )}
+        <Pagination
+          totalPage={totalPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      </HStack>
       <TableContainer>
         <Table variant="simple">
           <Thead>
@@ -127,12 +144,14 @@ const EventForm = ({ Database }: { Database: EventsType }) => {
           </Thead>
           <Tbody>
             {data &&
-              data.map((data) => (
-                <Tr key={data.hash}>
-                  <Td>{data.value}</Td>
-                  <Td>{data.hash}</Td>
-                </Tr>
-              ))}
+              data
+                .slice((currentPage - 1) * 10, currentPage * 10)
+                .map((data) => (
+                  <Tr key={data.hash}>
+                    <Td>{data.value}</Td>
+                    <Td>{data.hash}</Td>
+                  </Tr>
+                ))}
           </Tbody>
           <Tfoot>
             <Tr>

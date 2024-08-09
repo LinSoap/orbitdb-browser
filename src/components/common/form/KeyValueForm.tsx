@@ -3,6 +3,7 @@ import {} from "../../../context/OrbitDBProvier";
 import {
   Box,
   Button,
+  HStack,
   IconButton,
   InputGroup,
   Table,
@@ -20,6 +21,7 @@ import KeyValueItem from "./KeyValueItem";
 import StyledInput from "../StyledInput";
 import { KeyValueReturn, KeyValueType } from "@orbitdb/core";
 import { FaSearch } from "react-icons/fa";
+import Pagination from "./Pagination";
 
 const KeyValueForm = ({ Database }: { Database: KeyValueType }) => {
   const [data, setData] = useState<KeyValueReturn[]>();
@@ -27,6 +29,8 @@ const KeyValueForm = ({ Database }: { Database: KeyValueType }) => {
   const [key, setKey] = useState<string>("");
   const [value, setValue] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPage, setTotalPage] = useState<number>(0);
   const { colorMode } = useColorMode();
   const theme = useTheme();
   const bgButton = theme.colors.custom.bgButton[colorMode];
@@ -35,7 +39,6 @@ const KeyValueForm = ({ Database }: { Database: KeyValueType }) => {
     setKey("");
     setValue("");
     try {
-      console.log(Database.type);
       setData(await Database.all());
     } catch (err: any) {
       setError(`Error fetching data: ${err.message}`);
@@ -44,6 +47,13 @@ const KeyValueForm = ({ Database }: { Database: KeyValueType }) => {
   useEffect(() => {
     fetchData();
   }, [Database]);
+
+  useEffect(() => {
+    if (data) {
+      setTotalPage(Math.ceil(data.length / 10));
+      setCurrentPage(1);
+    }
+  }, [data]);
 
   const addNewItem = async () => {
     await Database.put(key, value);
@@ -63,12 +73,13 @@ const KeyValueForm = ({ Database }: { Database: KeyValueType }) => {
     const all = [];
     try {
       const amountNumber = Number(amount);
-      console.log(amountNumber)
-      if(amountNumber <= 0 ){
+      if (amountNumber <= 0) {
         fetchData();
-      }else{
-        for await (const record of Database.iterator({amount:Number(amount)})) {
-         all.unshift(record);
+      } else {
+        for await (const record of Database.iterator({
+          amount: Number(amount),
+        })) {
+          all.unshift(record);
         }
         setData(all);
       }
@@ -77,29 +88,34 @@ const KeyValueForm = ({ Database }: { Database: KeyValueType }) => {
     }
   };
 
-
   return (
     <div>
       {error && <p>{error}</p>}
-        <InputGroup size="md" marginY={2}>
+      <InputGroup size="md" marginY={2}>
         <StyledInput
           placeholder="Amount(Number)"
           value={amount}
           onChange={(event) => setAmount(event.target.value)}
         />
-          <IconButton
-            colorScheme="gray"
-            aria-label="Search database"
-            icon={<FaSearch />}
-            onClick={() => QueryData()}
-          />
+        <IconButton
+          colorScheme="gray"
+          aria-label="Search database"
+          icon={<FaSearch />}
+          onClick={() => QueryData()}
+        />
       </InputGroup>
-
-     {data?.length === 0 ? (
-        <p>This Database is Empty </p>
-      ) : (
-        <p>Count DataItem:{data?.length}</p>
-      )}
+      <HStack justifyContent={"space-between"}>
+        {data?.length === 0 ? (
+          <p>This Database is Empty </p>
+        ) : (
+          <p>Total Item:{data?.length}</p>
+        )}
+        <Pagination
+          totalPage={totalPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      </HStack>
       <TableContainer>
         <Table variant="simple">
           <Thead>
@@ -113,14 +129,16 @@ const KeyValueForm = ({ Database }: { Database: KeyValueType }) => {
           </Thead>
           <Tbody>
             {data &&
-              data.map((data) => (
-                <KeyValueItem
-                  key={data.hash}
-                  data={data}
-                  updateItem={updateItem}
-                  deleteItem={deleteItem}
-                />
-              ))}
+              data
+                .slice((currentPage - 1) * 10, currentPage * 10)
+                .map((data) => (
+                  <KeyValueItem
+                    key={data.hash}
+                    data={data}
+                    updateItem={updateItem}
+                    deleteItem={deleteItem}
+                  />
+                ))}
           </Tbody>
           <Tfoot>
             <Tr>

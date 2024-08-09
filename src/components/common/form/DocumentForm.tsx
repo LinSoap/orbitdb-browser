@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   Box,
   Button,
+  HStack,
   IconButton,
   InputGroup,
   Table,
@@ -18,12 +19,15 @@ import {
 import StyledInput from "../StyledInput";
 import { DocumentsReturn, DocumentsType } from "@orbitdb/core";
 import { FaSearch } from "react-icons/fa";
+import Pagination from "./Pagination";
 
 const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
   const [data, setData] = useState<DocumentsReturn[]>();
   const [error, setError] = useState<string | null>(null);
   const [newKey, setNewkey] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPage, setTotalPage] = useState<number>(0);
   const [newValue, setNewValue] = useState<string>("");
   const { colorMode } = useColorMode();
   const theme = useTheme();
@@ -43,9 +47,14 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
     fetchData();
   }, [Database]);
 
+  useEffect(() => {
+    if (data) {
+      setTotalPage(Math.ceil(data.length / 10));
+      setCurrentPage(1);
+    }
+  }, [data]);
+
   const onAddNewRow = async () => {
-    console.log("Key:" + newKey);
-    console.log("Value:" + newValue);
     await Database.put({ _id: newKey, newValue });
     fetchData();
   };
@@ -54,12 +63,13 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
     const all = [];
     try {
       const amountNumber = Number(amount);
-      console.log(amountNumber)
-      if(amountNumber <= 0 ){
+      if (amountNumber <= 0) {
         fetchData();
-      }else{
-        for await (const record of Database.iterator({amount:Number(amount)})) {
-         all.unshift(record);
+      } else {
+        for await (const record of Database.iterator({
+          amount: Number(amount),
+        })) {
+          all.unshift(record);
         }
         setData(all);
       }
@@ -67,7 +77,6 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
       setError(`Error fetching data: ${err.message}`);
     }
   };
-
 
   const replacer = (key: string, value: any) => {
     if (key === "_id") {
@@ -85,19 +94,25 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
           value={amount}
           onChange={(event) => setAmount(event.target.value)}
         />
-          <IconButton
-            colorScheme="gray"
-            aria-label="Search database"
-            icon={<FaSearch />}
-            onClick={() => QueryData()}
-          />
+        <IconButton
+          colorScheme="gray"
+          aria-label="Search database"
+          icon={<FaSearch />}
+          onClick={() => QueryData()}
+        />
       </InputGroup>
-
-      {data?.length === 0 ? (
-        <p>This Database is Empty </p>
-      ) : (
-        <p>Count DataItem:{data?.length}</p>
-      )}
+      <HStack justifyContent={"space-between"}>
+        {data?.length === 0 ? (
+          <p>This Database is Empty </p>
+        ) : (
+          <p>Total Item:{data?.length}</p>
+        )}
+        <Pagination
+          totalPage={totalPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      </HStack>
       <TableContainer>
         <Table variant="simple">
           <Thead>
@@ -109,13 +124,15 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
           </Thead>
           <Tbody>
             {data &&
-              data.map((data) => (
-                <Tr key={data.hash}>
-                  <Td>{data.value._id}</Td>
-                  <Td>{JSON.stringify(data.value, replacer, 2)}</Td>
-                  <Td>{data.hash}</Td>
-                </Tr>
-              ))}
+              data
+                .slice((currentPage - 1) * 10, currentPage * 10)
+                .map((data) => (
+                  <Tr key={data.hash}>
+                    <Td>{data.value._id}</Td>
+                    <Td>{JSON.stringify(data.value, replacer, 2)}</Td>
+                    <Td>{data.hash}</Td>
+                  </Tr>
+                ))}
           </Tbody>
           <Tfoot>
             <Tr>

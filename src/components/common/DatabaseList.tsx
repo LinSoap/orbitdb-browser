@@ -25,7 +25,6 @@ const DatabaseList = () => {
     }
     return name;
   };
-  console.log(databases);
 
   const handleClick = async (address: string) => {
     if (!databases.includes(address)) {
