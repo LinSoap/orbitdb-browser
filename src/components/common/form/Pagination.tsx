@@ -23,7 +23,7 @@ const Pagination = ({
   };
 
   return (
-    <HStack spacing={4} justifyContent="center" mt={4}>
+    <HStack justifyContent="center">
       <IconButton
         icon={<FaAngleLeft />}
         onClick={handlePreviousPage}

@@ -1,28 +1,33 @@
 import { CheckIcon, CloseIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { IconButton, Input, Td, Tr } from "@chakra-ui/react";
-import { KeyValueReturn } from "@orbitdb/core";
+import { DocumentsReturn } from "@orbitdb/core";
 import { useState } from "react";
 
-const KeyValueItem = ({
+const DocumentsItem = ({
   data,
+  isRaw,
   updateItem,
   deleteItem,
 }: {
-  data: KeyValueReturn;
+  data: DocumentsReturn;
+  isRaw: boolean;
   updateItem: (key: string, value: string) => Promise<void>;
   deleteItem: (key: string) => Promise<void>;
 }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [value, setValue] = useState<string>(data.value);
+  const [rawValue, setRawValue] = useState<string>(JSON.stringify(data.value));
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRawValue(e.target.value);
+  };
   return isEditing ? (
     <Tr key={data.hash}>
       <Td>{data.key}</Td>
       <Td>
         <Input
           htmlSize={4}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          value={isRaw ? rawValue : "keyvalue"}
+          onChange={(e) => handleChange(e)}
         />
       </Td>
       <Td>{data.hash}</Td>
@@ -32,7 +37,7 @@ const KeyValueItem = ({
           icon={<CheckIcon />}
           onClick={() => {
             setIsEditing(!isEditing);
-            updateItem(data.key, value);
+            updateItem(data.key, rawValue);
           }}
         />
         <IconButton
@@ -52,7 +57,7 @@ const KeyValueItem = ({
   ) : (
     <Tr key={data.hash}>
       <Td>{data.key}</Td>
-      <Td>{data.value}</Td>
+      <Td>{isRaw ? rawValue : "keyvalue"}</Td>
       <Td>{data.hash}</Td>
       <Td>
         <IconButton
@@ -72,4 +77,4 @@ const KeyValueItem = ({
   );
 };
 
-export default KeyValueItem;
+export default DocumentsItem;

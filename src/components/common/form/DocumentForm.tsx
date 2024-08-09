@@ -20,6 +20,7 @@ import StyledInput from "../StyledInput";
 import { DocumentsReturn, DocumentsType } from "@orbitdb/core";
 import { FaSearch } from "react-icons/fa";
 import Pagination from "./Pagination";
+import DocumentsItem from "./DocumentsItem";
 
 const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
   const [data, setData] = useState<DocumentsReturn[]>();
@@ -28,6 +29,7 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
   const [amount, setAmount] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(0);
+  const [isRaw, setIsRaw] = useState<boolean>(false);
   const [newValue, setNewValue] = useState<string>("");
   const { colorMode } = useColorMode();
   const theme = useTheme();
@@ -78,11 +80,14 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
     }
   };
 
-  const replacer = (key: string, value: any) => {
-    if (key === "_id") {
-      return undefined; // 排除 _id 属性
-    }
-    return value;
+  const updateItem = async (key: string, value: string) => {
+    await Database.put({ _id: key, newValue: value });
+    fetchData();
+  };
+
+  const deleteItem = async (key: string) => {
+    await Database.del(key);
+    fetchData();
   };
 
   return (
@@ -107,11 +112,16 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
         ) : (
           <p>Total Item:{data?.length}</p>
         )}
-        <Pagination
-          totalPage={totalPage}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-        />
+        <HStack>
+          <Button colorScheme="gray" onClick={() => setIsRaw(!isRaw)}>
+            {isRaw ? "Raw" : "KeyValue"}
+          </Button>
+          <Pagination
+            totalPage={totalPage}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
+        </HStack>
       </HStack>
       <TableContainer>
         <Table variant="simple">
@@ -120,6 +130,8 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
               <Th>Key</Th>
               <Th>Value</Th>
               <Th>Hash</Th>
+              <Th>Eidt</Th>
+              <Th>Delete</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -127,11 +139,13 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
               data
                 .slice((currentPage - 1) * 10, currentPage * 10)
                 .map((data) => (
-                  <Tr key={data.hash}>
-                    <Td>{data.value._id}</Td>
-                    <Td>{JSON.stringify(data.value, replacer, 2)}</Td>
-                    <Td>{data.hash}</Td>
-                  </Tr>
+                  <DocumentsItem
+                    key={data.hash}
+                    data={data}
+                    isRaw={isRaw}
+                    updateItem={updateItem}
+                    deleteItem={deleteItem}
+                  />
                 ))}
           </Tbody>
           <Tfoot>
