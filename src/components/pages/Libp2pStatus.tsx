@@ -163,7 +163,7 @@ const Libp2pStatus = () => {
   ));
 
   return (
-    <Card bg={bgColorMain} h={"full"}>
+    <Card bg={bgColorMain} minH={"101%"}>
       <MainTitle title="Libp2p Status" />
       {loading ? (
         <Loading />
@@ -219,7 +219,7 @@ const Libp2pStatus = () => {
               </Tr>
               {multiaddrList.length > 0 && (
                 <Tr>
-                  <Td colSpan={2}>
+                  <Td colSpan={3}>
                     <Collapse in={isMultiaddrsOpen}>
                       <Table variant="simple">
                         <Tbody>{multiaddrList}</Tbody>
@@ -248,7 +248,7 @@ const Libp2pStatus = () => {
               </Tr>
               {peers.length > 0 && (
                 <Tr>
-                  <Td colSpan={2}>
+                  <Td colSpan={3}>
                     <Collapse in={isConnectPeersOpen}>
                       <Table variant="simple">
                         <Tbody>{connectPeersList}</Tbody>
