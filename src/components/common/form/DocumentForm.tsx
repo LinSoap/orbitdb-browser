@@ -80,8 +80,9 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
     }
   };
 
-  const updateItem = async (key: string, value: string) => {
-    await Database.put({ _id: key, newValue: value });
+  const updateItem = async (update: { [key: string]: string }) => {
+    console.log(update);
+    await Database.put(update);
     fetchData();
   };
 
@@ -143,6 +144,7 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
                     key={data.hash}
                     data={data}
                     isRaw={isRaw}
+                    indexBy={Database.indexBy}
                     updateItem={updateItem}
                     deleteItem={deleteItem}
                   />
@@ -171,6 +173,8 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
                   Add New Row
                 </Button>
               </Td>
+              <Td />
+              <Td />
             </Tr>
           </Tfoot>
         </Table>

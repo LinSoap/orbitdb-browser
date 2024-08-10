@@ -1,34 +1,91 @@
 import { CheckIcon, CloseIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { IconButton, Input, Td, Tr } from "@chakra-ui/react";
-import { DocumentsReturn } from "@orbitdb/core";
+import {
+  Flex,
+  IconButton,
+  List,
+  ListItem,
+  Tag,
+  TagLabel,
+  Td,
+  Tr,
+} from "@chakra-ui/react";
+import { DocumentsReturn, DocumentsValue } from "@orbitdb/core";
 import { useState } from "react";
+import StyledInput from "../StyledInput";
+import DocumentsEditItem from "./DocumentsEditItem";
 
 const DocumentsItem = ({
   data,
   isRaw,
+  indexBy,
   updateItem,
   deleteItem,
 }: {
   data: DocumentsReturn;
   isRaw: boolean;
-  updateItem: (key: string, value: string) => Promise<void>;
+  indexBy: string;
+  updateItem: (update: { [key: string]: any }) => Promise<void>;
   deleteItem: (key: string) => Promise<void>;
 }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [rawValue, setRawValue] = useState<string>(JSON.stringify(data.value));
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRawValue(e.target.value);
+  const [newValue, setNewValue] = useState<DocumentsValue>(data.value);
+  const handleChange = (value: string) => {
+    setRawValue(value);
   };
+
+  const handleClostEdit = () => {
+    setIsEditing(false);
+    setNewValue(data.value);
+  };
+
+  console.log(newValue);
+
+  const formatValueItem = (data: DocumentsValue) => {
+    return (
+      <Flex wrap="wrap" gap={2}>
+        {Object.entries(data).map(([key, value]) => (
+          <Tag key={key}>
+            <TagLabel>
+              {indexBy === key ? "*" + key : key}:{value}
+            </TagLabel>
+          </Tag>
+        ))}
+      </Flex>
+    );
+  };
+
+  const formatEditList = (data: DocumentsValue) => {
+    return (
+      <List>
+        {Object.entries(data).map(([key, value], index) => (
+          <ListItem key={key}>
+            <DocumentsEditItem
+              index={index}
+              itemKey={key}
+              value={value}
+              indexBy={indexBy}
+              setNewValue={setNewValue}
+            />
+          </ListItem>
+        ))}
+      </List>
+    );
+  };
+
   return isEditing ? (
     <Tr key={data.hash}>
       <Td>{data.key}</Td>
       <Td>
-        <Input
-          htmlSize={4}
-          value={isRaw ? rawValue : "keyvalue"}
-          onChange={(e) => handleChange(e)}
-        />
+        {isRaw ? (
+          <StyledInput
+            htmlSize={4}
+            value={rawValue}
+            onChange={(e) => handleChange(e.target.value)}
+          />
+        ) : (
+          formatEditList(newValue)
+        )}
       </Td>
       <Td>{data.hash}</Td>
       <Td>
@@ -37,13 +94,13 @@ const DocumentsItem = ({
           icon={<CheckIcon />}
           onClick={() => {
             setIsEditing(!isEditing);
-            updateItem(data.key, rawValue);
+            updateItem(newValue);
           }}
         />
         <IconButton
           aria-label="Close Item"
           icon={<CloseIcon />}
-          onClick={() => setIsEditing(!isEditing)}
+          onClick={() => handleClostEdit()}
         />
       </Td>
       <Td>
@@ -57,7 +114,7 @@ const DocumentsItem = ({
   ) : (
     <Tr key={data.hash}>
       <Td>{data.key}</Td>
-      <Td>{isRaw ? rawValue : "keyvalue"}</Td>
+      <Td>{isRaw ? rawValue : formatValueItem(data.value)}</Td>
       <Td>{data.hash}</Td>
       <Td>
         <IconButton

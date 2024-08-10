@@ -248,7 +248,7 @@ declare module "@orbitdb/core" {
 
   export function KeyValue(args: DatabaseArgs): Promise<KeyValueType>;
 
-  export type DocumentsValue = { _id: string; [key: string]: string };
+  export type DocumentsValue = { [key: string]: string };
 
   export type DocumentsReturn = { 
     key: string; 
@@ -265,6 +265,7 @@ declare module "@orbitdb/core" {
     sync: any;
     peers: any;
     address: string;
+    indexBy: string;
     put(doc: DocumentsValue): Promise<string>;
     del(key: string): Promise<string>;
     get(key: string): Promise<DocumentsReturn>

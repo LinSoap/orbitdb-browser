@@ -1,7 +1,8 @@
 import { CheckIcon, CloseIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { IconButton, Input, Td, Tr } from "@chakra-ui/react";
+import { IconButton, Td, Tr } from "@chakra-ui/react";
 import { KeyValueReturn } from "@orbitdb/core";
 import { useState } from "react";
+import StyledInput from "../StyledInput";
 
 const KeyValueItem = ({
   data,
@@ -19,7 +20,7 @@ const KeyValueItem = ({
     <Tr key={data.hash}>
       <Td>{data.key}</Td>
       <Td>
-        <Input
+        <StyledInput
           htmlSize={4}
           value={value}
           onChange={(e) => setValue(e.target.value)}
