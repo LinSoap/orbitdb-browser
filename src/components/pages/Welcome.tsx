@@ -4,13 +4,12 @@ import {
   Button,
   Text,
   Heading,
-  Divider,
-  Stack,
   AbsoluteCenter,
+  Link,
 } from "@chakra-ui/react";
 import { FaBook, FaPlay, FaCog, FaAt, FaPlus } from "react-icons/fa";
 import { RiP2pFill } from "react-icons/ri";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Welcome = () => {
   const navigate = useNavigate();
@@ -25,7 +24,12 @@ const Welcome = () => {
         </Text>
         <VStack spacing={4} align="center">
           <Button leftIcon={<FaBook />} variant="outline" size="lg" w={"60%"}>
-            <Link to="/">Read Documentation</Link>
+            <Link
+              href="https://github.com/LinSoap/orbitdb-browser/wiki"
+              isExternal
+            >
+              Read Documentation
+            </Link>
           </Button>
 
           <Button
@@ -76,12 +80,6 @@ const Welcome = () => {
             Libp2p Connect Status
           </Button>
         </VStack>
-        <Divider my={6} />
-        <Stack direction={["column", "row"]} spacing={4} justify="center">
-          <Link to={"/"}>Visit Website</Link>
-          <Link to={"/"}>Join Community</Link>
-          <Link to={"/"}>Contact Support</Link>
-        </Stack>
       </AbsoluteCenter>
     </Box>
   );

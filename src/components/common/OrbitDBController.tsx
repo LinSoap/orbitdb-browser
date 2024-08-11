@@ -2,7 +2,6 @@ import { CloseIcon } from "@chakra-ui/icons";
 import {
   Button,
   IconButton,
-  Input,
   InputGroup,
   InputRightElement,
   Table,
