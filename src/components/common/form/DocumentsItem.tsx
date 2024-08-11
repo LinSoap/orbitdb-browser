@@ -64,17 +64,18 @@ const DocumentsItem = ({
   const formatEditList = (data: DocumentsValue) => {
     return (
       <List>
-        {Object.entries(data).map(([key, value], index) => (
-          <ListItem key={key}>
-            <DocumentsEditItem
-              index={index}
-              itemKey={key}
-              value={value}
-              indexBy={indexBy}
-              setNewValue={setNewValue}
-            />
-          </ListItem>
-        ))}
+        {Object.entries(data).map(([key, value], index) =>
+          indexBy === key ? null : (
+            <ListItem key={key}>
+              <DocumentsEditItem
+                index={index}
+                itemKey={key}
+                value={value}
+                setNewValue={setNewValue}
+              />
+            </ListItem>
+          )
+        )}
         <ListItem>
           <IconButton
             icon={<AddIcon />}
