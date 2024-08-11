@@ -1,4 +1,10 @@
-import { CheckIcon, CloseIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import {
+  AddIcon,
+  CheckIcon,
+  CloseIcon,
+  DeleteIcon,
+  EditIcon,
+} from "@chakra-ui/icons";
 import {
   Flex,
   IconButton,
@@ -69,6 +75,19 @@ const DocumentsItem = ({
             />
           </ListItem>
         ))}
+        <ListItem>
+          <IconButton
+            icon={<AddIcon />}
+            aria-label={"add new prop"}
+            onClick={() => {
+              const newKey = `Key${Object.keys(data).length + 1}`;
+              setNewValue((prevValue) => ({
+                ...prevValue,
+                [newKey]: "",
+              }));
+            }}
+          />
+        </ListItem>
       </List>
     );
   };

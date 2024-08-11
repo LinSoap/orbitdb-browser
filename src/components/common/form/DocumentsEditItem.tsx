@@ -47,7 +47,7 @@ const DocumentsEditItem = ({
             onChange={(e) => handleKeyChange(e.target.value, editItem[key])}
             onBlur={handleBlur}
           />
-
+          :
           <StyledInput
             value={editItem[key]}
             w={"auto"}
@@ -56,7 +56,6 @@ const DocumentsEditItem = ({
           />
         </Box>
       )}
-      :
     </Tag>
   );
 };
