@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 
 import { FaCheck } from "react-icons/fa";
+import StyledInput from "./StyledInput";
 
 const OrbitDBController = ({
   writers,
@@ -47,8 +48,9 @@ const OrbitDBController = ({
               <Tr key={index}>
                 <Td>
                   <InputGroup>
-                    <Input
+                    <StyledInput
                       type="text"
+                      colorScheme="gray"
                       placeholder="Writable ID"
                       value={id}
                       onChange={(e) => handleInputChange(index, e.target.value)}
