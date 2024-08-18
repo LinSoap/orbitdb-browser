@@ -1,30 +1,21 @@
-# React + TypeScript + Vite
+# OrbitDB Browser
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+OrbitDB Browser是一个OrbitDB WebUI管理工具，实现了Events、Documents,KeyValue类型数据库的增删改查，简化libp2p配置，支持配置Stun节点、Relay服务器以及PubSub Topics，默认支持WebRTC实现浏览器间节点传输。支持查看libp2p连接情况。支持OrbitDB Identity导入导出，支持OrbitDB AccessController管理数据库权限，通过WebUI轻松上手OrbitDB,管理你的公共数据库。
 
-Currently, two official plugins are available:
+//todo 在线示例
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 部署
 
-## Expanding the ESLint configuration
+//todo 本地部署
+//todo 上线服务（配置HTTPS,WebRTC(secure）)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 常见问题
+//todo  
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## 技术栈
+ - React
+ - TypeScript
+ - OrbitDB
+ - libp2p
+ - IPFS
+ - Chakra UI
