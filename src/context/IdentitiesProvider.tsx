@@ -1,19 +1,15 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import {
-  ComposedStorage,
   Identities,
   IdentitiesType,
   Identity,
-  IPFSBlockStorage,
-  LRUStorage,
-  Storage,
+  KeyStore,
+  KeyStoreType,
 } from "@orbitdb/core";
 import { useIpfs } from "./IpfsProvider";
 import { useCookies } from "react-cookie";
-import * as Block from "multiformats/block";
-import * as dagCbor from "@ipld/dag-cbor";
-import { sha256 } from "multiformats/hashes/sha2";
-import { Identity as IdentityFunction } from "@orbitdb/core/src/identities";
+import * as crypto from "@libp2p/crypto";
+import pathJoin from "../utils/path-join";
 
 const IdentitiesContext = createContext<any>(undefined);
 
@@ -25,11 +21,9 @@ export const IdentitiesProvider = ({
   const [cookies, setCookie, removeCookie] = useCookies(["identityID"]);
   const [identities, setIdentities] = useState<IdentitiesType>();
   const [identity, setIdentity] = useState<Identity>();
-  const [storage, setStorage] = useState<Storage>();
+  const [keyStore, setKeyStore] = useState<KeyStoreType>();
   const [error, setError] = useState("");
   const { ipfs } = useIpfs();
-  const codec = dagCbor;
-  const hasher = sha256;
 
   const createIdentity = async (id: string) => {
     try {
@@ -53,10 +47,22 @@ export const IdentitiesProvider = ({
     }
   };
 
+  const initKeyStore = async () => {
+    if (ipfs) {
+      const keyStore = await KeyStore({
+        path: pathJoin("./orbitdb", "identities"),
+      });
+      setKeyStore(keyStore);
+    }
+  };
+
   const initIdentities = async () => {
     if (ipfs) {
       try {
-        const IdentitiesInstance = await Identities({ ipfs });
+        const IdentitiesInstance = await Identities({
+          ipfs,
+          keystore: keyStore,
+        });
         setIdentities(IdentitiesInstance);
       } catch (error: any) {
         setError(`Error creating Identities: ${error.message}`);
@@ -64,38 +70,25 @@ export const IdentitiesProvider = ({
     }
   };
 
-  const initStorage = async () => {
-    if (ipfs) {
-      const newstorage = await ComposedStorage(
-        await LRUStorage({ size: 1000 }),
-        await IPFSBlockStorage({ ipfs, pin: true })
-      );
-      setStorage(newstorage);
-    }
-  };
+  const importIdentity = async (id: string, bytes: Uint8Array) => {
+    const keys = await crypto.keys.unmarshalPrivateKey(bytes);
+    const key = {
+      publicKey: keys.public.marshal(),
+      privateKey: keys.marshal(),
+    };
+    console.log(keys);
+    await keyStore?.addKey(id, key);
 
-  const importIdentity = async (bytes: Uint8Array) => {
-    const { value } = await Block.decode({ bytes, codec, hasher });
-    const identity = await IdentityFunction({ ...(value as object) });
-
-    if (!identity || !identity.hash || !identity.bytes) {
-      throw new Error("import Identity faild");
-    }
+    const identity = await identities?.createIdentity({ id });
     setIdentity(identity);
-    setCookie("identityID", identity.id);
-    if (storage) {
-      const existingIdentity = await storage.get(identity.hash);
-      if (!existingIdentity) {
-        await storage.put(identity.hash, identity.bytes);
-      }
-    } else {
-      console.warn("Storage is not init,can't storage identity");
-    }
-    return identity;
+    setCookie("identityID", id);
+
+    console.log(identity);
   };
 
   const exportIdentity = async (identity: Identity) => {
-    const bytes = await identity.bytes;
+    const key = await keyStore?.getKey(identity.id);
+    const bytes = key?.bytes;
 
     const blob = new Blob([bytes], { type: "application/octet-stream" });
 
@@ -114,8 +107,8 @@ export const IdentitiesProvider = ({
   };
 
   useEffect(() => {
+    initKeyStore();
     initIdentities();
-    initStorage();
   }, [ipfs]);
 
   useEffect(() => {

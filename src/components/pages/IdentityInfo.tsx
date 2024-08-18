@@ -41,8 +41,16 @@ const IdentityInfo = () => {
     const file = event.target.files?.[0];
     if (file) {
       try {
+        const fileName = file.name;
+        const id = fileName.replace("identity_", "").replace(".bin", "");
+
+        console.log(id);
         const bytes = await file.arrayBuffer();
-        const importedIdentity = await importIdentity(new Uint8Array(bytes));
+
+        const importedIdentity = await importIdentity(
+          id,
+          new Uint8Array(bytes)
+        );
         console.log("已导入身份:", importedIdentity);
       } catch (error) {
         console.error("导入身份时出错:", error);

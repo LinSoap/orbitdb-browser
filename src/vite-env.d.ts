@@ -1,8 +1,18 @@
 /// <reference types="vite/client" />
 // src/orbitdb-core.d.ts
 declare module '@orbitdb/core/src/identities' {
-  export function Identity(options: any): any;
+  export function Identity(options: any): Identity;
 }
+declare module "@orbitdb/core/src/keystore" {
+  export function verifySignature(publicKey: string, signature: string, message: string): Promise<boolean>;
+  export function signMessage(privateKey: string, message: string): Promise<string>;
+}
+
+declare module "@orbitdb/core/src/identities/provider" {
+  export function getIdentityProvider(type:string): any;
+  export function useIdentityProvider(provider: any): void;
+}
+
 declare module "@orbitdb/core" {
   import EventEmitter from "events";
   import type { HeliaLibp2p } from "helia";
@@ -60,6 +70,8 @@ declare module "@orbitdb/core" {
     bytes: Uint8Array;
     hash: string;
   };
+
+  export function isIdentity(identity: Identity): boolean;
 
   export type OrbitDB = {
     id: string;
