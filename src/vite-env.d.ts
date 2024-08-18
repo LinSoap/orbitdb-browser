@@ -88,8 +88,10 @@ declare module "@orbitdb/core" {
   };
   export function createOrbitDB(args: {
     ipfs: HeliaLibp2p;
-    directory: string;
+    directory?: string;
     id?: string;
+    identity?: Identity;
+    identities?: IdentitiesType;
   }): Promise<OrbitDB>;
 
   export function useAccessController(accessController: { type: string }): void;
