@@ -51,7 +51,7 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
 
   useEffect(() => {
     if (data) {
-      setTotalPage(Math.ceil(data.length / 10));
+      setTotalPage(data.length === 0 ? 1 : Math.ceil(data.length / 10));
       setCurrentPage(1);
     }
   }, [data]);
