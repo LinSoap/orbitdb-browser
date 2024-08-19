@@ -45,8 +45,6 @@ const DocumentsItem = ({
     setNewValue(data.value);
   };
 
-  console.log(newValue);
-
   const formatValueItem = (data: DocumentsValue) => {
     return (
       <Flex wrap="wrap" gap={2}>
