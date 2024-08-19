@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useIpfs } from "../../context/IpfsProvider";
+import { multiaddr } from "@multiformats/multiaddr";
 import { getPeerTypes } from "../../utils/libp2p";
 import {
   Box,
@@ -22,6 +23,8 @@ import { Circuit } from "@multiformats/multiaddr-matcher";
 import { protocols } from "@multiformats/multiaddr";
 import Loading from "../common/Loading";
 import MainTitle from "../common/MainTitle";
+import StyledInput from "../common/StyledInput";
+import { FaLink } from "react-icons/fa";
 const Libp2pStatus = () => {
   const { ipfs, bootstrapsList } = useIpfs();
   const libp2p = ipfs.libp2p;
@@ -30,6 +33,7 @@ const Libp2pStatus = () => {
   const [connections, setConnections] = useState(libp2p.getConnections());
   const [multiaddrs, setMultiaddrs] = useState(libp2p.getMultiaddrs());
   const [peerTypes, setPeerTypes] = useState(getPeerTypes(libp2p));
+  const [connectPeer, setConnectPeer] = useState("");
   const [isMultiaddrsOpen, setIsMultiaddrsOpen] = useState(false);
   const [isConnectPeersOpen, setIsConnectPeersOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -59,11 +63,11 @@ const Libp2pStatus = () => {
 
   const relayMultiaddrs = libp2p
     .getMultiaddrs()
-    .filter((ma: any) => Circuit.exactMatch(ma));
+    .filter((multiaddr: any) => Circuit.exactMatch(multiaddr));
 
   const relayPeers = relayMultiaddrs.map(
-    (ma: any) =>
-      ma
+    (multiaddr: any) =>
+      multiaddr
         .stringTuples()
         .filter(([name, _]: [any, any]) => name === protocols("p2p").code)
         .map(([_, value]: [any, any]) => value)[0]
@@ -77,6 +81,15 @@ const Libp2pStatus = () => {
       return "Relay";
     }
     return "Normal";
+  };
+
+  const handleConnect = async (peerMultiaddr: string) => {
+    let maddr = multiaddr(peerMultiaddr);
+    try {
+      await libp2p.dial(maddr);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const extractProtocols = (multiaddr: string): string[] => {
@@ -108,8 +121,8 @@ const Libp2pStatus = () => {
   const statusList = Object.entries(peerTypes).map(([key, value]) => (
     <Tr key={key}>
       <Td>{key}</Td>
-      <Td>{value}</Td>
       <Td />
+      <Td>{value}</Td>
     </Tr>
   ));
 
@@ -186,29 +199,42 @@ const Libp2pStatus = () => {
                 <Td>{connections.length}</Td>
                 <Td />
               </Tr>
-              {statusList.length > 0 && (
-                <Tr>
-                  <Td colSpan={2}>
-                    <Table variant="simple">
-                      <Tbody>
-                        <Tr>
-                          <Td>Peer Type</Td>
-                          <Td>Count</Td>
-                          <Td />
-                        </Tr>
-                        {statusList}
-                      </Tbody>
-                    </Table>
-                  </Td>
-                  <Td />
-                </Tr>
-              )}
+              <Tr>
+                <Td colSpan={2}>
+                  <Table variant="simple">
+                    <Tbody>
+                      <Tr>
+                        <Td>Peer Type</Td>
+                        <Td />
+                        <Td>Count</Td>
+                      </Tr>
+                      {statusList}
+                    </Tbody>
+                  </Table>
+                </Td>
+                <Td />
+              </Tr>
+              <Tr>
+                <Td fontWeight="bold">Connect New Peer</Td>
+                <Td>
+                  <StyledInput
+                    value={connectPeer}
+                    onChange={(e) => setConnectPeer(e.target.value)}
+                  ></StyledInput>
+                </Td>
+                <Td>
+                  <IconButton
+                    aria-label={"connect"}
+                    icon={<FaLink />}
+                    onClick={() => handleConnect(connectPeer)}
+                  />
+                </Td>
+              </Tr>
               <Tr>
                 <Td fontWeight="bold">Multiaddr:</Td>
                 <Td>{multiaddrs.length}</Td>
                 <Td>
                   <IconButton
-                    size="sm"
                     onClick={() => setIsMultiaddrsOpen(!isMultiaddrsOpen)}
                     aria-label="Toggle multiaddrs"
                     icon={
@@ -233,7 +259,6 @@ const Libp2pStatus = () => {
                 <Td>{peers.length}</Td>
                 <Td>
                   <IconButton
-                    size="sm"
                     onClick={() => setIsConnectPeersOpen(!isConnectPeersOpen)}
                     aria-label="Toggle Connected Peer"
                     icon={
