@@ -30,7 +30,7 @@ const EventForm = ({ Database }: { Database: EventsType }) => {
   const [queryType, setQueryType] = useState<string>("gte");
   const [amount, setAmount] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPage, setTotalPage] = useState<number>(0);
+  const [totalPage, setTotalPage] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
   const [newRow, setNewRow] = useState<string>("");
   const { colorMode } = useColorMode();

@@ -28,7 +28,7 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
   const [newKey, setNewkey] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPage, setTotalPage] = useState<number>(0);
+  const [totalPage, setTotalPage] = useState<number>(1);
   const [isRaw, setIsRaw] = useState<boolean>(false);
   const [newValue, setNewValue] = useState<string>("");
   const { colorMode } = useColorMode();

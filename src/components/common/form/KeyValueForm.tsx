@@ -30,7 +30,7 @@ const KeyValueForm = ({ Database }: { Database: KeyValueType }) => {
   const [value, setValue] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPage, setTotalPage] = useState<number>(0);
+  const [totalPage, setTotalPage] = useState<number>(1);
   const { colorMode } = useColorMode();
   const theme = useTheme();
   const bgButton = theme.colors.custom.bgButton[colorMode];
