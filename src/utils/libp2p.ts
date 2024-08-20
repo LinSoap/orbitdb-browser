@@ -33,3 +33,22 @@ export function getPeerTypes(libp2p:Libp2p) {
 
   return types
 }
+
+const supportedProtocols = new Set([
+  'ip4', 'ip6', 'dns4', 'dns6', 'dnsaddr', 'tcp', 'udp', 'quic-v1', 'ws', 'wss', 'webtransport', 
+  'webrtc', 'certhash', 'p2p-circuit', 'p2p-webrtc-star', 'p2p-webrtc-direct', 
+  'p2p-websocket-star', 'memory', 'unix', 'p2p'
+]);
+
+export const extractProtocols = (multiaddr: string): string[] => {
+  const parts = multiaddr.split("/").filter(Boolean);
+  const protocols: string[] = [];
+
+  for (const part of parts) {
+    if (supportedProtocols.has(part)) {
+      protocols.push(part);
+    }
+  }
+
+  return protocols;
+};

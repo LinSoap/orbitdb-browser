@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useIpfs } from "../../context/IpfsProvider";
 import { multiaddr } from "@multiformats/multiaddr";
-import { getPeerTypes } from "../../utils/libp2p";
+import { extractProtocols, getPeerTypes } from "../../utils/libp2p";
 import {
   Box,
   Card,
@@ -90,32 +90,6 @@ const Libp2pStatus = () => {
     } catch (e) {
       console.log(e);
     }
-  };
-
-  const extractProtocols = (multiaddr: string): string[] => {
-    const protocols = new Set();
-    const parts = multiaddr.split("/");
-
-    parts.forEach((part) => {
-      if (
-        part &&
-        // match PeerId
-        !part.match(/^[A-Za-z0-9]{52}$/) &&
-        // match Port
-        !part.match(
-          /^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$/
-        ) &&
-        // match ipv4 address
-        !part.match(/^\d+\.\d+\.\d+\.\d+$/) &&
-        // match ipv6 address
-        !part.match(
-          /(?:^|:)(?:[0-9a-fA-F]{0,4}){1,8}(?::[0-9a-fA-F]{1,4}){1,7}(?::(?:[0-9a-fA-F]{0,4}){1,8})?/
-        )
-      ) {
-        protocols.add(part);
-      }
-    });
-    return Array.from(protocols) as string[];
   };
 
   const statusList = Object.entries(peerTypes).map(([key, value]) => (
