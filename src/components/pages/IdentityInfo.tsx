@@ -46,7 +46,6 @@ const IdentityInfo = () => {
         const fileName = file.name;
         const id = fileName.replace("identity_", "").replace(".bin", "");
 
-        console.log(id);
         const bytes = await file.arrayBuffer();
 
         await importIdentity(id, new Uint8Array(bytes));

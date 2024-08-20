@@ -11,7 +11,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
-import { FaAlignJustify, FaBan, FaCheck } from "react-icons/fa";
+import { FaAlignJustify, FaBan, FaCheck, FaSync } from "react-icons/fa";
 import { DocumentsType, EventsType, KeyValueType } from "@orbitdb/core";
 
 const DatabaseInfoHeader = ({
@@ -27,6 +27,10 @@ const DatabaseInfoHeader = ({
   const handleClose = () => {
     closeDatabase(Database);
     navigate("/");
+  };
+
+  const handleRefresh = async () => {
+    closeDatabase(Database);
   };
 
   return (
@@ -46,6 +50,14 @@ const DatabaseInfoHeader = ({
             mr={2}
             onClick={() => navigate("./detail")}
             aria-label="Detail"
+          />
+        </Tooltip>
+        <Tooltip label="Refresh">
+          <IconButton
+            icon={<FaSync />}
+            size="sm"
+            onClick={handleRefresh}
+            aria-label="Refresh Database"
           />
         </Tooltip>
         <Tooltip label="Close">

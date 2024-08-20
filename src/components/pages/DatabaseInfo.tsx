@@ -23,28 +23,31 @@ const DatabaseInfo = () => {
   const { identity } = useIdentities();
   const [writerble, setWriteable] = useState<boolean>(false);
   const { addError } = useError();
-  const { getDatabase } = useOrbitDB();
+  const { getDatabase, orbitDB, addDatabase } = useOrbitDB();
   const [Database, setDatabase] = useState<
     EventsType | DocumentsType | KeyValueType
   >();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDataBase = async () => {
       try {
         if (address) {
-          const db = await getDatabase(address);
-          if (db) {
+          let db = await getDatabase(address);
+          if (!db) {
+            db = await orbitDB.open("/orbitdb/" + address);
+            addDatabase(db);
             setDatabase(db);
-          } else {
-            navigate("/");
           }
+          // console.log(await db.all());
+          setDatabase(db);
         }
       } catch (err: any) {
-        addError(`Error getting database: ${err.message}`);
+        navigate("/");
+        addError(`get database error:${err.message}`);
       }
     };
-    fetchData();
-  }, [address, getDatabase]);
+    fetchDataBase();
+  }, [address, getDatabase, orbitDB]);
 
   const hasWriteable = async () => {
     if (!Database) {
