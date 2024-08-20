@@ -1,8 +1,9 @@
 import { CheckIcon, CloseIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { IconButton, Td, Tr } from "@chakra-ui/react";
+import { Flex, IconButton, Spacer, Td, Tr, Text } from "@chakra-ui/react";
 import { KeyValueReturn } from "@orbitdb/core";
 import { useState } from "react";
 import StyledInput from "../StyledInput";
+import CopyIconButton from "../CopyIconButton";
 
 const KeyValueItem = ({
   data,
@@ -54,7 +55,13 @@ const KeyValueItem = ({
     <Tr key={data.hash}>
       <Td>{data.key}</Td>
       <Td>{data.value}</Td>
-      <Td>{data.hash}</Td>
+      <Td>
+        <Flex alignItems="center">
+          <Text>{data.hash}</Text>
+          <Spacer />
+          <CopyIconButton ariaLabel={"Copy hash"} data={data.hash} />
+        </Flex>
+      </Td>
       <Td>
         <IconButton
           aria-label="Edit Item"

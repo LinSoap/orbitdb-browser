@@ -15,8 +15,11 @@ import {
   Th,
   Thead,
   Tr,
+  Text,
   useColorMode,
   useTheme,
+  Flex,
+  Spacer,
 } from "@chakra-ui/react";
 import StyledInput from "../StyledInput";
 import { EventsReturn, EventsType } from "@orbitdb/core";
@@ -24,6 +27,7 @@ import { FaSearch } from "react-icons/fa";
 import { isBase58 } from "../../../utils/check";
 import Pagination from "./Pagination";
 import { useError } from "../../../context/ErrorProvider";
+import CopyIconButton from "../CopyIconButton";
 
 const EventForm = ({
   Database,
@@ -158,7 +162,16 @@ const EventForm = ({
                 .map((data) => (
                   <Tr key={data.hash}>
                     <Td>{data.value}</Td>
-                    <Td>{data.hash}</Td>
+                    <Td>
+                      <Flex alignItems="center">
+                        <Text>{data.hash}</Text>
+                        <Spacer />
+                        <CopyIconButton
+                          ariaLabel={"Copy hash"}
+                          data={data.hash}
+                        />
+                      </Flex>
+                    </Td>
                   </Tr>
                 ))}
           </Tbody>

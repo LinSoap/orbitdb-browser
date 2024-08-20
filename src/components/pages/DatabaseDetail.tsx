@@ -14,6 +14,8 @@ import {
   useColorMode,
   useTheme,
   Card,
+  IconButton,
+  HStack,
 } from "@chakra-ui/react";
 import MainTitle from "../common/MainTitle";
 import {
@@ -22,6 +24,8 @@ import {
   KeyValueType,
   OrbitDBAccessControllerType,
 } from "@orbitdb/core";
+import { CopyIcon } from "@chakra-ui/icons";
+import CopyIconButton from "../common/CopyIconButton";
 
 const DatabaseDetail = () => {
   const { address } = useParams<{ address: string }>();
@@ -89,7 +93,15 @@ const DatabaseDetail = () => {
             <Tbody>
               <Tr>
                 <Td>Address</Td>
-                <Td>{Database?.address}</Td>
+                <Td>
+                  <HStack>
+                    <Text>{Database?.address}</Text>
+                    <CopyIconButton
+                      ariaLabel={"Copy Database address"}
+                      data={Database?.address ?? ""}
+                    />
+                  </HStack>
+                </Td>
               </Tr>
               <Tr>
                 <Td>Name</Td>
@@ -101,7 +113,15 @@ const DatabaseDetail = () => {
               </Tr>
               <Tr>
                 <Td>Access Address</Td>
-                <Td>{Database?.access.address}</Td>
+                <Td>
+                  <HStack>
+                    <Text>{Database?.access.address}</Text>
+                    <CopyIconButton
+                      ariaLabel={"Copy access address"}
+                      data={Database?.access.address ?? ""}
+                    />
+                  </HStack>
+                </Td>
               </Tr>
               <Tr>
                 <Td>Access Type</Td>
@@ -126,12 +146,21 @@ const DatabaseDetail = () => {
               <Thead>
                 <Tr>
                   <Td>Writable ID</Td>
+                  <Td />
                 </Tr>
               </Thead>
               <Tbody>
                 {Database.access.write.map((id: string) => (
                   <Tr key={id}>
                     <Td>{id}</Td>
+                    <Td>
+                      <IconButton
+                        aria-label="Copy hash"
+                        icon={<CopyIcon />}
+                        size="sm"
+                        onClick={() => navigator.clipboard.writeText(id)}
+                      />
+                    </Td>
                   </Tr>
                 ))}
               </Tbody>

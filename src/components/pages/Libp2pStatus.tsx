@@ -25,6 +25,7 @@ import Loading from "../common/Loading";
 import MainTitle from "../common/MainTitle";
 import StyledInput from "../common/StyledInput";
 import { FaLink } from "react-icons/fa";
+import CopyIconButton from "../common/CopyIconButton";
 const Libp2pStatus = () => {
   const { ipfs, bootstrapsList } = useIpfs();
   const libp2p = ipfs.libp2p;
@@ -138,13 +139,7 @@ const Libp2pStatus = () => {
         </Flex>
       </Td>
       <Td>
-        <IconButton
-          aria-label="Copy multiaddr"
-          icon={<CopyIcon />}
-          size="sm"
-          ml={2}
-          onClick={() => navigator.clipboard.writeText(peer.toString())}
-        />
+        <CopyIconButton ariaLabel={"Copy multiaddr"} data={peer.toString()} />
       </Td>
     </Tr>
   ));
@@ -160,7 +155,10 @@ const Libp2pStatus = () => {
             <Tbody>
               <Tr>
                 <Td fontWeight="bold">Peer ID:</Td>
-                <Td>{peerId}</Td>
+                <Td>
+                  {peerId}
+                  <CopyIconButton ariaLabel={"Copy peer id"} data={peerId} />
+                </Td>
                 <Td />
               </Tr>
               <Tr>

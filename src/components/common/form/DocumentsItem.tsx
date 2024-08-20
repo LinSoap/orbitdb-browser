@@ -14,11 +14,14 @@ import {
   TagLabel,
   Td,
   Tr,
+  Text,
+  Spacer,
 } from "@chakra-ui/react";
 import { DocumentsReturn, DocumentsValue } from "@orbitdb/core";
 import { useState } from "react";
 import StyledInput from "../StyledInput";
 import DocumentsEditItem from "./DocumentsEditItem";
+import CopyIconButton from "../CopyIconButton";
 
 const DocumentsItem = ({
   data,
@@ -133,7 +136,13 @@ const DocumentsItem = ({
     <Tr key={data.hash}>
       <Td>{data.key}</Td>
       <Td>{isRaw ? rawValue : formatValueItem(data.value)}</Td>
-      <Td>{data.hash}</Td>
+      <Td>
+        <Flex alignItems="center">
+          <Text>{data.hash}</Text>
+          <Spacer />
+          <CopyIconButton ariaLabel={"Copy hash"} data={data.hash} />
+        </Flex>
+      </Td>
       <Td>
         <IconButton
           aria-label="Edit Item"

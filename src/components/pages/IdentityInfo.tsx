@@ -16,6 +16,7 @@ import { useRef, useState } from "react";
 import MainTitle from "../common/MainTitle";
 import StyledInput from "../common/StyledInput";
 import { useError } from "../../context/ErrorProvider";
+import CopyIconButton from "../common/CopyIconButton";
 
 const IdentityInfo = () => {
   const {
@@ -62,7 +63,10 @@ const IdentityInfo = () => {
         <Tbody>
           <Tr>
             <Td>Id</Td>
-            <Td>{identity?.id}</Td>
+            <Td>
+              {identity?.id}
+              <CopyIconButton ariaLabel={"Copy id"} data={identity?.id} />
+            </Td>
           </Tr>
           <Tr>
             <Td>Public Key</Td>

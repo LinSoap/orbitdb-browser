@@ -13,6 +13,7 @@ import {
 import { CloseIcon } from "@chakra-ui/icons";
 import { FaAlignJustify, FaBan, FaCheck, FaSync } from "react-icons/fa";
 import { DocumentsType, EventsType, KeyValueType } from "@orbitdb/core";
+import CopyIconButton from "./CopyIconButton";
 
 const DatabaseInfoHeader = ({
   Database,
@@ -71,7 +72,13 @@ const DatabaseInfoHeader = ({
       </Flex>
       <VStack spacing={4} align="stretch">
         <Heading fontSize="2xl">OrbitDB Database: {Database?.name}</Heading>
-        <Heading fontSize="lg">Address: {Database?.address}</Heading>
+        <HStack>
+          <Heading fontSize="lg">Address: {Database?.address}</Heading>
+          <CopyIconButton
+            ariaLabel={"Copy multiaddr"}
+            data={Database.address}
+          />
+        </HStack>
         <Flex justifyContent={"space-between"}>
           <Heading fontSize="lg">Type: {Database?.type}</Heading>
 

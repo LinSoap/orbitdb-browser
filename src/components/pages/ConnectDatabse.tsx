@@ -6,10 +6,13 @@ import {
   Tbody,
   Td,
   Tr,
+  Text,
   useColorMode,
   useTheme,
   VStack,
   InputGroup,
+  Flex,
+  Spacer,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +20,7 @@ import { useOrbitDB } from "../../context/OrbitDBProvier";
 import { RecentDatabaseType } from "../../types/Orbitdb";
 import MainTitle from "../common/MainTitle";
 import StyledInput from "../common/StyledInput";
+import CopyIconButton from "../common/CopyIconButton";
 
 const ConnectDatabse = () => {
   const navigate = useNavigate();
@@ -96,7 +100,16 @@ const ConnectDatabse = () => {
             {recentDatabase.map((db: RecentDatabaseType) => (
               <Tr key={db.address}>
                 <Td>{db.name}</Td>
-                <Td>{db.address}</Td>
+                <Td>
+                  <Flex align="center">
+                    <Text>{db.address}</Text>
+                    <Spacer />
+                    <CopyIconButton
+                      ariaLabel={"Copy address"}
+                      data={db.address}
+                    />
+                  </Flex>
+                </Td>
                 <Td>{db.type}</Td>
                 <Td>{db.acccess}</Td>
                 <Td>{formatDate(db.latestOpened)}</Td>
