@@ -76,14 +76,11 @@ export const IdentitiesProvider = ({
       publicKey: keys.public.marshal(),
       privateKey: keys.marshal(),
     };
-    console.log(keys);
     await keyStore?.addKey(id, key);
 
     const identity = await identities?.createIdentity({ id });
     setIdentity(identity);
     setCookie("identityID", id);
-
-    console.log(identity);
   };
 
   const exportIdentity = async (identity: Identity) => {
@@ -96,7 +93,7 @@ export const IdentitiesProvider = ({
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = `identity_${identity.id}.bin`; // 设置文件名
+    a.download = `identity_${identity.id}.bin`;
     document.body.appendChild(a);
     a.click();
 

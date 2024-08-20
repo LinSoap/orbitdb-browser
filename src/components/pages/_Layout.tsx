@@ -9,6 +9,8 @@ import {
 import { Outlet, useLocation } from "react-router-dom";
 import Welcome from "./Welcome";
 import SideBarContainer from "../common/SideBarContainer";
+import ErrorAlert from "../common/ErrorAlert";
+import { useError } from "../../context/ErrorProvider";
 
 const Layout = () => {
   const { colorMode } = useColorMode();
@@ -17,6 +19,7 @@ const Layout = () => {
   const isRoot = location.pathname === "/";
   const bgColorMain = theme.colors.custom.bgColorMain[colorMode];
   const bgColorAside = theme.colors.custom.bgColorAside[colorMode];
+  const { errors, removeError } = useError();
 
   return (
     <Grid
@@ -46,6 +49,7 @@ const Layout = () => {
         </Show>
         <Outlet />
         {isRoot && <Welcome />}
+        <ErrorAlert errors={errors} onClose={removeError} />
       </GridItem>
     </Grid>
   );

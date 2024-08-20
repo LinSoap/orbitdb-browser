@@ -12,42 +12,17 @@ import {
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import { FaAlignJustify, FaBan, FaCheck } from "react-icons/fa";
-import { useIdentities } from "../../context/IdentitiesProvider";
-import { useEffect, useState } from "react";
-import {
-  DocumentsType,
-  EventsType,
-  KeyValueType,
-  OrbitDBAccessControllerType,
-} from "@orbitdb/core";
+import { DocumentsType, EventsType, KeyValueType } from "@orbitdb/core";
 
 const DatabaseInfoHeader = ({
   Database,
+  writerble,
 }: {
   Database: EventsType | DocumentsType | KeyValueType;
+  writerble: boolean;
 }) => {
   const navigate = useNavigate();
   const { closeDatabase } = useOrbitDB();
-  const { identity } = useIdentities();
-  const [writerble, setWriteable] = useState<boolean>(false);
-
-  const hasWriteable = async () => {
-    const { access } = Database || {};
-    if (!access) return false;
-    const orbitdbWriterSet = new Set(
-      access?.type === "orbitdb"
-        ? await (access as OrbitDBAccessControllerType).get("write")
-        : []
-    );
-    const writerSet = new Set([...orbitdbWriterSet, ...access?.write]);
-    return writerSet.has(identity.id) || writerSet.has("*");
-  };
-
-  useEffect(() => {
-    hasWriteable().then((result) => {
-      setWriteable(result);
-    });
-  }, [Database, identity]);
 
   const handleClose = () => {
     closeDatabase(Database);

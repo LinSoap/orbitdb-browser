@@ -22,26 +22,32 @@ import StyledInput from "../StyledInput";
 import { KeyValueReturn, KeyValueType } from "@orbitdb/core";
 import { FaSearch } from "react-icons/fa";
 import Pagination from "./Pagination";
+import { useError } from "../../../context/ErrorProvider";
 
-const KeyValueForm = ({ Database }: { Database: KeyValueType }) => {
+const KeyValueForm = ({
+  Database,
+  writerble,
+}: {
+  Database: KeyValueType;
+  writerble: boolean;
+}) => {
   const [data, setData] = useState<KeyValueReturn[]>();
-  const [error, setError] = useState<string | null>(null);
   const [key, setKey] = useState<string>("");
   const [value, setValue] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
   const { colorMode } = useColorMode();
+  const { addError } = useError();
   const theme = useTheme();
   const bgButton = theme.colors.custom.bgButton[colorMode];
   const fetchData = async () => {
-    setError(null);
     setKey("");
     setValue("");
     try {
       setData(await Database.all());
     } catch (err: any) {
-      setError(`Error fetching data: ${err.message}`);
+      addError(`Error fetching data: ${err.message}`);
     }
   };
   useEffect(() => {
@@ -60,13 +66,21 @@ const KeyValueForm = ({ Database }: { Database: KeyValueType }) => {
     fetchData();
   };
   const updateItem = async (key: string, value: string) => {
-    await Database.put(key, value);
-    fetchData();
+    if (writerble) {
+      await Database.put(key, value);
+      fetchData();
+    } else {
+      addError("You are not allowed to edit this Database");
+    }
   };
 
   const deleteItem = async (key: string) => {
-    await Database.del(key);
-    fetchData();
+    if (writerble) {
+      await Database.del(key);
+      fetchData();
+    } else {
+      addError("You are not allowed to edit this Database");
+    }
   };
 
   const QueryData = async () => {
@@ -84,13 +98,12 @@ const KeyValueForm = ({ Database }: { Database: KeyValueType }) => {
         setData(all);
       }
     } catch (err: any) {
-      setError(`Error fetching data: ${err.message}`);
+      addError(`Error fetching data: ${err.message}`);
     }
   };
 
   return (
     <div>
-      {error && <p>{error}</p>}
       <InputGroup size="md" marginY={2}>
         <StyledInput
           placeholder="Amount(Number)"

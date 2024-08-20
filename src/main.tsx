@@ -17,6 +17,7 @@ import { CookiesProvider } from "react-cookie";
 import Layout from "./components/pages/_Layout";
 import Libp2pConfig from "./components/pages/Libp2pConfig";
 import CreateDatabase from "./components/pages/CreateDatabase";
+import { ErrorProvider } from "./context/ErrorProvider";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -61,14 +62,16 @@ const router = createBrowserRouter([
 ]);
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <CookiesProvider>
-      <IpfsProvider>
-        <IdentitiesProvider>
-          <OrbitDBProvider>
-            <RouterProvider router={router} />
-          </OrbitDBProvider>
-        </IdentitiesProvider>
-      </IpfsProvider>
-    </CookiesProvider>
+    <ErrorProvider>
+      <CookiesProvider>
+        <IpfsProvider>
+          <IdentitiesProvider>
+            <OrbitDBProvider>
+              <RouterProvider router={router} />
+            </OrbitDBProvider>
+          </IdentitiesProvider>
+        </IpfsProvider>
+      </CookiesProvider>
+    </ErrorProvider>
   </React.StrictMode>
 );

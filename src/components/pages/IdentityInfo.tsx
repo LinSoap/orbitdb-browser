@@ -15,6 +15,7 @@ import { useIdentities } from "../../context/IdentitiesProvider";
 import { useRef, useState } from "react";
 import MainTitle from "../common/MainTitle";
 import StyledInput from "../common/StyledInput";
+import { useError } from "../../context/ErrorProvider";
 
 const IdentityInfo = () => {
   const {
@@ -30,6 +31,7 @@ const IdentityInfo = () => {
   const bgColorMain = theme.colors.custom.bgColorMain[colorMode];
   const bgButton = theme.colors.custom.bgButton[colorMode];
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { addError } = useError();
 
   const handleExport = async () => {
     if (identity) {
@@ -47,13 +49,9 @@ const IdentityInfo = () => {
         console.log(id);
         const bytes = await file.arrayBuffer();
 
-        const importedIdentity = await importIdentity(
-          id,
-          new Uint8Array(bytes)
-        );
-        console.log("已导入身份:", importedIdentity);
+        await importIdentity(id, new Uint8Array(bytes));
       } catch (error) {
-        console.error("导入身份时出错:", error);
+        addError("Failed to import identity");
       }
     }
   };

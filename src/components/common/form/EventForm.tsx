@@ -23,27 +23,33 @@ import { EventsReturn, EventsType } from "@orbitdb/core";
 import { FaSearch } from "react-icons/fa";
 import { isBase58 } from "../../../utils/check";
 import Pagination from "./Pagination";
+import { useError } from "../../../context/ErrorProvider";
 
-const EventForm = ({ Database }: { Database: EventsType }) => {
+const EventForm = ({
+  Database,
+  writerble,
+}: {
+  Database: EventsType;
+  writerble: boolean;
+}) => {
   const [data, setData] = useState<EventsReturn[]>();
   const [queryHash, setQueryHash] = useState<string>("");
   const [queryType, setQueryType] = useState<string>("gte");
   const [amount, setAmount] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
-  const [error, setError] = useState<string | null>(null);
+  const { addError } = useError();
   const [newRow, setNewRow] = useState<string>("");
   const { colorMode } = useColorMode();
   const theme = useTheme();
   const bgButton = theme.colors.custom.bgButton[colorMode];
 
   const fetchData = async () => {
-    setError(null);
     setNewRow("");
     try {
       setData(await Database.all());
     } catch (err: any) {
-      setError(`Error fetching data: ${err.message}`);
+      addError(`Error fetching data: ${err.message}`);
     }
   };
 
@@ -67,7 +73,7 @@ const EventForm = ({ Database }: { Database: EventsType }) => {
       }
       setData(all);
     } catch (err: any) {
-      setError(`Error fetching data: ${err.message}`);
+      addError(`Error fetching data: ${err.message}`);
     }
   };
 
@@ -83,13 +89,16 @@ const EventForm = ({ Database }: { Database: EventsType }) => {
   }, [data]);
 
   const onAddNewRow = async () => {
-    await Database.add(newRow);
-    fetchData();
+    if (writerble) {
+      await Database.add(newRow);
+      fetchData();
+    } else {
+      addError("You are not allowed to edit this Database");
+    }
   };
 
   return (
     <div>
-      {error && <p>{error}</p>}
       <InputGroup size="md" marginY={2}>
         <Select
           width={"auto"}

@@ -25,10 +25,17 @@ import Pagination from "./Pagination";
 import DocumentsItem from "./DocumentsItem";
 import DocumentsEditItem from "./DocumentsEditItem";
 import { AddIcon } from "@chakra-ui/icons";
+import { useError } from "../../../context/ErrorProvider";
 
-const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
+const DocumentForm = ({
+  Database,
+  writerble,
+}: {
+  Database: DocumentsType;
+  writerble: boolean;
+}) => {
   const [data, setData] = useState<DocumentsReturn[]>();
-  const [error, setError] = useState<string | null>(null);
+  const { addError } = useError();
   const [amount, setAmount] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
@@ -42,12 +49,11 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
   const bgButton = theme.colors.custom.bgButton[colorMode];
 
   const fetchData = async () => {
-    setError(null);
     setNewValue({ _id: "" });
     try {
       setData(await Database.all());
     } catch (err: any) {
-      setError(`Error fetching data: ${err.message}`);
+      addError(`Error fetching data: ${err.message}`);
     }
   };
   useEffect(() => {
@@ -76,13 +82,17 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
         setData(all);
       }
     } catch (err: any) {
-      setError(`Error fetching data: ${err.message}`);
+      addError(`Error fetching data: ${err.message}`);
     }
   };
 
   const updateItem = async (update: DocumentsValue) => {
-    await Database.put(update);
-    fetchData();
+    if (writerble) {
+      await Database.put(update);
+      fetchData();
+    } else {
+      addError("You are not allowed to edit this Database");
+    }
   };
 
   const addNewItem = async (newItem: DocumentsValue | string) => {
@@ -91,7 +101,7 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
         const parsedItem = JSON.parse(newItem) as DocumentsValue;
         await Database.put(parsedItem);
       } catch (error) {
-        console.error("无法解析字符串为有效的 DocumentsValue:", error);
+        addError("Cant parse string to valid DocumentsValue");
       }
     } else {
       await updateItem(newItem);
@@ -100,13 +110,16 @@ const DocumentForm = ({ Database }: { Database: DocumentsType }) => {
   };
 
   const deleteItem = async (key: string) => {
-    await Database.del(key);
-    fetchData();
+    if (writerble) {
+      await Database.del(key);
+      fetchData();
+    } else {
+      addError("You are not allowed to edit this Database");
+    }
   };
 
   return (
     <div>
-      {error && <p>{error}</p>}
       <InputGroup size="md" marginY={2}>
         <StyledInput
           placeholder="Amount(Number)"
