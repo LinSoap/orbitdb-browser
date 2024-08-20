@@ -105,11 +105,13 @@ const Libp2pStatus = () => {
     <Tr key={multiaddr.toString()}>
       <Td>
         <Flex wrap="wrap" gap={2}>
-          {extractProtocols(multiaddr.toString()).map((type: string) => (
-            <Tag key={type} borderRadius="full" variant="solid">
-              <TagLabel>{type}</TagLabel>
-            </Tag>
-          ))}
+          {extractProtocols(multiaddr.toString()).map(
+            (type: string, index: number) => (
+              <Tag key={index} borderRadius="full" variant="solid">
+                <TagLabel>{type}</TagLabel>
+              </Tag>
+            )
+          )}
         </Flex>
       </Td>
 
