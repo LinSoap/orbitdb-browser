@@ -14,6 +14,7 @@ import { bootstrap } from "@libp2p/bootstrap";
 import { pubsubPeerDiscovery } from "@libp2p/pubsub-peer-discovery";
 import { useCookies } from "react-cookie";
 import { webTransport } from "@libp2p/webtransport";
+import { webRTCDirect } from "@libp2p/webrtc";
 const IpfsContext = createContext<any | undefined>(undefined);
 
 export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
@@ -41,6 +42,7 @@ export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
           filter: all,
         }),
         webTransport(),
+        webRTCDirect(),
         webRTC({
           rtcConfiguration: {
             iceServers: [
