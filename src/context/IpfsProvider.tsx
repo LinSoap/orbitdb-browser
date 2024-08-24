@@ -10,6 +10,11 @@ import { identify } from "@libp2p/identify";
 import { createLibp2p } from "libp2p";
 import { createHelia } from "helia";
 import { LevelBlockstore } from "blockstore-level";
+import { kadDHT } from "@libp2p/kad-dht";
+import { mplex } from "@libp2p/mplex";
+import { autoNAT } from "@libp2p/autonat";
+import { ipnsSelector } from "ipns/selector";
+import { ipnsValidator } from "ipns/validator";
 import { bootstrap } from "@libp2p/bootstrap";
 import { pubsubPeerDiscovery } from "@libp2p/pubsub-peer-discovery";
 import { useCookies } from "react-cookie";
@@ -28,9 +33,9 @@ export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
   );
   const [bootstrapsList, setBootstrapsList] = useState(
     cookies.bootstrap || [
-      "",
-      // "/dnsaddr/bootstrap.libp2p.io/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb",
-      // "/dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN",
+      // "",
+      "/dnsaddr/bootstrap.libp2p.io/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb",
+      "/dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN",
       // "/dnsaddr/bootstrap.libp2p.io/p2p/QmQCU2EcMqAqQPR2i9bChDtGNJchTbq5TbXJJ16u19uLTa",
       // "/dnsaddr/bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt",
       // "/dnsaddr/bootstrap.libp2p.io/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ",
@@ -43,7 +48,7 @@ export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
   const createOptions = () => {
     return {
       addresses: {
-        listen: ["/webrtc"],
+        listen: ["/ip4/0.0.0.0/tcp/0", "/ip6/::/tcp/0", "/webrtc"],
       },
       transports: [
         webSockets({
@@ -61,11 +66,11 @@ export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
           },
         }),
         circuitRelayTransport({
-          discoverRelays: 1,
+          discoverRelays: 2,
         }),
       ],
       connectionEncryption: [noise()],
-      streamMuxers: [yamux()],
+      streamMuxers: [yamux(), mplex()],
       connectionGater: {
         denyDialMultiaddr: () => false,
       },
@@ -81,7 +86,20 @@ export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
       services: {
         identify: identify(),
         pubsub: gossipsub({ allowPublishToZeroTopicPeers: true }),
+        dht: kadDHT({
+          validators: {
+            ipns: ipnsValidator,
+          },
+          selectors: {
+            ipns: ipnsSelector,
+          },
+        }),
+        autoNAT: autoNAT(),
       },
+      // connectionManager: {
+      //   maxConnections: Infinity,
+      //   minConnections: 0,
+      // },
     };
   };
 
@@ -99,6 +117,7 @@ export const IpfsProvider = ({ children }: { children: React.ReactNode }) => {
       const libp2p = await createLibp2p({ ...libp2pOptions });
       const blockstore = new LevelBlockstore("./ipfs/blocks");
       const ipfs = await createHelia({ libp2p, blockstore });
+      // const ipfs = await createHelia({ libp2p, blockstore });
       setIpfs(ipfs);
     } catch (error: any) {
       setError(`Error creating IPFS: ${error.message}`);
