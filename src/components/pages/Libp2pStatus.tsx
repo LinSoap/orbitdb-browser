@@ -24,7 +24,7 @@ import { protocols } from "@multiformats/multiaddr";
 import Loading from "../common/Loading";
 import MainTitle from "../common/MainTitle";
 import StyledInput from "../common/StyledInput";
-import { FaLink } from "react-icons/fa";
+import { FaLink, FaSyncAlt } from "react-icons/fa";
 import CopyIconButton from "../common/CopyIconButton";
 const Libp2pStatus = () => {
   const { ipfs, bootstrapsList } = useIpfs();
@@ -39,19 +39,26 @@ const Libp2pStatus = () => {
   const [isConnectPeersOpen, setIsConnectPeersOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const handlePeerConnect = () => {
+    setConnections(libp2p.getConnections());
+    setMultiaddrs(libp2p.getMultiaddrs());
+    setPeerTypes(getPeerTypes(libp2p));
+    multiaddrs.map((multiaddr: string) => {
+      extractProtocols(multiaddr.toString());
+    });
+  };
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setPeerId(libp2p.peerId.string);
-      setStatus(libp2p.status);
-      setConnections(libp2p.getConnections());
-      setMultiaddrs(libp2p.getMultiaddrs());
-      setPeerTypes(getPeerTypes(libp2p));
-      multiaddrs.map((multiaddr: string) => {
-        extractProtocols(multiaddr.toString());
-      });
-      setLoading(false);
-    }, 5000); // 每5秒刷新一次数据
-    return () => clearInterval(interval); // 清除定时器
+    setPeerId(libp2p.peerId.string);
+    setStatus(libp2p.status);
+
+    libp2p.addEventListener("peer:connect", handlePeerConnect);
+
+    setLoading(false);
+
+    return () => {
+      libp2p.removeEventListener("peer:connect", handlePeerConnect);
+    };
   }, [libp2p]);
 
   const { colorMode } = useColorMode();
@@ -171,7 +178,13 @@ const Libp2pStatus = () => {
               <Tr>
                 <Td fontWeight="bold">Connections:</Td>
                 <Td>{connections.length}</Td>
-                <Td />
+                <Td>
+                  <IconButton
+                    aria-label="Refresh connections"
+                    icon={<FaSyncAlt />}
+                    onClick={() => handlePeerConnect()}
+                  />
+                </Td>
               </Tr>
               <Tr>
                 <Td colSpan={2}>
