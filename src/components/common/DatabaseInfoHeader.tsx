@@ -57,6 +57,7 @@ const DatabaseInfoHeader = ({
           <IconButton
             icon={<FaSync />}
             size="sm"
+            mr={2}
             onClick={handleRefresh}
             aria-label="Refresh Database"
           />
